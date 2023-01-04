@@ -1,0 +1,8 @@
+asgiref==3.6.0
+Django==4.1.5
+django-auto-prefetch==0.0.6
+django-soft-delete==0.9.18
+djangorestframework==3.14.0
+pytz==2022.7
+sqlparse==0.4.3
+tzdata==2022.7
