@@ -90,8 +90,8 @@ WSGI_APPLICATION = 'skripsi.wsgi.application'
 # db_names = str(os.getenv('name'))
 
 schema_skripsi = "public"
-host_names = "admin"
-user_names = "admin"
+host_names = "localhost"
+user_names = "postgres"
 password_names = "admin123"
 port_names = "5432"
 db_names = "postgres"
