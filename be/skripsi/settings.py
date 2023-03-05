@@ -22,10 +22,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-2y-=!zk%upvb$%j3xm01g9k@ajb_g6q0+imnt$o3m@nz6ttjje'
 
+# set 20 MB for uploading data, on default 5 MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+ENV_VARIABLE = {
+    'MAX_LEVEL_INCLUDE': 3,
+}
 
 
 # Application definition
@@ -78,6 +85,48 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'skripsi.wsgi.application'
+
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "root": {"level": "INFO", "handlers": ["file"]},
+#     "handlers": {
+#         "file": {
+#             "level": "INFO",
+#             "class": "logging.FileHandler",
+#             "filename": "django.log",
+#             "formatter": "custom_json",
+#         },
+#         'gunicorn': {
+#             'level': 'INFO',
+#             'class': 'logging.StreamHandler',
+#             "formatter": "custom_json",
+#         },
+#     },
+#     "loggers": {
+#         "django": {
+#             "handlers": ["file",'gunicorn'],
+#             "level": "INFO",
+#             "propagate": True
+#         },      
+#     },
+#     "formatters": {
+#         "app": {
+#             "format": (
+#                 u"%(asctime)s [%(levelname)-8s] "
+#                 "(%(module)s.%(funcName)s) %(message)s"
+#             ),
+#             "datefmt": "%Y-%m-%d %H:%M:%S",
+#         },        
+#         'verbose': {
+#             'format': ' "message" : {message} ,"level" : {levelname} ',
+#             'style': '{',
+#         },
+#         'custom_json' :{
+#             '()' : CustomJsonFormatter
+#         }
+#     },
+# }
 
 
 # Database
