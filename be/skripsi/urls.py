@@ -20,6 +20,7 @@ from api import viewsets
 
 router = routers.DefaultRouter()
 router.register(r'product', viewsets.ProductViewSet)
+router.register(r'courier', viewsets.CourierViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),

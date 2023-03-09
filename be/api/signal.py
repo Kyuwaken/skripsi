@@ -90,11 +90,12 @@ def audit_trail_created_updated(sender, instance, created,update_fields, **kwarg
         user = User.objects.get(pk=user['id'])
     except:
         user = None
+    
     log = Log(
         user=user.__str__() if user else None,
         object_id=instance.id,
         serialized_data=json.dumps(full, cls=DjangoJSONEncoder),
-        object_repr=str(instance),
+        object_repr=instance.__class__.__name__,
         content_type=Log().get_content_type(instance),
         action=action
     )
@@ -115,11 +116,12 @@ def audit_trail_deleted(sender, instance, **kwargs):
                             many=False,
                             structure=structure)
     user = get_current_user()
+    
     log = Log(
         user=user.__str__() if user else None,
         object_id=instance.id,
         serialized_data=json.dumps(serializer.data, cls=DjangoJSONEncoder),
-        object_repr=str(instance),
+        object_repr=instance.__class__.__name__,
         content_type=Log().get_content_type(instance),
         action=Log.DELETED
     )

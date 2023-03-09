@@ -5,8 +5,10 @@ from ..models import Product
 from api.permissions import IsAuthenticated, IsSellerOrReadOnly
 from api.exceptions import NotAuthorizedException,NotFoundException
 from django.db.models.base import ObjectDoesNotExist
+from api.utils import custom_viewset
 
-class ProductViewSet(viewsets.ModelViewSet):
+class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
+    serializer_class = ProductSerializer
     queryset = Product.objects.all()
     # permission_classes = (IsAuthenticated, IsSellerOrReadOnly)
 
@@ -17,13 +19,13 @@ class ProductViewSet(viewsets.ModelViewSet):
     #         return NotAuthorizedException()
 
     def list(self, request):
-        queryset = self.queryset.select_related('categoryId')
+        queryset = self.queryset.select_related('category')
         serializer = ProductSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
     
     def retrieve(self, request, *args, **kwargs):
         try:
-            product =  self.queryset.get(pk=kwargs['pk']).select_related('categoryId')
+            product =  self.queryset.get(pk=kwargs['pk']).select_related('category')
         except ObjectDoesNotExist:
             raise NotFoundException("Product")
         serializer = ProductSerializer(product, many=False)

@@ -14,7 +14,7 @@ class CustomAuthMiddleware(object):
 
     def process_request(self, request):
         # breakpoint()
-        token = request.COOKIES.get('Bte8wiZdhuuwmItf0lioiEfe9oPh9ArBi_lHlUZQI50')
+        token = request.COOKIES.get('token')
         if token:
             user = decode_token(token)
             if user:

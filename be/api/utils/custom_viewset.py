@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from api.utils.serialize import Serializer
 from api.utils.generate import generate, generate_structure
-from api.models import AuditLog
+from api.models import Log
 # from api.utils.query import query_debugger
 
 
@@ -60,12 +60,12 @@ class CustomListHistoriesModelMixin:
     @action(detail=True)
     def histories(self, request, *args, **kwargs):
         instance = self.get_raw_global_object(kwargs['pk'])
-        logs = AuditLog.objects.filter(
-            entity_id=instance.id,
-            content_type=AuditLog().get_content_type(instance)
+        logs = Log.objects.filter(
+            object_id=instance.id,
+            content_type=Log().get_content_type(instance)
         )
-        structure = dict(generate_structure(AuditLog))
-        serializer = Serializer(logs, AuditLog.__name__, many=True, structure=structure)
+        structure = dict(generate_structure(Log))
+        serializer = Serializer(logs, Log.__name__, many=True, structure=structure)
         return Response(serializer.data)
 
 

@@ -28,10 +28,12 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+FERNET_KEY = '4aEZPz1CoUWbujbe-_lYERfZuV_bSatnFj4y_R2L1W0='
+
 ALLOWED_HOSTS = []
 
 ENV_VARIABLE = {
-    'MAX_LEVEL_INCLUDE': 3,
+    'MAX_LEVEL_INCLUDE': 5,
 }
 
 
@@ -46,9 +48,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'api',
+    'django_softdelete',
     # buat allow origin
-    'corsheaders',
+    'corsheaders'
 ]
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'api.exceptions.custom_exception_handler.custom_exception_handler'
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
