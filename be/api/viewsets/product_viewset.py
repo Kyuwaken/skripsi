@@ -10,13 +10,7 @@ from api.utils import custom_viewset
 class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
-    # permission_classes = (IsAuthenticated, IsSellerOrReadOnly)
-
-    # def create(self, request, *args, **kwargs):
-    #     if role_id =='Seller':
-    #         return super().create(request, *args, **kwargs)
-    #     else:
-    #         return NotAuthorizedException()
+    permission_classes = (IsAuthenticated, IsSellerOrReadOnly)
 
     def list(self, request):
         queryset = self.queryset.select_related('category')
@@ -30,3 +24,12 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
             raise NotFoundException("Product")
         serializer = ProductSerializer(product, many=False)
         return Response(serializer.data,status=200)
+    
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+    
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
