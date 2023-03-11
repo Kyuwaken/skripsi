@@ -3,8 +3,12 @@ from .transaction_serializer import TransactionResponseSerializer
 from .master_status_serializer import MasterStatusSerializer
 from ..models import TransactionStatus
 
-
 class TransactionStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TransactionStatus
+        fields = '__all__'
+
+class TransactionStatusResponseSerializer(serializers.ModelSerializer):
     transactionId = TransactionResponseSerializer(many=False)
     masterStatusId = MasterStatusSerializer(many=False)
     class Meta:

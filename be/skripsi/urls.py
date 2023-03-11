@@ -19,8 +19,20 @@ from rest_framework import routers
 from api import viewsets
 
 router = routers.DefaultRouter()
-router.register(r'product', viewsets.ProductViewSet)
+router.register(r'cart', viewsets.CartViewSet)
+router.register(r'category', viewsets.CategoryViewSet)
+router.register(r'country', viewsets.CountryViewSet)
 router.register(r'courier', viewsets.CourierViewSet)
+router.register(r'favourite', viewsets.FavouriteViewSet)
+router.register(r'master_status', viewsets.MasterStatusViewSet)
+router.register(r'payment_method', viewsets.PaymentMethodViewSet)
+router.register(r'payment_type', viewsets.PaymentTypeViewSet)
+router.register(r'payment', viewsets.PaymentViewSet)
+router.register(r'product_review', viewsets.ProductReviewViewSet)
+router.register(r'product', viewsets.ProductViewSet)
+router.register(r'transaction_detail', viewsets.TransactionDetailViewSet)
+router.register(r'transaction_status', viewsets.TransactionStatusViewSet)
+router.register(r'transaction', viewsets.TransactionViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
