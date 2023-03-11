@@ -1,15 +1,17 @@
 [
     {
+        "username":"ian",
         "name": "Ian",
-        "roleId" : 1,
+        "role" : 1,
         "phone": "08213945853",
         "email": "vincentchris012@gmail.com",
         "password": "admin123",
         "address": "Kebon Kacang 14 no 27, Kecamatan Kebon Kacang, Jakarta"
     },
     {
+        "username":"stephen",
         "name": "Stephen",
-        "roleId" : 2,
+        "role" : 2,
         "phone": "08124923824",
         "email": "stephenac@gmail.com",
         "password": "admin123",
@@ -17,8 +19,9 @@
 
     },
     {
+        "username":"elbert",
         "name": "Elbert",
-        "roleId" : 3,
+        "role" : 3,
         "phone": "0819238242423",
         "email": "elbertchainatra@gmail.com",
         "password": "admin123",

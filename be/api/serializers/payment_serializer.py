@@ -10,9 +10,9 @@ class PaymentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PaymentResponseSerializer(serializers.ModelSerializer):
-    transactionId = TransactionSerializer(many=False)
-    paymentTypeId = PaymentTypeSerializer(many=False)
-    paymentMethodId = PaymentMethodSerializer(many=False)
+    transaction = TransactionSerializer(many=False)
+    paymentType = PaymentTypeSerializer(many=False)
+    paymentMethod = PaymentMethodSerializer(many=False)
     class Meta:
         model = Payment
         fields = '__all__'

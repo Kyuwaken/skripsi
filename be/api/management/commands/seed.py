@@ -26,8 +26,8 @@ class Command(BaseCommand):
             data_list = json.load(f)
 
         for data in data_list:
-            role = Role.objects.get(pk=data['roleId'])
-            data['roleId'] = role
+            role = Role.objects.get(pk=data['role'])
+            data['role'] = role
             User.objects.get_or_create(
                 name=data['name'], defaults=data)
         self.comment("Seeding User")
@@ -37,6 +37,6 @@ class Command(BaseCommand):
                           comment)+self.style.SUCCESS('OK'))
 
     def handle(self, *args, **options):
-        # self.seed_role()
-        # self.seed_category()
+        self.seed_role()
+        self.seed_category()
         self.seed_user()

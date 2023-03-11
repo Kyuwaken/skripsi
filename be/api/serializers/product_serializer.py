@@ -10,8 +10,8 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProductResponseSerializer(serializers.ModelSerializer):
-    categoryId = CategorySerializer(many=False)
-    sellerId = UserSerializer(many=False)
+    category = CategorySerializer(many=False)
+    seller = UserSerializer(many=False)
     class Meta:
         model = Product
         fields = '__all__'

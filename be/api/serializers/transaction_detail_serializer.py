@@ -9,8 +9,8 @@ class TransactionDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TransactionDetailResponseSerializer(serializers.ModelSerializer):
-    transactionId = TransactionResponseSerializer(many=False)
-    productId = ProductResponseSerializer(many=False)
+    transaction = TransactionResponseSerializer(many=False)
+    product = ProductResponseSerializer(many=False)
     class Meta:
         model = TransactionDetail
         fields = '__all__'

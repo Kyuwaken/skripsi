@@ -13,9 +13,10 @@ from .role_model import Role
 from .transaction_detail_model import TransactionDetail
 from .transaction_model import Transaction
 from .transaction_status_model import TransactionStatus
-from .seller_model import Seller
-from .customer_model import Customer
-from .admin_model import Admin
+# from .seller_model import Seller
+# from .customer_model import Customer
+# from .admin_model import Admin
+from .user_model import User
 from .log_model import Log
 
 app = [

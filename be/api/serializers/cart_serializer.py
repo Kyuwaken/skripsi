@@ -11,8 +11,8 @@ class CartSerializer(serializers.ModelSerializer):
 
 
 class CartResponseSerializer(serializers.ModelSerializer):
-    userId = UserSerializer(many=False)
-    productId = ProductResponseSerializer(many=False)
+    user = UserSerializer(many=False)
+    product = ProductResponseSerializer(many=False)
     class Meta:
         model = Cart
         fields = '__all__'

@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from ..serializers import ProductSerializer
+from ..serializers import ProductSerializer, ProductResponseSerializer
 from rest_framework.response import Response
 from ..models import Product
 from api.permissions import IsAuthenticated, IsSellerOrReadOnly
@@ -10,11 +10,11 @@ from api.utils import custom_viewset
 class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
-    permission_classes = (IsAuthenticated, IsSellerOrReadOnly)
+    # permission_classes = (IsAuthenticated, IsSellerOrReadOnly)
 
     def list(self, request):
         queryset = self.queryset.select_related('category')
-        serializer = ProductSerializer(queryset, many=True)
+        serializer = ProductResponseSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
     
     def retrieve(self, request, *args, **kwargs):
@@ -22,7 +22,7 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
             product =  self.queryset.get(pk=kwargs['pk']).select_related('category')
         except ObjectDoesNotExist:
             raise NotFoundException("Product")
-        serializer = ProductSerializer(product, many=False)
+        serializer = ProductResponseSerializer(product, many=False)
         return Response(serializer.data,status=200)
     
     def create(self, request, *args, **kwargs):

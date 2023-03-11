@@ -10,8 +10,8 @@ class ProductReviewSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProductReviewResponseSerializer(serializers.ModelSerializer):
-    customerId = UserSerializer(many=False)
-    productId = ProductResponseSerializer(many=False)
+    customer = UserSerializer(many=False)
+    product = ProductResponseSerializer(many=False)
     class Meta:
         model = ProductReview
         fields = '__all__'

@@ -10,8 +10,8 @@ class TransactionSerializer(serializers.ModelSerializer):
     
 
 class TransactionResponseSerializer(serializers.ModelSerializer):
-    sellerId = UserSerializer(many=False)
-    customerId = UserSerializer(many=False)
+    seller = UserSerializer(many=False)
+    customer = UserSerializer(many=False)
     class Meta:
         model = Transaction
         fields = '__all__'

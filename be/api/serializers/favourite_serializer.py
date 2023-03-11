@@ -9,8 +9,8 @@ class FavouriteSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class FavouriteResponseSerializer(serializers.ModelSerializer):
-    productId = ProductSerializer(many=False)
-    userId = UserSerializer(many=False)
+    product = ProductSerializer(many=False)
+    user = UserSerializer(many=False)
     class Meta:
         model = Favourite
         fields = '__all__'

@@ -13,4 +13,5 @@ from .role_serializer import Role
 from .transaction_detail_serializer import TransactionDetailSerializer, TransactionDetailResponseSerializer
 from .transaction_serializer import TransactionSerializer, TransactionResponseSerializer
 from .transaction_status_serializer import TransactionStatusSerializer, TransactionStatusResponseSerializer
-from .user_serializer import AdminSerializer,SellerSerializer,CustomerSerializer
+# from .user_serializer import AdminSerializer,SellerSerializer,CustomerSerializer
+from .user_serializer import UserSerializer, UserResponseSerializer
