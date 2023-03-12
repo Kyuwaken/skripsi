@@ -35,5 +35,8 @@ router.register(r'transaction_status', viewsets.TransactionStatusViewSet)
 router.register(r'transaction', viewsets.TransactionViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('login/', viewsets.LoginView.as_view()),
+    path('logout/', viewsets.LogoutView.as_view()),
+    path('login/user/', viewsets.LoginUserView.as_view()), # for checking role
     path('', include(router.urls)),
 ]

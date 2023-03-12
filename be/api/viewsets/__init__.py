@@ -13,3 +13,6 @@ from .transaction_detail_view import TransactionDetailViewSet
 from .transaction_status_view import TransactionStatusViewSet
 from .transaction_view import TransactionViewSet
 from .user_view import UserViewSet
+from .auth.login_view import LoginView
+from .auth.logout_view import LogoutView
+from .auth.login_user_view import LoginUserView

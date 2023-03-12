@@ -2,6 +2,8 @@ import auto_prefetch
 from django_softdelete.models import SoftDeleteModel
 from api.models.abstract_model import TimestampModel, UserTrackModel
 from django.db import models
+from cryptography.fernet import Fernet
+
 
 class User(TimestampModel, UserTrackModel, SoftDeleteModel):
     username = models.CharField(max_length=255, unique=True)
@@ -16,3 +18,7 @@ class User(TimestampModel, UserTrackModel, SoftDeleteModel):
         'Country', on_delete=models.CASCADE, null=True, db_constraint=False)
     def __str__(self) -> str:
         return self.name
+    
+    def save(self, *args, **kwargs):
+        self.password = Fernet.encrypt(self.password.encode()).decode()
+        return super().save(*args,**kwargs)

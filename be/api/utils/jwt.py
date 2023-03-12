@@ -4,10 +4,11 @@ from datetime import timedelta
 from django.conf import settings
 from django.utils import timezone
 
-def generate_token(id, username, display_name, role):
+def generate_token(id, username, name, role):
     payload = {
         "id": id,
-        "name": username,
+        "username": username,
+        "name": name,
         "role": role
     }
     encoded_jwt = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
