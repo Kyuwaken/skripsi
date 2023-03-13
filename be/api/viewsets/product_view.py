@@ -26,6 +26,7 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         return Response(serializer.data,status=200)
     
     def create(self, request, *args, **kwargs):
+        breakpoint()
         return super().create(request, *args, **kwargs)
     
     def update(self, request, *args, **kwargs):
