@@ -3,6 +3,7 @@ from django_softdelete.models import SoftDeleteModel
 from api.models.abstract_model import TimestampModel, UserTrackModel
 from django.db import models
 from cryptography.fernet import Fernet
+from django.conf import settings
 
 
 class User(TimestampModel, UserTrackModel, SoftDeleteModel):
@@ -20,5 +21,6 @@ class User(TimestampModel, UserTrackModel, SoftDeleteModel):
         return self.name
     
     def save(self, *args, **kwargs):
-        self.password = Fernet.encrypt(self.password.encode()).decode()
+        fernet = Fernet(settings.FERNET_KEY)
+        self.password = fernet.encrypt(self.password.encode()).decode()
         return super().save(*args,**kwargs)

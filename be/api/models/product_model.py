@@ -11,7 +11,7 @@ class Product(TimestampModel, UserTrackModel, SoftDeleteModel):
         'User', on_delete=models.CASCADE, null=True, db_constraint=False)
     price = models.CharField(max_length=255)
     preorderTime = models.CharField(max_length=255)
-    prodcutDescription = models.TextField()
+    productDescription = models.TextField()
     productPhoto = models.ImageField(upload_to='products/', null=True)
     def __str__(self) -> str:
         return self.name
