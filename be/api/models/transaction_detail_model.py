@@ -9,4 +9,4 @@ class TransactionDetail(TimestampModel, UserTrackModel, SoftDeleteModel):
     product = auto_prefetch.ForeignKey(
         'Product', on_delete=models.CASCADE, null=True, db_constraint=False)
     quantity = models.IntegerField()
-    productPrice = models.CharField(max_length=255)
+    productPrice = models.BigIntegerField(default=0)

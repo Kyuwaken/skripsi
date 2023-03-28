@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from ..serializers import PaymentTypeSerializer
 from ..models import PaymentType
-from rest_framework.permissions import IsAuthenticated
+from api.permissions import IsAuthenticated
 from api.utils import custom_viewset
 
 class PaymentTypeViewSet(custom_viewset.CustomModelWithHistoryViewSet):

@@ -1,4 +1,4 @@
-from api.models import RequestLog
+from api.models.request_log_model import RequestLog
 from api.utils.triple_des import TripleDES
 import json
 from django.conf import settings

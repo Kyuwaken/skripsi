@@ -11,6 +11,6 @@ class Transaction(TimestampModel, UserTrackModel, SoftDeleteModel):
     dateOrdered = models.DateTimeField(auto_now_add=True)
     # statusTransaksi = models.CharField(max_length=255)
     noResi = models.TextField()
-    courierName = models.CharField(max_length=255)
-    courierPrice = models.CharField(max_length=255)
+    courierName = models.CharField(max_length=255,blank=True,null=True)
+    courierPrice = models.IntegerField(blank=True,null=True)
     

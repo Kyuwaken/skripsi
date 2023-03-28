@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from ..serializers import ProductReviewSerializer, ProductReviewResponseSerializer
 from ..models import ProductReview
-from rest_framework.permissions import IsAuthenticated
+from api.permissions import IsAuthenticated
 from api.utils import custom_viewset
 from django.db.models.base import ObjectDoesNotExist
 from api.exceptions import NotAuthorizedException,NotFoundException

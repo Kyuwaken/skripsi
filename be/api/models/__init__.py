@@ -9,6 +9,7 @@ from .payment_model import Payment
 from .payment_type_model import PaymentType
 from .product_model import Product
 from .product_review_model import ProductReview
+from .product_image_model import ProductImage
 from .role_model import Role
 from .transaction_detail_model import TransactionDetail
 from .transaction_model import Transaction
@@ -18,6 +19,7 @@ from .transaction_status_model import TransactionStatus
 # from .admin_model import Admin
 from .user_model import User
 from .log_model import Log
+from .request_log_model import RequestLog
 
 app = [
     'Cart',
@@ -31,9 +33,11 @@ app = [
     'PaymentType',
     'Product',
     'ProductReview',
+    'ProductImage',
     'Role',
     'TransactionDetail',
     'Transaction',
     'TransactionStatus',
-    'User'
+    'User',
+    'RequestLog'
 ]

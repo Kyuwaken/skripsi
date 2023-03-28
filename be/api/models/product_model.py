@@ -9,10 +9,9 @@ class Product(TimestampModel, UserTrackModel, SoftDeleteModel):
         'Category', on_delete=models.CASCADE, null=True, db_constraint=False)
     seller = auto_prefetch.ForeignKey(
         'User', on_delete=models.CASCADE, null=True, db_constraint=False)
-    price = models.CharField(max_length=255)
-    preorderTime = models.CharField(max_length=255)
+    price = models.IntegerField(default=0)
+    preorderTime = models.IntegerField(null=True,blank=True)
     productDescription = models.TextField()
-    productPhoto = models.ImageField(upload_to='products/', null=True)
     def __str__(self) -> str:
         return self.name
     

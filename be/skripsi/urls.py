@@ -35,6 +35,9 @@ router.register(r'product', viewsets.ProductViewSet)
 router.register(r'transaction_detail', viewsets.TransactionDetailViewSet)
 router.register(r'transaction_status', viewsets.TransactionStatusViewSet)
 router.register(r'transaction', viewsets.TransactionViewSet)
+router.register(r'product-image', viewsets.ProductImageViewSet)
+router.register(r'user', viewsets.UserViewSet)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', viewsets.LoginView.as_view()),

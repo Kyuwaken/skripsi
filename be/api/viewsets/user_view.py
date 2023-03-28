@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from ..serializers import UserSerializer, UserResponseSerializer
 from ..models import User
-from rest_framework.permissions import IsAuthenticated
+from api.permissions import IsAuthenticated
 from django.db.models.base import ObjectDoesNotExist
 from api.exceptions import NotAuthorizedException,NotFoundException
 from rest_framework.response import Response
