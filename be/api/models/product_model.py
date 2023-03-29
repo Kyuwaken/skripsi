@@ -3,6 +3,8 @@ import auto_prefetch
 from django_softdelete.models import SoftDeleteModel
 from api.models.abstract_model import TimestampModel, UserTrackModel
 
+# def file_path(instance,filename):
+#     return f"{instance.seller.username}/{instance.name}/{filename}"
 class Product(TimestampModel, UserTrackModel, SoftDeleteModel):
     name = models.CharField(max_length=255)
     category = auto_prefetch.ForeignKey(
@@ -12,6 +14,7 @@ class Product(TimestampModel, UserTrackModel, SoftDeleteModel):
     price = models.IntegerField(default=0)
     preorderTime = models.IntegerField(null=True,blank=True)
     productDescription = models.TextField()
+    weight = models.IntegerField(default=0) # in gram
     def __str__(self) -> str:
         return self.name
     

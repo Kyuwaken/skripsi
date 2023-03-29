@@ -9,7 +9,8 @@ from api.utils import custom_viewset
 from rest_framework.decorators import action
 from api.utils.validation_input import validate_integer
 from api.exceptions import NotAuthorizedException,NotFoundException, ValidationException
-import base64
+import base64, copy
+from django.db import transaction
 
 class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     serializer_class = ProductSerializer
@@ -33,6 +34,58 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         queryset = self.queryset.select_related('category').prefetch_related('product_image')
         serializer = ProductResponseImageSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
+    
+    @action(detail=False, methods=['get'])
+    def list_with_image(self, request):
+        queryset = self.queryset.select_related('category').prefetch_related('product_image')
+        serializer = ProductResponseSerializer(queryset, many=True)
+        data = copy.deepcopy(serializer.data)
+        
+        images = ProductImage.objects.all()
+        image_path = {}
+        for i in images:
+            if i.product.id not in image_path:
+                image_path[i.product.id] = i.productPhoto.path
+        for i in data:
+            image = {}
+            path = image_path[i['id']]
+            with open(path,'rb') as img_file:
+                extension = str(path).split('.')[-1].lower()
+                b64_string = base64.b64encode(img_file.read())
+                image['id'] = i['id']
+                image['path'] = path
+                image['imageType']= "image/"+extension
+                image['stringBase64'] = b64_string
+            breakpoint()
+            i['product_image'] = image
+        return Response(data, status=200)
+    
+    @action(detail=False, methods=['post'])
+    def getByCategory(self, request, *args, **kwargs):
+        validate_integer(request.data,['category'])
+        category_id = request.data['category']
+        queryset = self.queryset.filter(category_id=category_id).select_related('category')
+        serializer = ProductResponseSerializer(queryset, many=True)
+        data = copy.deepcopy(serializer.data)
+        
+        images = ProductImage.objects.all()
+        image_path = {}
+        for i in images:
+            if i.product.id not in image_path:
+                image_path[i.product.id] = i.productPhoto.path
+        for i in data:
+            image = {}
+            path = image_path[i['id']]
+            with open(path,'rb') as img_file:
+                extension = str(path).split('.')[-1].lower()
+                b64_string = base64.b64encode(img_file.read())
+                image['id'] = i['id']
+                image['path'] = path
+                image['imageType']= "image/"+extension
+                image['stringBase64'] = b64_string
+            breakpoint()
+            i['product_image'] = image
+        return Response(data, status=200)
     
     @action(detail=True, methods=['get'])
     def retrieve_with_image(self, request, *args, **kwargs):
@@ -59,14 +112,20 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         data['product_image'] = image_resp
         return Response(data,status=200)
     
+    @transaction.atomic
     @action(detail=False, methods=['post'])
     def create_product_with_image(self, request, *args, **kwargs):
-        product = super().create(request, *args, **kwargs)
+        breakpoint()
+        product = Product.objects.filter(name__iexact = request.data['name'],seller_id=request.custom_user['id'])
+        if product:
+            raise ValidationException('Product ' + request.data['name'] + ' in seller '+ request.custom_user['name'] + ' already exists')
+        super().create(request, *args, **kwargs)
+        product = Product.objects.get(name = request.data['name'],seller_id=request.custom_user['id'],price=request.data['price'])
         self.validate_max_size(request)
         self.validate_type_file(request)
-        data = request.data['productPhoto']
+        data = request.data.pop('productPhoto')
         for i in data:
-            ProductImage.objects.create(productPhoto=i,product=product)
+            ProductImage.objects.create(productPhoto=i,product_id=product.id)
         return Response(status=200)
     
     def retrieve(self, request, *args, **kwargs):
@@ -86,13 +145,4 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
-    
-    @action(detail=False, methods=['post'])
-    def getByCategory(self, request, *args, **kwargs):
-        validate_integer(request.data,['category'])
-        category_id = request.data['category']
-        queryset = self.queryset.filter(category_id=category_id).select_related('category')
-        serializer = ProductResponseSerializer(queryset, many=True)
-        return Response(serializer.data, status=200)
-    
     

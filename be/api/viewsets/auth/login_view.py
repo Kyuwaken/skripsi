@@ -70,7 +70,12 @@ class LoginView(APIView):
         password = request.data['password'] #delete if use fernet
         # breakpoint()
         try:
-            login_user = User.objects.get(username=username,role__name = user_role,password=password)
+            login_user = User.objects.get(username=username,role__name = user_role)
+            fernet = Fernet(settings.FERNET_KEY)
+            password_db = fernet.decrypt(login_user.password)
+            password_request = fernet.decrypt(password)
+            if password_db != password_request:
+                raise InvalidCredentialException()
         except:
             raise InvalidCredentialException()
 
