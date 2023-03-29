@@ -1,0 +1,20 @@
+[
+    {
+        "name":"Customer request the products to the Seller, waiting to Seller calculate the price include expedition"
+    },
+    {
+        "name":"Seller already calculate the price, waiting the Customer to pay the DP"
+    },
+    {
+        "name":"Customer already paid the DP, waiting the Seller to buy the products"
+    },
+    {
+        "name":"The products already bought by Seller, waiting to be fully paid by Customer"
+    },
+    {
+        "name":"Customer already fully paid the DP, waiting the Seller to send the products"
+    },
+    {
+        "name":"The products already received by Customer"
+    }
+]
