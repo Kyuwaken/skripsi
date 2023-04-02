@@ -14,7 +14,6 @@ class User(TimestampModel, UserTrackModel, SoftDeleteModel):
         'Role', on_delete=models.CASCADE, null=True, db_constraint=False)
     phone = models.CharField(max_length=255, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
-    address = models.TextField(blank=True, null=True)
     country = auto_prefetch.ForeignKey(
         'Country', on_delete=models.CASCADE, null=True, db_constraint=False)
     def __str__(self) -> str:

@@ -1,15 +1,14 @@
-from ..utils import send_mail, send_notification, sendApproval
+from api.utils.send_email_util import send_mail, send_notification, sendApproval
 from rest_framework.response import Response
 import requests
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 import json
 from rest_framework import status
-from ..models import Notif
-from custom_viewset.models import  Log
-from custom_viewset.utils.generate import generate_structure
-from custom_viewset import get_current_user
-from custom_viewset.utils.serialize import Serializer
+from ..models import Notif, Log
+from api.utils.generate import generate_structure
+from api.middleware.custom_get_current_middleware import get_current_user
+from api.utils.serialize import Serializer
 from django.core.serializers.json import DjangoJSONEncoder
 
 class SendNotificationViewSet(APIView):
