@@ -9,7 +9,7 @@ from api.utils import custom_viewset
 from rest_framework.decorators import action
 from api.utils.validation_input import validate_integer
 from api.exceptions import NotAuthorizedException,NotFoundException, ValidationException
-import base64, copy
+import base64, copy, os
 from django.db import transaction
 
 class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
@@ -35,7 +35,7 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         serializer = ProductResponseImageSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
     
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], url_name='list-with-image')
     def list_with_image(self, request):
         queryset = self.queryset.select_related('category').prefetch_related('product_image')
         serializer = ProductResponseSerializer(queryset, many=True)
@@ -60,7 +60,7 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
             i['product_image'] = image
         return Response(data, status=200)
     
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'], url_name='get-by-category')
     def getByCategory(self, request, *args, **kwargs):
         validate_integer(request.data,['category'])
         category_id = request.data['category']
@@ -87,7 +87,7 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
             i['product_image'] = image
         return Response(data, status=200)
     
-    @action(detail=True, methods=['get'])
+    @action(detail=True, methods=['get'], url_name='retrieve-with-image')
     def retrieve_with_image(self, request, *args, **kwargs):
         try:
             product =  self.queryset.get(pk=kwargs['pk'])
@@ -113,7 +113,7 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         return Response(data,status=200)
     
     @transaction.atomic
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'], url_name='create-product-with-image')
     def create_product_with_image(self, request, *args, **kwargs):
         breakpoint()
         product = Product.objects.filter(name__iexact = request.data['name'],seller_id=request.custom_user['id'])
@@ -140,8 +140,26 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
     
+    @transaction.atomic
     def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
+        try:
+            product = self.queryset.get(pk=kwargs['pk'])
+        except ObjectDoesNotExist:
+            raise NotFoundException("Product")
+        self.validate_max_size(request)
+        self.validate_type_file(request)
+        data = request.data.pop('productPhoto')
+        product_images = ProductImage.objects.filter(product_id=kwargs['pk'])
+        path = []
+        for i in product_images:
+            path.append(i.productPhoto.path)
+        product_images.delete()
+        for i in path:
+            if os.path.isfile(i):
+                os.remove(i)
+        for i in data:
+            ProductImage.objects.create(productPhoto=i,product_id=product.id)
+        return Response(status=200)
     
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
