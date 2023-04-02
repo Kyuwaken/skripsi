@@ -1,18 +1,24 @@
 [
     {
-        "name":"Customer request the products to the Seller, waiting to Seller calculate the price include expedition"
+        "name":"Customer already paid the DP, waiting the Seller confirmation"
     },
     {
-        "name":"Seller already calculate the price, waiting the Customer to pay the DP"
+        "name":"Seller accept the transaction, waiting the Seller to buy the products"
     },
     {
-        "name":"Customer already paid the DP, waiting the Seller to buy the products"
+        "name":"Seller reject the transaction, transaction/order cancelled"
     },
     {
         "name":"The products already bought by Seller, waiting to be fully paid by Customer"
     },
     {
+        "name":"Seller exceeded Pre Order time limit, refund will be made to the customer"
+    },
+    {
         "name":"Customer already fully paid the DP, waiting the Seller to send the products"
+    },
+    {
+        "name":"The product is being delivered by expedition service, waiting the product to be delivered to Customer"
     },
     {
         "name":"The products already received by Customer"
