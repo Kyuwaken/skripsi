@@ -15,6 +15,9 @@
         "name":"Seller exceeded Pre Order time limit, refund will be made to the customer"
     },
     {
+        "name":"Customer exceeded payment time limit, the DP will be forwarded to the seller"
+    },
+    {
         "name":"Customer already fully paid the DP, waiting the Seller to send the products"
     },
     {

@@ -8,9 +8,11 @@ class Transaction(TimestampModel, UserTrackModel, SoftDeleteModel):
         'User', on_delete=models.CASCADE, null=True, db_constraint=False, related_name='seller')
     customer = auto_prefetch.ForeignKey(
         'User', on_delete=models.CASCADE, null=True, db_constraint=False, related_name='customer')
-    dateOrdered = models.DateTimeField(auto_now_add=True)
+    # dateOrdered = models.DateTimeField(auto_now_add=True)
     # statusTransaksi = models.CharField(max_length=255)
     noResi = models.TextField(blank=True, null=True)
+    preOrderTime = models.IntegerField(blank=True,null=True)
     courierName = models.CharField(max_length=255,blank=True,null=True)
     courierPrice = models.IntegerField(blank=True,null=True)
+    address = models.TextField()
     
