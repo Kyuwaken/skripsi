@@ -14,3 +14,13 @@ class FavouriteResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favourite
         fields = '__all__'
+    
+    def get_created_by(self, obj):
+        if obj.created_by:
+            return obj.created_by.display_name
+        return None
+
+    def get_updated_by(self, obj):
+        if obj.updated_by:
+            return obj.updated_by.display_name
+        return None

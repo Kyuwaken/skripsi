@@ -31,3 +31,13 @@ class ProductResponseImageSerializer(serializers.ModelSerializer):
                   'price','preorderTime','productDescription',
                   'created_at','updated_at','created_by','updated_by',
                   'is_deleted','deleted_at','product_image']
+    
+    def get_created_by(self, obj):
+        if obj.created_by:
+            return obj.created_by.display_name
+        return None
+
+    def get_updated_by(self, obj):
+        if obj.updated_by:
+            return obj.updated_by.display_name
+        return None

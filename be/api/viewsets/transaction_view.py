@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from ..serializers import TransactionSerializer,TransactionResponseSerializer
+from ..serializers import TransactionSerializer,TransactionResponseSerializer, PaymentSerializer, TransactionResponseDetailSerializer
 from ..models import Transaction, Product, User, TransactionDetail, Payment, TransactionStatus
 from api.permissions import IsAuthenticated
 from api.utils import custom_viewset
@@ -8,6 +8,7 @@ from api.exceptions import NotAuthorizedException,NotFoundException
 from rest_framework.response import Response
 from rest_framework.decorators import action
 import copy, datetime
+from api.utils.validation_input import validate_input
 
 class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     serializer_class = TransactionSerializer
@@ -24,15 +25,18 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
             transaction =  self.queryset.get(pk=kwargs['pk']).select_related('user')
         except ObjectDoesNotExist:
             raise NotFoundException("Transaction")
-        serializer = TransactionResponseSerializer(transaction, many=False)
+        serializer = TransactionResponseDetailSerializer(transaction, many=False)
         return Response(serializer.data,status=200)
     
     # create transaction, banyak transaction detail tergantung barang dan status transaksi, 1 payment
     # total ada lebih dari 1 transaction detail, 2 payment yaitu DP dan FP
     def create(self, request, *args, **kwargs):
+        validate_input(request.data,['product','payment_method','address','nominal'])
         customer = request.custom_user['id']
         products = request.data['product'].pop()
         payment_method = request.data['payment_method']
+        address = request.data['address']
+        nominal = request.data['nominal']
         tr_detail = []
         for i in products:
             if i == 0: seller = Product.objects.get(pk=i['product_id']).seller.id
@@ -44,13 +48,13 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
             detail['product_price'] = product_price
             detail['quantity'] = quantity
             tr_detail.append(copy.deepcopy(detail))
-        transaction = Transaction.objects.create(cutomer_id = customer, seller_id = seller)
+        transaction = Transaction.objects.create(cutomer_id = customer, seller_id = seller, address = address)
         serz = TransactionSerializer(transaction,many=False)
         id_transaction = serz.data['id']
         for i in tr_detail:
             transaction_detail = TransactionDetail.objects.create(transaction_id=id_transaction,**i)
         transaction_status = TransactionStatus.objects.create(transaction_id=id_transaction, masterStatus_id=1)
-        payment = Payment.objects.create(transaction_id=id_transaction, paymentType_id=1, paymentMethod_id=payment_method, paymentStatus=1)
+        payment = Payment.objects.create(transaction_id=id_transaction, paymentType_id=1, paymentMethod_id=payment_method, paymentStatus=1, nominal=nominal)
         return Response(status=200)
     
     # create job that already status already bought by seller, waiting to be fully paid by customer after 3 days auto cancel
@@ -75,5 +79,42 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
             if i.dateOrdered + datetime.timedelta(days=i.transaction.preOrderTime) > datetime.datetime.now():
                 TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=5)
         return Response(status=200)
-
     
+    # @action(detail=False, methods=['post'], url_name='full-payment')
+    # def transaction_full_payment(self, request, *args, **kwargs):
+    #     validate_input(request.data,['transaction','paymentType','paymentMethod','nominal'])
+    #     payment = Payment.objects.create(**request.data)
+    #     serz = PaymentSerializer(payment,many=False)
+    #     return Response(serz.data,status=200)
+
+    @action(detail=False, methods=['post'], url_name='get-down-payment')
+    def getDetailDownPayment(self, request, *args, **kwargs):
+        validate_input(request.data,['id'])
+        transactionDetail = TransactionDetail.objects.filter(transaction_id=request.data['id'])
+        total = 0
+        for i in transactionDetail:
+            total += i.productPrice * i.quantity
+        payment_dp = total * 20 / 100
+        data = {
+            "total": total,
+            "dp": int(payment_dp)
+        }
+        return Response(data,status=200)
+    
+    @action(detail=False, methods=['post'], url_name='get-full-payment')
+    def getDetailFullPayment(self, request, *args, **kwargs):
+        validate_input(request.data,['id'])
+        payment_dp = Payment.objects.get(transaction_id=request.data['id'],paymentType_id=1)
+        transactionDetail = TransactionDetail.objects.filter(transaction_id=request.data['id'])
+        total = 0
+        for i in transactionDetail:
+            total += i.productPrice * i.quantity
+        grandTotal = total - payment_dp.nominal
+        data = {
+            "total": total,
+            "dp": payment_dp.nominal,
+            "grandTotal": grandTotal
+        }
+        return Response(data,status=200)
+        
+
