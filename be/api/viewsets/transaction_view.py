@@ -61,7 +61,7 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         transaction_status_exclude = [i.id for i in TransactionStatus.objects.filter(transaction__id__in=list_tr_id) if i.masterStatus.id > 4]
         transaction_status_to_check = TransactionStatus.objects.filter(masterStatus_id=4).exclude(id__in = transaction_status_exclude)
         for i in transaction_status_to_check:
-            if i.dateOrdered + 3 > datetime.datetime.now():
+            if i.dateOrdered + datetime.timedelta(days=3) > datetime.datetime.now():
                 TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=6)
         return Response(status=200)
     
@@ -72,7 +72,7 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         transaction_status_exclude = [i.id for i in TransactionStatus.objects.filter(transaction__id__in=list_tr_id) if i.masterStatus.id > 2]
         transaction_status_to_check = TransactionStatus.objects.filter(masterStatus_id=2).exclude(id__in = transaction_status_exclude)
         for i in transaction_status_to_check:
-            if i.dateOrdered + i.transaction.preOrderTime > datetime.datetime.now():
+            if i.dateOrdered + datetime.timedelta(days=i.transaction.preOrderTime) > datetime.datetime.now():
                 TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=5)
         return Response(status=200)
 
