@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .product_serializer import ProductResponseSerializer
+from .product_serializer import ProductResponseImageSerializer
 from .user_serializer import  UserSerializer
 from ..models import ProductReview
 
@@ -11,7 +11,7 @@ class ProductReviewSerializer(serializers.ModelSerializer):
 
 class ProductReviewResponseSerializer(serializers.ModelSerializer):
     customer = UserSerializer(many=False)
-    product = ProductResponseSerializer(many=False)
+    product = ProductResponseImageSerializer(many=False)
     class Meta:
         model = ProductReview
         fields = '__all__'

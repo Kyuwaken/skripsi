@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .category_serializer import CategorySerializer
 from .user_serializer import UserSerializer
 from ..models import Product, ProductImage
+import base64
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -17,9 +18,18 @@ class ProductResponseSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProductImageSerializer(serializers.ModelSerializer):
+    imageType = serializers.SerializerMethodField()
+    stringBase64 = serializers.SerializerMethodField()
     class Meta:
         model = ProductImage
-        fields = ['id','productPhoto']
+        fields = ['id','imageType','stringBase64']
+    def get_imageType(self,obj):
+        with open(obj.productPhoto.path, 'rb') as img_file:
+            extension = str(obj.productPhoto.path).split('.')[-1].lower()
+            return "image/"+extension
+    def get_stringBase64(self,obj):
+        with open(obj.productPhoto.path, 'rb') as img_file:
+            return base64.b64encode(img_file.read())
 
 class ProductResponseImageSerializer(serializers.ModelSerializer):
     category = CategorySerializer(many=False)

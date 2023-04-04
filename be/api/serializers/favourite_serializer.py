@@ -1,5 +1,5 @@
 from .user_serializer import UserSerializer
-from .product_serializer import ProductSerializer
+from .product_serializer import ProductResponseImageSerializer
 from rest_framework import serializers
 from ..models import Favourite
 
@@ -9,7 +9,7 @@ class FavouriteSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class FavouriteResponseSerializer(serializers.ModelSerializer):
-    product = ProductSerializer(many=False)
+    product = ProductResponseImageSerializer(many=False)
     user = UserSerializer(many=False)
     class Meta:
         model = Favourite

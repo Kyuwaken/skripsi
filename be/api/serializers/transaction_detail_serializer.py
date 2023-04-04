@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .product_serializer import ProductResponseSerializer
+from .product_serializer import ProductResponseImageSerializer
 from .user_serializer import UserSerializer
 from ..models import TransactionDetail, Transaction
 
@@ -17,7 +17,7 @@ class TransactionResponseSerializer(serializers.ModelSerializer):
 
 class TransactionDetailResponseSerializer(serializers.ModelSerializer):
     transaction = TransactionResponseSerializer(many=False)
-    product = ProductResponseSerializer(many=False)
+    product = ProductResponseImageSerializer(many=False)
     total = serializers.SerializerMethodField()
     class Meta:
         model = TransactionDetail

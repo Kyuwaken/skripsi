@@ -1,5 +1,5 @@
 from .user_serializer import UserSerializer
-from .product_serializer import ProductResponseSerializer
+from .product_serializer import ProductResponseImageSerializer
 from rest_framework import serializers
 from ..models import Cart
 
@@ -12,7 +12,7 @@ class CartSerializer(serializers.ModelSerializer):
 
 class CartResponseSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False)
-    product = ProductResponseSerializer(many=False)
+    product = ProductResponseImageSerializer(many=False)
     class Meta:
         model = Cart
         fields = '__all__'
