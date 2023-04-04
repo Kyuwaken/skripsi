@@ -72,7 +72,7 @@ MIDDLEWARE = [
 
     # custom middleware
     'api.middleware.custom_auth_middleware.CustomAuthMiddleware',
-    # 'api.middleware.custom_request_log_middleware.RequestLogMiddleware',
+    'api.middleware.custom_request_log_middleware.RequestLogMiddleware',
 ]
 
 # buat allow origin

@@ -115,7 +115,6 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     @transaction.atomic
     @action(detail=False, methods=['post'], url_name='create-product-with-image')
     def create_product_with_image(self, request, *args, **kwargs):
-        breakpoint()
         product = Product.objects.filter(name__iexact = request.data['name'],seller_id=request.custom_user['id'])
         if product:
             raise ValidationException('Product ' + request.data['name'] + ' in seller '+ request.custom_user['name'] + ' already exists')
@@ -124,7 +123,9 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         self.validate_max_size(request)
         self.validate_type_file(request)
         data = request.data.pop('productPhoto')
-        for i in data:
+        for index,i in enumerate(data):
+            last = str(i.name).split('.')
+            i.name = str(index+1) + '.'+last[-1]
             ProductImage.objects.create(productPhoto=i,product_id=product.id)
         return Response(status=200)
     
@@ -157,7 +158,9 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         for i in path:
             if os.path.isfile(i):
                 os.remove(i)
-        for i in data:
+        for index,i in enumerate(data):
+            last = str(i.name).split('.')
+            i.name = str(index+1) + '.'+last[-1]
             ProductImage.objects.create(productPhoto=i,product_id=product.id)
         return Response(status=200)
     

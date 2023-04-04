@@ -1,11 +1,18 @@
 from rest_framework import serializers
-from .transaction_serializer import TransactionResponseSerializer
 from .product_serializer import ProductResponseSerializer
-from ..models import TransactionDetail
+from .user_serializer import UserSerializer
+from ..models import TransactionDetail, Transaction
 
 class TransactionDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = TransactionDetail
+        fields = '__all__'
+
+class TransactionResponseSerializer(serializers.ModelSerializer):
+    seller = UserSerializer(many=False)
+    customer = UserSerializer(many=False)
+    class Meta:
+        model = Transaction
         fields = '__all__'
 
 class TransactionDetailResponseSerializer(serializers.ModelSerializer):

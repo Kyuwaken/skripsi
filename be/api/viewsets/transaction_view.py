@@ -80,6 +80,16 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
                 TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=5)
         return Response(status=200)
     
+    @action(detail=False, methods=['get'], url_name='checking-due-date-sending-product')
+    def job_checking_due_date_sending_product(self,request):
+        list_tr_id = [i.transaction.id for i in TransactionStatus.objects.filter(masterStatus_id=7)]
+        transaction_status_exclude = [i.id for i in TransactionStatus.objects.filter(transaction__id__in=list_tr_id) if i.masterStatus.id > 7]
+        transaction_status_to_check = TransactionStatus.objects.filter(masterStatus_id=7).exclude(id__in = transaction_status_exclude)
+        for i in transaction_status_to_check:
+            if i.dateOrdered + datetime.timedelta(days=3) > datetime.datetime.now():
+                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=8)
+        return Response(status=200)
+    
     # @action(detail=False, methods=['post'], url_name='full-payment')
     # def transaction_full_payment(self, request, *args, **kwargs):
     #     validate_input(request.data,['transaction','paymentType','paymentMethod','nominal'])
