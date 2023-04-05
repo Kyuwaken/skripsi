@@ -55,8 +55,6 @@
   </template>
   
   <script>
-  import Swal from 'sweetalert2';
-  
   export default {
     data() {
       return {
@@ -71,6 +69,7 @@
           (v) => /.+@.+/.test(v) || 'Email must be valid',
         ],
         usernameRules: [(v) => !!v || 'Username is required'],
+        
         passwordRules: [
           (v) => !!v || 'Password is required',
           (v) => v.length >= 6 || 'Password must be at least 6 characters',

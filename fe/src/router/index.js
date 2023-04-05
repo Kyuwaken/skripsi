@@ -45,6 +45,11 @@ const routes = [
     path: "/sellereditprofile",
     name: "sellereditprofile",
     component: () => import("../views/SellerEditProfile.vue")
+  },
+  {
+    path: "/sellerproduct",
+    name: "sellereditprofile",
+    component: () => import("../views/Product/SellerProduct.vue")
   }
 ]
 
