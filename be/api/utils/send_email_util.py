@@ -53,6 +53,11 @@ def send_mail(text,subject,to_emails):
         'text': str(text)
     })
 
+def already_pay_dp(data):
+    products = data['transaction_detail']
+    
+
+
 def send_notification(subject,tr_id,send_to,type):
     
     # msg=MIMEMultipart('alternative')
@@ -89,6 +94,7 @@ def send_notification(subject,tr_id,send_to,type):
     transaction = Transaction.objects.get(pk=tr_id)
     serz = TransactionResponseDetailSerializer(transaction,many=False)
     data = copy.deepcopy(serz.data)
+    if type == 'already_pay_dp': body = already_pay_dp(data)
     message = render_to_string(dict_type[type],{'body': msg})
     # #masukkan ke msg set content
     msg.set_content(message, subtype='html')
