@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\api",
+    "\\api\\json",
+    "\\api\\models",
+    "\\api\\viewsets"
+  ],
+  "SelectedNode": "\\api\\viewsets\\transaction_view.py",
+  "PreviewInSolutionExplorer": false
+}
