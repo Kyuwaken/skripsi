@@ -19,12 +19,49 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
-    path: '/profile',
-    name: 'profile',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/ProfileView.vue')
+    path: '/customerprofile',
+    name: 'customerprofile',
+    component: () => import('../views/CustomerProfile.vue')
+  },
+  {
+    path: '/customerhome',
+    name: 'customerhome',
+    component: () => import('../views/CustomerHome.vue')
+  },
+  {
+    path: '/customerregistration',
+    name: 'customerregis',
+    component: () => import('../views/CustomerRegistration.vue')
+  },
+  {
+    path: '/customereditprofile',
+    name: 'customereditprofile',
+    component: () => import('../views/CustomerEditProfile.vue')
+  },
+  {
+    path: "/sellerregistration",
+    name: "sellerregis",
+    component: () => import("../views/SellerPages/SellerRegistration.vue")
+  },
+  {
+    path: "/sellerprofile",
+    name: "sellerprofile",
+    component: () => import("../views/SellerPages/SellerProfile.vue")
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: () => import("../views/Login.vue")
+  },
+  {
+    path: "/sellereditprofile",
+    name: "sellereditprofile",
+    component: () => import("../views/SellerPages/SellerEditProfile.vue")
+  },
+  {
+    path: "/sellerproduct",
+    name: "sellereditprofile",
+    component: () => import("../views/SellerPages/SellerProduct.vue")
   }
 ]
 
