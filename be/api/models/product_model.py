@@ -14,7 +14,6 @@ class Product(TimestampModel, UserTrackModel, SoftDeleteModel):
     price = models.IntegerField(default=0)
     preorderTime = models.IntegerField(null=True,blank=True)
     productDescription = models.TextField()
-    weight = models.IntegerField(default=0) # in gram
     def __str__(self) -> str:
         return self.name
     

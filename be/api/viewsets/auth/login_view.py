@@ -23,8 +23,8 @@ class LoginView(APIView):
         try:
             login_user = User.objects.get(username=username)
             fernet = Fernet(settings.FERNET_KEY)
-            password_db = fernet.decrypt(login_user.password)
-            password_request = fernet.decrypt(password)
+            password_db = fernet.decrypt(bytes(login_user.password.encode()))
+            password_request = fernet.decrypt(bytes(password.encode()))
             if password_db != password_request:
                 raise InvalidCredentialException()
         except:

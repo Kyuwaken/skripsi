@@ -28,24 +28,25 @@ class SendNotificationViewSet(APIView):
     def post(self, request):
         reqbody=json.loads(request.body)
         subject = reqbody['subject']
-        body = reqbody['body']
+        tr_id = reqbody['transaction_id']
         send_to = reqbody["send_to"]
-        notif_id= reqbody["id"]
-        instance = Notif.objects.get(pk = notif_id)
+        type = reqbody['type']
+        # notif_id= reqbody["id"]
+        # instance = Notif.objects.get(pk = notif_id)
         # breakpoint()
-        sending = send_notification(subject,body,send_to)
+        sending = send_notification(subject,tr_id,send_to,type)
         full = [{
             "field": "Mail" ,
             "Status" : "Success" if sending["Status"] != "Failed" else "Failed", 
             "Sent to" : send_to , 
             "Subject": subject , 
-            "Body": body , 
-            "Detail send to" : sending["Email_Sended"] if "Email_Sended" in sending else "None",
-            "Kabiro Sent" :  sending["Kabiro_Sended"] if "Kabiro_Sended" in sending else "None"
+            # "Body": body , 
+            # "Detail send to" : sending["Email_Sended"] if "Email_Sended" in sending else "None",
+            # "Kabiro Sent" :  sending["Kabiro_Sended"] if "Kabiro_Sended" in sending else "None"
             }]
         if sending["Status"] == "Failed" : 
             full.append({"Reason" : "Failed in sending, Fail to Connect to SMTP server"}) 
-        self.writeHistory(request.user.display_name, instance,full)
+        # self.writeHistory(request.user.display_name, instance,full)
 
         return Response(sending, status=200) if sending["Status"] != "Failed" else Response({"Status" :"Failed in sending, Fail to Connect to SMTP server"}, status.HTTP_400_BAD_REQUEST)
 

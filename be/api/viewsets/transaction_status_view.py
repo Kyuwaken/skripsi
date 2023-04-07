@@ -26,14 +26,15 @@ class TransactionStatusViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         serializer = TransactionStatusResponseSerializer(transaction_status, many=False)
         return Response(serializer.data,status=200)
     
-    @action(detail=False, methods=['post'], url_name='check-status-transaction')
+    @action(detail=False, methods=['post'], url_path='check-status-transaction')
     def checkStatusTransaction(self, request):
         transaction_id = request.data['transaction']
-        masterStatus = self.queryset.filter(transaction_id=transaction_id).order_by('-id')[0]
-        serz = MasterStatusSerializer(masterStatus,many=False)
+        breakpoint()
+        master_status = self.queryset.filter(transaction_id=transaction_id).order_by('-id')[0].masterStatus
+        serz = MasterStatusSerializer(master_status,many=False)
         return Response(serz.data,status=200)
     
-    @action(detail=False, methods=['post'], url_name='update-status-transaction')
+    @action(detail=False, methods=['post'], url_path='update-status-transaction')
     def updateStatusTransaction(self, request):
         transaction_id = request.data['transaction']
         masterStatus_id = request.data['masterStatus']

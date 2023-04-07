@@ -1,11 +1,18 @@
 from rest_framework import serializers
-from .transaction_serializer import TransactionResponseSerializer
 from .master_status_serializer import MasterStatusSerializer
-from ..models import TransactionStatus
+from .user_serializer import UserSerializer
+from ..models import TransactionStatus, Transaction
 
 class TransactionStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = TransactionStatus
+        fields = '__all__'
+
+class TransactionResponseSerializer(serializers.ModelSerializer):
+    seller = UserSerializer(many=False)
+    customer = UserSerializer(many=False)
+    class Meta:
+        model = Transaction
         fields = '__all__'
 
 class TransactionStatusResponseSerializer(serializers.ModelSerializer):
@@ -14,3 +21,13 @@ class TransactionStatusResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = TransactionStatus
         fields = '__all__'
+    
+    def get_created_by(self, obj):
+        if obj.created_by:
+            return obj.created_by.display_name
+        return None
+
+    def get_updated_by(self, obj):
+        if obj.updated_by:
+            return obj.updated_by.display_name
+        return None

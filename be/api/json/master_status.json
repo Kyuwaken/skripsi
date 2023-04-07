@@ -21,6 +21,9 @@
         "name":"Customer already fully paid the DP, waiting the Seller to send the products"
     },
     {
+        "name":"Seller exceeded Sending time limit, refund will be made to the customer"
+    },
+    {
         "name":"The product is being delivered by expedition service, waiting the product to be delivered to Customer"
     },
     {
