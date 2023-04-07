@@ -41,12 +41,12 @@ const routes = [
   {
     path: "/sellerregistration",
     name: "sellerregis",
-    component: () => import("../views/SellerRegistration.vue")
+    component: () => import("../views/SellerPages/SellerRegistration.vue")
   },
   {
     path: "/sellerprofile",
     name: "sellerprofile",
-    component: () => import("../views/SellerProfile.vue")
+    component: () => import("../views/SellerPages/SellerProfile.vue")
   },
   {
     path: "/login",
@@ -56,12 +56,12 @@ const routes = [
   {
     path: "/sellereditprofile",
     name: "sellereditprofile",
-    component: () => import("../views/SellerEditProfile.vue")
+    component: () => import("../views/SellerPages/SellerEditProfile.vue")
   },
   {
     path: "/sellerproduct",
     name: "sellereditprofile",
-    component: () => import("../views/Product/SellerProduct.vue")
+    component: () => import("../views/SellerPages/SellerProduct.vue")
   }
 ]
 
