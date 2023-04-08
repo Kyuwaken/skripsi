@@ -30,7 +30,7 @@ class UserResponseSerializer(serializers.ModelSerializer):
     country = CountrySerializer(many=False)
     class Meta:
         model = User
-        fields = '__all__'
+        exclude = ['username','password']
     
     def get_created_by(self, obj):
         if obj.created_by:

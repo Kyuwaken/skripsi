@@ -4,13 +4,21 @@ from email.mime.multipart import MIMEMultipart
 
 
 from ..models import Transaction
-from ..serializers import TransactionResponseDetailSerializer
+from ..serializers import TransactionResponseNotificationSerializer
 from email.message import EmailMessage
 from django.template.loader import render_to_string
 
 from rest_framework.response import Response
 from rest_framework import status
 import json, copy
+import locale, datetime
+
+def rupiah_format(angka, with_prefix=True, desimal=2):
+    locale.setlocale(locale.LC_NUMERIC, 'IND')
+    rupiah = locale.format("%.*f", (desimal, angka), True)
+    if with_prefix:
+        return "Rp {}".format(rupiah)
+    return rupiah
 
 # username='u067648@dti.co.id'
 username='gsit_panda@bca.co.id'
@@ -19,8 +27,8 @@ password=''
 # username='edummy12345@gmail.com'
 # password='123dummy456'
 
-EMAIL_ADDRESS = "edummy12345@gmail.com"
-EMAIL_PASSWORD = "123dummy456"
+EMAIL_ADDRESS = "testingspider0@gmail.com"
+EMAIL_PASSWORD = "#Admin123"
 EMAIL_BCA = 'u067648@dti.co.id,u06764812@dti.co.id'
 # EMAIL_BCA = 'yosefina_santoso@dti.co.id'
 def send_mail(text,subject,to_emails):
@@ -56,9 +64,27 @@ def send_mail(text,subject,to_emails):
 def already_pay_dp(data):
     products = data['transaction_detail']
     
+    seller = products[0]['transaction']['seller']
+    customer = products[0]['transaction']['customer']
+    seller_email= products[0]['transaction']['seller']['email']
+    customer_email = products[0]['transaction']['customer']['email']
+    payload = []
+    total = 0
+    for i in products:
+        container = {}
+        container['name'] = i['product']['name']
+        container['price'] = rupiah_format(i['product']['price'])
+        container['quantity'] = i['quantity']
+        container['sub_total'] = rupiah_format(i['total'])
+        total += i['total']
+        payload.append(container)
+    # breakpoint()
+    
+    return payload, seller, customer, rupiah_format(total), 
+    
 
 
-def send_notification(subject,tr_id,send_to,type):
+def send_notification(subject,tr_id,type):
     
     # msg=MIMEMultipart('alternative')
     # msg['From']=username
@@ -86,16 +112,27 @@ def send_notification(subject,tr_id,send_to,type):
         'product_delivered': 'notification_product_delivered.html', #to customer and seller
         'complain_delivering':'notification_complain_delivering.html' #to admin
     }
+    # breakpoint()
     msg = EmailMessage()
     msg['X-Priority'] = '2'
     msg['Subject'] = subject
-    msg['From'] = username
-    msg['To'] = send_to
+    msg['From'] = EMAIL_ADDRESS
     transaction = Transaction.objects.get(pk=tr_id)
-    serz = TransactionResponseDetailSerializer(transaction,many=False)
+    serz = TransactionResponseNotificationSerializer(transaction,many=False)
     data = copy.deepcopy(serz.data)
-    if type == 'already_pay_dp': body = already_pay_dp(data)
-    message = render_to_string(dict_type[type],{'body': msg})
+    if type in ['already_pay_dp','product_to_be_confirm']: 
+        body, seller, customer, total  = already_pay_dp(data)
+        if type == 'already_pay_dp':
+            msg['To'] = customer['email']
+        else:
+            msg['To'] = seller['email']
+        for i in data['payment']:
+            if i['paymentType']['name'] == 'Down Payment':
+                dp = rupiah_format(i['nominal'])
+        for i in data['transaction_status']:
+            if i['masterStatus']['id'] == 1:
+                time_limit = ((datetime.datetime.strptime(i['dateOrdered'],'%Y-%m-%dT%H:%M:%S.%f%z')).date() + datetime.timedelta(days=3)).strftime('%d %B %Y')
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':total,'dp':dp,'timelimit':time_limit})
     # #masukkan ke msg set content
     msg.set_content(message, subtype='html')
     
@@ -129,9 +166,18 @@ def send_notification(subject,tr_id,send_to,type):
     # server.quit()
     #sambungkan ke smtp email
     try:
-        with smtplib.SMTP(host='smtp.gmail.com', port=465) as smtp:
+        with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp:
+            smtp.starttls()
+            smtp.login("vincentchris012@gmail.com", "frnobdncrvtcmnci")
+            # smtp.sendmail("vincentchris012@gmail.com",msg['To'],msg)
+            # smtp.login(EMAIL_ADDRESS,EMAIL_PASSWORD)
             smtp.send_message(msg)
             smtp.quit()
+        # server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        # server.ehlo()
+        # server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+        # server.sendmail(EMAIL_ADDRESS, msg['To'], msg)
+        # server.close()
     except:
         return ({"Status" :"Failed"})
     # try:

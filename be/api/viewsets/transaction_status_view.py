@@ -7,6 +7,8 @@ from django.db.models.base import ObjectDoesNotExist
 from api.exceptions import NotAuthorizedException,NotFoundException, ValidationException
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from api.utils.send_email_util import send_notification
+from django.db import transaction
 
 class TransactionStatusViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     serializer_class = TransactionStatusSerializer
@@ -34,11 +36,16 @@ class TransactionStatusViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         serz = MasterStatusSerializer(master_status,many=False)
         return Response(serz.data,status=200)
     
+    @transaction.atomic
     @action(detail=False, methods=['post'], url_path='update-status-transaction')
     def updateStatusTransaction(self, request):
         transaction_id = request.data['transaction']
         masterStatus_id = request.data['masterStatus']
         if masterStatus_id > 8: raise ValidationException('max status transaction cannot update more')
+        if masterStatus_id == 2:
+            send_notification('NO REPLY - ALREADY PAY DP - [NAMEAPPS]' ,transaction_id, 'already_pay_dp')
+            send_notification('NO REPLY - TO BE CONFIRM - [NAMEAPPS]',transaction_id, 'product_to_be_confirm')
+        
         transactionStatus = TransactionStatus.objects.create(transaction_id=transaction_id, masterStatus_id=masterStatus_id)
         serz = TransactionStatusResponseSerializer(transactionStatus,many=False)
         return Response(serz.data,status=200)
