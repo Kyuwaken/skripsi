@@ -60,8 +60,13 @@ const routes = [
   },
   {
     path: "/sellerproduct",
-    name: "sellereditprofile",
+    name: "sellerproduct",
     component: () => import("../views/SellerPages/SellerProduct.vue")
+  },
+  {
+    path: "/addproduct",
+    name: "addproduct",
+    component: () => import("../views/SellerPages/AddProduct.vue")
   }
 ]
 

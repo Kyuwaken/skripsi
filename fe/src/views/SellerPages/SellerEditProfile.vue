@@ -1,7 +1,7 @@
 <template>
     <v-card>
       <v-card-title>
-        <v-btn icon @click="$router.push('/profile')">
+        <v-btn icon @click="$router.push('/sellerprofile')">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <span class="headline">Edit Profile</span>

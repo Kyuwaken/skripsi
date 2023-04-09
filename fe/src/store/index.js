@@ -5,12 +5,21 @@ import login from "./login";
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
-  },
-  getters: {
+    seller: {
+      name: 'John Doe',
+      country: 'us',
+      username: 'username',
+      email: 'emailini',
+      phoneNumber: '09823409823',
+      description: 'menjual barang bekas'
+    }
   },
   mutations: {
+    SET_SELLER(state, seller) {
+      state.seller = seller
+    }
   },
   actions: {
     alertError({ _commit }, { errorMsg, error }) {
@@ -32,3 +41,5 @@ export default new Vuex.Store({
     login
   }
 })
+
+export default store
