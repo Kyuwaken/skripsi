@@ -20,7 +20,11 @@
   </template>
   
   <script>
+  import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
   export default {
+    computed:{
+      ...mapState("login",["loginData"])
+    },
     data() {
       return {
         username: '',
@@ -37,31 +41,36 @@
       }
     },
     methods: {
+      ...mapActions("login", ["postLogin"]),
       async submit() {
+        console.log(this.valid)
         if (this.valid) {
-          try {
-            const response = await axios.post('/api/login', {
-              username: this.username,
-              password: this.password
-            });
-            // Handle login success here
-            Swal.fire({
-              title: 'Success!',
-              text: 'Logged in successfully',
-              icon: 'success',
-              timer: 2000,
-              showConfirmButton: false
-            });
-          } catch (error) {
-            // Handle login error here
-            Swal.fire({
-              title: 'Error!',
-              text: 'Invalid username or password',
-              icon: 'error',
-              timer: 2000,
-              showConfirmButton: false
-            });
-          }
+          this.postLogin({username:this.username,password:this.password})
+          // try {
+            //   const response = await axios.post('login/', {
+              //     username: this.username,
+              //     password: this.password
+              //   });
+              //   console.log(response)
+              //   // Handle login success here
+              //   // Swal.fire({
+                //   //   title: 'Success!',
+                //   //   text: 'Logged in successfully',
+                //   //   icon: 'success',
+                //   //   timer: 2000,
+                //   //   showConfirmButton: false
+                //   // });
+                // } catch (error) {
+          //   console.log("failed")
+          //   // Handle login error here
+          //   // Swal.fire({
+          //   //   title: 'Error!',
+          //   //   text: 'Invalid username or password',
+          //   //   icon: 'error',
+          //   //   timer: 2000,
+          //   //   showConfirmButton: false
+          //   // });
+          // }
         }
       },
       signup() {
