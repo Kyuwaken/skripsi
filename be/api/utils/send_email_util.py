@@ -104,10 +104,12 @@ def send_notification(subject,tr_id,type):
         'seller_buy_product':'notification_buy_product.html', #to seller need to buy the product before the pre order
         'seller_reject_transaction':'notification_seller_reject_transaction.html', #to customer
         'to_full_payment':'notification_to_full_payment.html', #to customer
+        'time_limit_confirmation': 'notification_time_limit_confirmation.html', #to customer and seller
         'time_limit_preorder': 'notification_time_limit_preorder.html', #to customer and seller
         'time_limit_full_payment': 'notification_time_limit_payment.html', #to customer and seller
         'time_limit_send_product':'notification_time_limit_send_product.html', #to customer and seller
         'product_need_to_send': 'notification_product_need_to_send.html', #to seller send the product that already fp by customer
+        'already_pay_fp':'notification_already_pay_fp.html', #to customer
         'sending_product': 'notification_sending_product.html', #to_customer
         'product_delivered': 'notification_product_delivered.html', #to customer and seller
         'complain_delivering':'notification_complain_delivering.html' #to admin

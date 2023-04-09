@@ -10,6 +10,7 @@ from rest_framework.decorators import action
 import copy, datetime
 from api.utils.validation_input import validate_input
 from django.db import transaction
+from api.utils.send_email_util import send_notification
 
 class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     serializer_class = TransactionSerializer
@@ -60,6 +61,34 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
             transaction_detail = TransactionDetail.objects.create(transaction_id=id_transaction,**i)
         transaction_status = TransactionStatus.objects.create(transaction_id=id_transaction, masterStatus_id=1)
         payment = Payment.objects.create(transaction_id=id_transaction, paymentType_id=1, paymentMethod_id=payment_method, nominal=nominal)
+        send_notification('NO REPLY - ALREADY PAY DOWN PAYMENT - [NAMEAPPS]' ,id_transaction, 'already_pay_dp')
+        send_notification('NO REPLY - TO BE CONFIRM - [NAMEAPPS]',id_transaction, 'product_to_be_confirm')
+        return Response(status=200)
+    
+    @action(detail=False, methods=['get'], url_path='checking-seller-confirmation')
+    @transaction.atomic
+    def job_checking_seller_confirmation(self,request):
+        list_tr_id = [i.transaction.id for i in TransactionStatus.objects.filter(masterStatus_id=1)]
+        breakpoint()
+        transaction_status_exclude = [i.id for i in TransactionStatus.objects.filter(transaction__id__in=list_tr_id) if i.masterStatus.id > 1]
+        transaction_status_to_check = TransactionStatus.objects.filter(masterStatus_id=1).exclude(id__in = transaction_status_exclude)
+        for i in transaction_status_to_check:
+            if i.dateOrdered.date() + datetime.timedelta(days=3) < datetime.datetime.now().date():
+                send_notification('NO REPLY - TIME LIMIT CONFIRMATION - [NAMEAPPS]' ,i.transaction.id, 'time_limit_confirmation')
+                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=8)
+        return Response(status=200)
+    
+    # create job that cancel the order because the seller pre order is time limit
+    @transaction.atomic
+    @action(detail=False, methods=['get'], url_path='checking-time-limit-seller-preorder')
+    def job_checking_time_limit_seller_preorder(self,request):
+        list_tr_id = [i.transaction.id for i in TransactionStatus.objects.filter(masterStatus_id=2)]
+        transaction_status_exclude = [i.id for i in TransactionStatus.objects.filter(transaction__id__in=list_tr_id) if i.masterStatus.id > 2]
+        transaction_status_to_check = TransactionStatus.objects.filter(masterStatus_id=2).exclude(id__in = transaction_status_exclude)
+        for i in transaction_status_to_check:
+            if i.dateOrdered.date() + datetime.timedelta(days=i.transaction.preOrderTime) < datetime.datetime.now().date():
+                send_notification('NO REPLY - TIME LIMIT PRE ORDER - [NAMEAPPS]' ,i.transaction.id, 'time_limit_preorder')
+                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=9)
         return Response(status=200)
     
     # create job that already status already bought by seller, waiting to be fully paid by customer after 3 days auto cancel
@@ -72,19 +101,8 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         transaction_status_to_check = TransactionStatus.objects.filter(masterStatus_id=4).exclude(id__in = transaction_status_exclude)
         for i in transaction_status_to_check:
             if i.dateOrdered.date() + datetime.timedelta(days=3) < datetime.datetime.now().date():
-                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=6)
-        return Response(status=200)
-    
-    # create job that cancel the order because the seller pre order is time limit
-    @transaction.atomic
-    @action(detail=False, methods=['get'], url_path='checking-time-limit-seller-preorder')
-    def job_checking_time_limit_seller_preorder(self,request):
-        list_tr_id = [i.transaction.id for i in TransactionStatus.objects.filter(masterStatus_id=2)]
-        transaction_status_exclude = [i.id for i in TransactionStatus.objects.filter(transaction__id__in=list_tr_id) if i.masterStatus.id > 2]
-        transaction_status_to_check = TransactionStatus.objects.filter(masterStatus_id=2).exclude(id__in = transaction_status_exclude)
-        for i in transaction_status_to_check:
-            if i.dateOrdered.date() + datetime.timedelta(days=i.transaction.preOrderTime) < datetime.datetime.now().date():
-                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=5)
+                send_notification('NO REPLY - TIME LIMIT FULL PAYMENT - [NAMEAPPS]' ,i.transaction.id, 'time_limit_full_payment')
+                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=10)
         return Response(status=200)
     
     @action(detail=False, methods=['get'], url_path='checking-due-date-sending-product')
@@ -95,20 +113,10 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         transaction_status_to_check = TransactionStatus.objects.filter(masterStatus_id=7).exclude(id__in = transaction_status_exclude)
         for i in transaction_status_to_check:
             if i.dateOrdered.date() + datetime.timedelta(days=3) < datetime.datetime.now().date():
-                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=8)
+                send_notification('NO REPLY - TIME LIMIT SEND PRODUCT - [NAMEAPPS]' ,i.transaction.id, 'time_limit_send_product')
+                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=11)
         return Response(status=200)
     
-    @action(detail=False, methods=['get'], url_path='checking-seller-confirmation')
-    @transaction.atomic
-    def job_checking_seller_confirmation(self,request):
-        list_tr_id = [i.transaction.id for i in TransactionStatus.objects.filter(masterStatus_id=1)]
-        breakpoint()
-        transaction_status_exclude = [i.id for i in TransactionStatus.objects.filter(transaction__id__in=list_tr_id) if i.masterStatus.id > 1]
-        transaction_status_to_check = TransactionStatus.objects.filter(masterStatus_id=1).exclude(id__in = transaction_status_exclude)
-        for i in transaction_status_to_check:
-            if i.dateOrdered.date() + datetime.timedelta(days=3) < datetime.datetime.now().date():
-                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=3)
-        return Response(status=200)
     
     # @action(detail=False, methods=['post'], url_path='full-payment')
     # def transaction_full_payment(self, request, *args, **kwargs):
@@ -146,5 +154,19 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
             "grandTotal": grandTotal
         }
         return Response(data,status=200)
+    
+    @action(detail=False, methods=['post'], url_path='full-payment')
+    def fullPayment(self, request, *args, **kwargs):
+        validate_input(request.data,['transaction','paymentMethod','nominal'])
+        transaction = request.data['transaction']
+        paymentMethod = request.data['paymentMethod']
+        nominal = request.data['nominal']
+        send_notification('NO REPLY - NEED TO SEND PRODUCTS - [NAMEAPPS]',transaction,'product_need_to_send')
+        send_notification('NO REPLY - ALREADY PAY FULL PAYMENT - [NAMEAPPS]',transaction,'already_pay_fp')
+        payment = Payment.objects.create(transaction_id=transaction,paymentMethod=paymentMethod,nominal=nominal,paymentType_id=2)
+        serz = PaymentSerializer(payment, many=False)
+        return Response(serz.data,status=200)
+    
+    
         
 

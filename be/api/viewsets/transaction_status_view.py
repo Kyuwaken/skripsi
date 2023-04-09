@@ -43,9 +43,12 @@ class TransactionStatusViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         masterStatus_id = request.data['masterStatus']
         if masterStatus_id > 8: raise ValidationException('max status transaction cannot update more')
         if masterStatus_id == 2:
-            send_notification('NO REPLY - ALREADY PAY DP - [NAMEAPPS]' ,transaction_id, 'already_pay_dp')
-            send_notification('NO REPLY - TO BE CONFIRM - [NAMEAPPS]',transaction_id, 'product_to_be_confirm')
-        
+            send_notification('NO REPLY - CONFIRMATION PRODUCTS - [NAMEAPPS]' ,transaction_id, 'confirmation_product')
+            send_notification('NO REPLY - BUY THE PRODUCTS - [NAMEAPPS]' ,transaction_id, 'seller_buy_product')
+        if masterStatus_id == 7:
+            send_notification('NO REPLY - TRANSACTION REJECTED BY SELLER - [NAMEAPPS]',transaction_id,'seller_reject_transaction')
+        if masterStatus_id == 3: # antara taruh sini atau bikin di transaction tergantung inputnya apa
+            send_notification('NO REPLY - NEED FULL PAYMENT - [NAMEAPPS]',transaction_id,'to_full_payment')
         transactionStatus = TransactionStatus.objects.create(transaction_id=transaction_id, masterStatus_id=masterStatus_id)
         serz = TransactionStatusResponseSerializer(transactionStatus,many=False)
         return Response(serz.data,status=200)
