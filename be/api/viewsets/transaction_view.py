@@ -167,6 +167,28 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         serz = PaymentSerializer(payment, many=False)
         return Response(serz.data,status=200)
     
+    @action(detail=False, methods=['post'], url_path='deliver-product')
+    def deliverProduct(self, request, *args, **kwargs):
+        validate_input(request.data,['noResi','courierName','transaction'])
+        transaction = Transaction.objects.get(pk=request.data['transaction'])
+        transaction.noResi = request.data['noResi']
+        transaction.courierName = request.data['courierName']
+        transaction.save()
+        transactionStatus = TransactionStatus.objects.create(transaction_id = request.data['transaction'], masterStatus_id = 5)
+        send_notification('NO REPLY - SENDING PRODUCTS - [NAMEAPPS]',request.data['transaction'],'sending_product')
+        serz = TransactionResponseDetailSerializer(transaction,many=False)
+        return Response(serz.data,status=200)
+
+    @action(detail=False, methods=['post'], url_path='seller-confirm-delivered')
+    def sellerConfirmDelivered(self, request, *args, **kwargs):
+        validate_input(request.data,['transaction'])
+        TransactionStatus.objects.create(transaction_id = request.data['transaction'], masterStatus_id = 6)
+        return Response(status=200)
     
+    @action(detail=False, methods=['post'], url_path='customer-confirm-delivered')
+    def customerConfirmDelivered(self, request, *args, **kwargs):
+        validate_input(request.data,['transaction'])
+        TransactionStatus.objects.create(transaction_id = request.data['transaction'], masterStatus_id = 7)
+        return Response(status=200)
         
 
