@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <!-- <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
+    <v-app-bar app color="white" flat>
+      <!-- <div class="d-flex align-center">
         <v-img
           alt="Vuetify Logo"
           class="shrink mr-2"
@@ -30,9 +30,9 @@
       >
         <span class="mr-2">Latest Release</span>
         <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar> -->
-
+      </v-btn> -->
+      <Header></Header>
+    </v-app-bar>
     <v-main>
       <router-view
         :baseURL="baseURL"
@@ -44,10 +44,16 @@
   </v-app>
 </template>
 
-<script>
 
+<script>
+import Header from "./components/Header.vue";
 export default {
   name: 'App',
+  components: {
+    Header,
+  },
+  
+
 
   data() {
     return {

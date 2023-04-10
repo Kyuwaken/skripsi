@@ -19,6 +19,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
+    path: '/productdetail',
+    name: 'productdetail',
+    component: () => import('../views/ProductDetail.vue')
+  },
+  {
     path: '/customerprofile',
     name: 'customerprofile',
     component: () => import('../views/CustomerProfile.vue')
@@ -37,6 +42,16 @@ const routes = [
     path: '/customereditprofile',
     name: 'customereditprofile',
     component: () => import('../views/CustomerEditProfile.vue')
+  },
+  {
+    path: '/customerfavorite',
+    name: 'customerfavorite',
+    component: () => import('../views/CustomerFavorite.vue')
+  },
+  {
+    path: '/customercart',
+    name: 'customercart',
+    component: () => import('../views/CustomerCart.vue')
   },
   {
     path: "/sellerregistration",
@@ -67,7 +82,7 @@ const routes = [
     path: "/addproduct",
     name: "addproduct",
     component: () => import("../views/SellerPages/AddProduct.vue")
-  }
+  },
 ]
 
 const router = new VueRouter({

@@ -14,23 +14,60 @@
             </v-carousel>
         </v-row>
         <v-row>
+            <v-col cols="6">
+                <v-sheet outlined color="white" elevation="2" rounded="lg">
+                    <v-container fluid>
+                        <v-row no-gutters class="ma-2">
+                            Category
+                        </v-row>
+                        <v-row>
+                            <v-col cols="auto">
+                                <v-btn elevation="2" icon tile width="100" height="100">
+                                        <v-icon>mdi-tshirt-crew-outline</v-icon>
+                                    
+                                        Clothes
+                                </v-btn>
+                            </v-col>
+                            <v-col cols="auto">
+                                <v-btn elevation="2" icon tile width="100" height="100">
+                                        <v-icon>mdi-tshirt-crew-outline</v-icon>
+                                    
+                                        Clothes
+                                </v-btn>
+                            </v-col>
+                            <v-col cols="auto">
+                                <v-btn elevation="2" icon tile width="100" height="100">
+                                        <v-icon>mdi-tshirt-crew-outline</v-icon>
+                                    
+                                        Clothes
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-sheet>
+            </v-col>
+        </v-row>
+
+        <v-divider class="mt-5 mb-5"></v-divider>
+
+        <v-row>
             <v-col cols=12>
                 <v-sheet outlined color="white" elevation="5">
                     <v-row class="justify-center mt-4">
                         <h1>You May Like</h1>
                     </v-row>
                     <v-row>
-                        <v-col class="ma-7 mt-0">
+                        <v-col class="ma-7 mt-0 mr-0">
                             <router-link to="/">
                                 <v-img src="https://picsum.photos/200/300/?"></v-img>
                             </router-link>
                         </v-col>
-                        <v-col class="ma-7 mt-0">
+                        <v-col class="ma-7 mt-0 mr-0">
                             <router-link to="/">
                                 <v-img src="https://picsum.photos/200/300/?"></v-img>
                             </router-link>
                         </v-col>
-                        <v-col class="ma-7 mt-0">
+                        <v-col class="ma-7 mt-0 mr-0">
                             <router-link to="/">
                                 <v-img src="https://picsum.photos/200/300/?"></v-img>
                             </router-link>
@@ -44,14 +81,16 @@
                 </v-sheet>
             </v-col>
         </v-row>
-        <v-row class="ma-5">
+
+
+        <!-- <v-row class="ma-5">
             <v-hover>
                 <router-link to="/">
                     <v-img src="https://picsum.photos/200/300/?blur"></v-img>
                 </router-link>
             </v-hover>
 
-        </v-row>
+        </v-row> -->
     </v-container>
 </template>
 
