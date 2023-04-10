@@ -1,6 +1,6 @@
 [
     {
-        "name":"Customer already paid the DP, waiting the Seller confirmation",
+        "name":"Customer already paid the down payment (DP), waiting the Seller confirmation",
         "id":1
     },
     {
@@ -12,7 +12,7 @@
         "id":3
     },
     {
-        "name":"Customer already fully paid the DP, waiting the Seller to send the products",
+        "name":"Customer already paid the full payment (FP), waiting the Seller to send the products",
         "id":4
     },
     {
@@ -20,27 +20,31 @@
         "id":5
     },
     {
-        "name":"The products already received by Customer",
+        "name":"The product has arrived, waiting for Customer's confirmation",
         "id":6
     },
     {
-        "name":"Seller reject the transaction, transaction/order cancelled",
+        "name":"The products already received by Customer",
         "id":7
     },
     {
-        "name":"Seller exceeded the confirmation time limit, refund will be made to the customer",
+        "name":"Seller reject the transaction, transaction/order cancelled",
         "id":8
     },
     {
-        "name":"Seller exceeded Pre Order time limit, refund will be made to the customer",
+        "name":"Seller exceeded the confirmation time limit, refund will be made to the customer",
         "id":9
     },
     {
-        "name":"Customer exceeded payment time limit, the DP will be forwarded to the seller",
+        "name":"Seller exceeded pre order time limit, refund will be made to the customer",
         "id":10
     },
     {
-        "name":"Seller exceeded Sending time limit, refund will be made to the customer",
+        "name":"Customer exceeded payment time limit, the DP will be forwarded to the seller",
         "id":11
+    },
+    {
+        "name":"Seller exceeded sending time limit, refund will be made to the customer",
+        "id":12
     }
 ]

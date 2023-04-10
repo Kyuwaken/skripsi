@@ -31,7 +31,6 @@ class TransactionStatusViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     @action(detail=False, methods=['post'], url_path='check-status-transaction')
     def checkStatusTransaction(self, request):
         transaction_id = request.data['transaction']
-        breakpoint()
         master_status = self.queryset.filter(transaction_id=transaction_id).order_by('-id')[0].masterStatus
         serz = MasterStatusSerializer(master_status,many=False)
         return Response(serz.data,status=200)
@@ -41,7 +40,9 @@ class TransactionStatusViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     def updateStatusTransaction(self, request):
         transaction_id = request.data['transaction']
         masterStatus_id = request.data['masterStatus']
-        if masterStatus_id > 8: raise ValidationException('max status transaction cannot update more')
+        master_status = self.queryset.filter(transaction_id=transaction_id).order_by('-id')[0].masterStatus.id
+        if master_status > masterStatus_id : raise ValidationException("status transaction cannot go back")
+        if masterStatus_id > 12: raise ValidationException('max status transaction cannot update more')
         if masterStatus_id == 2:
             send_notification('NO REPLY - CONFIRMATION PRODUCTS - [NAMEAPPS]' ,transaction_id, 'confirmation_product')
             send_notification('NO REPLY - BUY THE PRODUCTS - [NAMEAPPS]' ,transaction_id, 'seller_buy_product')

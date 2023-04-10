@@ -69,13 +69,12 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     @transaction.atomic
     def job_checking_seller_confirmation(self,request):
         list_tr_id = [i.transaction.id for i in TransactionStatus.objects.filter(masterStatus_id=1)]
-        breakpoint()
         transaction_status_exclude = [i.id for i in TransactionStatus.objects.filter(transaction__id__in=list_tr_id) if i.masterStatus.id > 1]
         transaction_status_to_check = TransactionStatus.objects.filter(masterStatus_id=1).exclude(id__in = transaction_status_exclude)
         for i in transaction_status_to_check:
             if i.dateOrdered.date() + datetime.timedelta(days=3) < datetime.datetime.now().date():
                 send_notification('NO REPLY - TIME LIMIT CONFIRMATION - [NAMEAPPS]' ,i.transaction.id, 'time_limit_confirmation')
-                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=8)
+                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus_id=9)
         return Response(status=200)
     
     # create job that cancel the order because the seller pre order is time limit
@@ -88,7 +87,7 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         for i in transaction_status_to_check:
             if i.dateOrdered.date() + datetime.timedelta(days=i.transaction.preOrderTime) < datetime.datetime.now().date():
                 send_notification('NO REPLY - TIME LIMIT PRE ORDER - [NAMEAPPS]' ,i.transaction.id, 'time_limit_preorder')
-                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=9)
+                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus_id=10)
         return Response(status=200)
     
     # create job that already status already bought by seller, waiting to be fully paid by customer after 3 days auto cancel
@@ -102,19 +101,19 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         for i in transaction_status_to_check:
             if i.dateOrdered.date() + datetime.timedelta(days=3) < datetime.datetime.now().date():
                 send_notification('NO REPLY - TIME LIMIT FULL PAYMENT - [NAMEAPPS]' ,i.transaction.id, 'time_limit_full_payment')
-                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=10)
+                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus_id=11)
         return Response(status=200)
     
     @action(detail=False, methods=['get'], url_path='checking-due-date-sending-product')
     @transaction.atomic
     def job_checking_due_date_sending_product(self,request):
-        list_tr_id = [i.transaction.id for i in TransactionStatus.objects.filter(masterStatus_id=7)]
-        transaction_status_exclude = [i.id for i in TransactionStatus.objects.filter(transaction__id__in=list_tr_id) if i.masterStatus.id > 7]
-        transaction_status_to_check = TransactionStatus.objects.filter(masterStatus_id=7).exclude(id__in = transaction_status_exclude)
+        list_tr_id = [i.transaction.id for i in TransactionStatus.objects.filter(masterStatus_id=5)]
+        transaction_status_exclude = [i.id for i in TransactionStatus.objects.filter(transaction__id__in=list_tr_id) if i.masterStatus.id > 5]
+        transaction_status_to_check = TransactionStatus.objects.filter(masterStatus_id=5).exclude(id__in = transaction_status_exclude)
         for i in transaction_status_to_check:
             if i.dateOrdered.date() + datetime.timedelta(days=3) < datetime.datetime.now().date():
                 send_notification('NO REPLY - TIME LIMIT SEND PRODUCT - [NAMEAPPS]' ,i.transaction.id, 'time_limit_send_product')
-                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus=11)
+                TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus_id=12)
         return Response(status=200)
     
     
