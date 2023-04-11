@@ -30,17 +30,15 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         serializer = TransactionResponseDetailSerializer(transaction, many=False)
         return Response(serializer.data,status=200)
     
-    @action(detail=False, methods=['post'], url_path='seller')
+    @action(detail=False, methods=['get'], url_path='seller')
     def getAllTransactionByIdSeller(self, request, *args, **kwargs):
-        validate_input(request.data,['id'])
-        queryset = self.queryset.filter(seller_id=request.data['id'])
+        queryset = self.queryset.filter(seller_id=request.custom_user['id'])
         serializer = TransactionResponseDetailSerializer(queryset, many=True)
         return Response(serializer.data,status=200)
     
-    @action(detail=False, methods=['post'], url_path='customer')
+    @action(detail=False, methods=['get'], url_path='customer')
     def getAllTransactionByIdCustomer(self, request, *args, **kwargs):
-        validate_input(request.data,['id'])
-        queryset = self.queryset.filter(customer_id=request.data['id'])
+        queryset = self.queryset.filter(customer_id=request.custom_user['id'])
         serializer = TransactionResponseDetailSerializer(queryset, many=True)
         return Response(serializer.data,status=200)
     
@@ -72,6 +70,7 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         serz = TransactionSerializer(transaction,many=False)
         id_transaction = serz.data['id']
         for i in products:
+            i.pop('preorderTime')
             transaction_detail = TransactionDetail.objects.create(transaction_id=id_transaction,**i)
         transaction_status = TransactionStatus.objects.create(transaction_id=id_transaction, masterStatus_id=1)
         payment = Payment.objects.create(transaction_id=id_transaction, paymentType_id=1, paymentMethod_id=payment_method, nominal=nominal)

@@ -117,6 +117,7 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         product = Product.objects.filter(name__iexact = request.data['name'],seller_id=request.custom_user['id'])
         if product:
             raise ValidationException('Product ' + request.data['name'] + ' in seller '+ request.custom_user['name'] + ' already exists')
+        request.data._mutable=True
         request.data['seller']=request.custom_user['id']
         super().create(request, *args, **kwargs)
         product = Product.objects.get(name = request.data['name'],seller_id=request.custom_user['id'],price=request.data['price'])
