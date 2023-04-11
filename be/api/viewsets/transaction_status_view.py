@@ -30,7 +30,7 @@ class TransactionStatusViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     
     @action(detail=False, methods=['post'], url_path='check-status-transaction')
     def checkStatusTransaction(self, request):
-        transaction_id = request.data['transaction']
+        transaction_id = request.data['id']
         master_status = self.queryset.filter(transaction_id=transaction_id).order_by('-id')[0].masterStatus
         serz = MasterStatusSerializer(master_status,many=False)
         return Response(serz.data,status=200)

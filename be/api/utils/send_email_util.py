@@ -196,6 +196,9 @@ def send_notification(subject,tr_id,type):
     
     if type == 'sending_product':
         msg['To'] = customer['email']
+        no_resi = data['noResi']
+        courier_name = data['courierName']
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':total,'address':address,'no_resi':no_resi,'courier_name':courier_name})
         
     if type == 'product_delivered':
         pass

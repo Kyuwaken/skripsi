@@ -30,6 +30,20 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         serializer = TransactionResponseDetailSerializer(transaction, many=False)
         return Response(serializer.data,status=200)
     
+    @action(detail=False, methods=['post'], url_path='seller')
+    def getAllTransactionByIdSeller(self, request, *args, **kwargs):
+        validate_input(request.data,['id'])
+        queryset = self.queryset.filter(seller_id=request.data['id'])
+        serializer = TransactionResponseDetailSerializer(queryset, many=True)
+        return Response(serializer.data,status=200)
+    
+    @action(detail=False, methods=['post'], url_path='customer')
+    def getAllTransactionByIdCustomer(self, request, *args, **kwargs):
+        validate_input(request.data,['id'])
+        queryset = self.queryset.filter(customer_id=request.data['id'])
+        serializer = TransactionResponseDetailSerializer(queryset, many=True)
+        return Response(serializer.data,status=200)
+    
     # create transaction, banyak transaction detail tergantung barang dan status transaksi, 1 payment
     # total ada lebih dari 1 transaction detail, 2 payment yaitu DP dan FP
     @transaction.atomic

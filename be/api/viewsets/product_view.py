@@ -61,8 +61,8 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     
     @action(detail=False, methods=['post'], url_path='get-by-category')
     def getByCategory(self, request, *args, **kwargs):
-        validate_integer(request.data,['category'])
-        category_id = request.data['category']
+        validate_integer(request.data,['id'])
+        category_id = request.data['id']
         queryset = self.queryset.filter(category_id=category_id).select_related('category')
         serializer = ProductResponseSerializer(queryset, many=True)
         data = copy.deepcopy(serializer.data)
@@ -82,7 +82,6 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
                 image['path'] = path
                 image['imageType']= "image/"+extension
                 image['stringBase64'] = b64_string
-            breakpoint()
             i['product_image'] = image
         return Response(data, status=200)
     

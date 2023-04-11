@@ -27,8 +27,8 @@ class TransactionResponseDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = ['id','seller','customer','noResi','preOrderTime','courierName',
-                  'courierPrice','address','created_at','updated_at',
-                  'created_by','updated_by', 'is_deleted','deleted_at',
+                  'address','created_at','updated_at','created_by',
+                  'updated_by', 'is_deleted','deleted_at',
                   'transaction_detail','transaction_status','payment']
     
     def get_created_by(self, obj):
@@ -50,8 +50,8 @@ class TransactionResponseNotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = ['id','seller','customer','noResi','preOrderTime','courierName',
-                  'courierPrice','address','created_at','updated_at',
-                  'created_by','updated_by', 'is_deleted','deleted_at',
+                  'address','created_at','updated_at','created_by',
+                  'updated_by', 'is_deleted','deleted_at',
                   'transaction_detail','transaction_status','payment']
     
     def get_created_by(self, obj):
