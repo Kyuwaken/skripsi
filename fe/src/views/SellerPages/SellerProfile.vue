@@ -83,7 +83,7 @@ export default {
       {
         title: 'Update Profile',
         icon: 'mdi-account',
-        link: '/seller/profile/update'
+        link: '/sellereditprofile'
       },
       {
         title: 'Post a Product',
@@ -91,20 +91,16 @@ export default {
         link: '/addproduct'
       },
       {
-        title: 'Update Products',
-        icon: 'mdi-cart-outline',
-        link: '/seller/products/update'
+        title: 'Products List',
+        icon: 'mdi-format-list-bulleted',
+        link: '/sellerproduct'
       },
       {
         title: 'Transactions',
         icon: 'mdi-history',
         link: '/seller/transactions'
       },
-      {
-        title: 'Products List',
-        icon: 'mdi-format-list-bulleted',
-        link: '/sellerproduct'
-      },
+      
     ],
   }),
 };

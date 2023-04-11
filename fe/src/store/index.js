@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import Swal from "sweetalert2";
 import login from "./login";
+import product from "./product";
+import category from "./category";
 
 Vue.use(Vuex)
 
@@ -38,7 +40,9 @@ const store = new Vuex.Store({
     },
   },
   modules: {
-    login
+    login,
+    product,
+    category
   }
 })
 
