@@ -25,12 +25,13 @@
           /* Sub-total and Total styles */
           .money-value {
             text-align: right;
-        }
+          }
         </style>
       </head>
-      <body>
-        <p>Dear {{customer.name}},</p>
-        <p>Here is the detail of the products that you ordered from {{seller.name}}'s store</p>
+    <body>
+        <p>Dear {{seller.name}}'s store,</p>
+        <p>The transaction already confirmed, you need to buy and confirm already bought before {{timelimit}}</p>
+        <p>Here is the detail of the product</p>
         <table>
             <tr>
                 <th>Product Name</th>
@@ -51,9 +52,6 @@
                 <td class="money-value">{{total}}</td>
             </tr>
         </table>
-        <p>You already pay {{dp}} for this transaction, so you need to pay off the transaction {{total}} - {{dp}} = {{fp}}</p>
-        <p>You have to pay the FP (Full Payment) for this transaction {{fp}} before {{timelimit}}</p>
-        <p>If it's time limit, your DP (Down Payment) will be sended to seller</p>
     </body>
 </html>
 {% endblock %}

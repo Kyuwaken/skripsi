@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .payment_type_serializer import PaymentTypeSerializer
 from .payment_method_serializer import PaymentMethodSerializer
-from .user_serializer import UserSerializer
+from .user_serializer import UserResponseSerializer
 from ..models import Payment, Transaction
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -10,8 +10,8 @@ class PaymentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TransactionResponseSerializer(serializers.ModelSerializer):
-    seller = UserSerializer(many=False)
-    customer = UserSerializer(many=False)
+    seller = UserResponseSerializer(many=False)
+    customer = UserResponseSerializer(many=False)
     class Meta:
         model = Transaction
         fields = '__all__'

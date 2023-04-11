@@ -101,7 +101,7 @@ def send_notification(subject,tr_id,type):
         'already_pay_dp':'notification_already_pay_dp.html', #to customer
         'product_to_be_confirm':'notification_product_to_be_confirm.html', #to seller
         'confirmation_product':'notification_confirmation_product.html', #to customer that seller accept transaction
-        'seller_buy_product':'notification_buy_product.html', #to seller need to buy the product before the pre order
+        'seller_buy_product':'notification_seller_buy_product.html', #to seller need to buy the product before the pre order
         'seller_reject_transaction':'notification_seller_reject_transaction.html', #to customer
         'to_full_payment':'notification_to_full_payment.html', #to customer
         'time_limit_confirmation': 'notification_time_limit_confirmation.html', #to customer and seller
@@ -122,8 +122,8 @@ def send_notification(subject,tr_id,type):
     transaction = Transaction.objects.get(pk=tr_id)
     serz = TransactionResponseNotificationSerializer(transaction,many=False)
     data = copy.deepcopy(serz.data)
-    if type in ['already_pay_dp','product_to_be_confirm']: 
-        body, seller, customer, total  = already_pay_dp(data)
+    body, seller, customer, total  = already_pay_dp(data)
+    if type in ['already_pay_dp','product_to_be_confirm']:
         if type == 'already_pay_dp':
             msg['To'] = customer['email']
         else:
@@ -135,6 +135,73 @@ def send_notification(subject,tr_id,type):
             if i['masterStatus']['id'] == 1:
                 time_limit = ((datetime.datetime.strptime(i['dateOrdered'],'%Y-%m-%dT%H:%M:%S.%f%z')).date() + datetime.timedelta(days=3)).strftime('%d %B %Y')
         message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':total,'dp':dp,'timelimit':time_limit})
+    
+    if type == 'confirmation_product':
+        msg['To'] = customer['email']
+        for i in data['transaction_status']:
+            if i['masterStatus']['id'] == 2:
+                time_limit = ((datetime.datetime.strptime(i['dateOrdered'],'%Y-%m-%dT%H:%M:%S.%f%z')).date() + datetime.timedelta(days=data['preOrderTime'])).strftime('%d %B %Y')
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':total,'timelimit':time_limit})
+
+    if type == 'seller_buy_product':
+        msg['To'] = seller['email']
+        for i in data['transaction_status']:
+            if i['masterStatus']['id'] == 2:
+                time_limit = ((datetime.datetime.strptime(i['dateOrdered'],'%Y-%m-%dT%H:%M:%S.%f%z')).date() + datetime.timedelta(days=data['preOrderTime'])).strftime('%d %B %Y')
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':total,'timelimit':time_limit})
+    if type == 'seller_reject_transaction':
+        pass
+    
+    if type == 'to_full_payment':
+        msg['To'] = customer['email']
+        for i in data['payment']:
+            if i['paymentType']['name'] == 'Down Payment':
+                dp = rupiah_format(i['nominal'])
+            if i['paymentType']['name'] == 'Full Payment':
+                fp = rupiah_format(i['nominal'])
+        for i in data['transaction_status']:
+            if i['masterStatus']['id'] == 3:
+                time_limit = ((datetime.datetime.strptime(i['dateOrdered'],'%Y-%m-%dT%H:%M:%S.%f%z')).date() + datetime.timedelta(days=3)).strftime('%d %B %Y')
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':total,'fp':fp,'dp':dp,'timelimit':time_limit})
+    
+    if type == 'time_limit_confirmation':
+        pass
+
+    if type == 'time_limit_preorder':
+        pass
+
+    if type == 'time_limit_full_payment':
+        pass
+
+    if type == 'time_limit_send_product':
+        pass
+
+    if type == 'already_pay_fp':
+        msg['To'] = customer['email']
+        for i in data['payment']:
+            if i['paymentType']['name'] == 'Full Payment':
+                fp = rupiah_format(i['nominal'])
+        for i in data['transaction_status']:
+            if i['masterStatus']['id'] == 4:
+                time_limit = ((datetime.datetime.strptime(i['dateOrdered'],'%Y-%m-%dT%H:%M:%S.%f%z')).date() + datetime.timedelta(days=3)).strftime('%d %B %Y')
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':total,'fp':fp,'timelimit':time_limit})
+
+    if type == 'product_need_to_send':
+        msg['To'] = seller['email']
+        address = data['address']
+        for i in data['transaction_status']:
+            if i['masterStatus']['id'] == 4:
+                time_limit = ((datetime.datetime.strptime(i['dateOrdered'],'%Y-%m-%dT%H:%M:%S.%f%z')).date() + datetime.timedelta(days=3)).strftime('%d %B %Y')
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':total,'timelimit':time_limit,'address':address})
+    
+    if type == 'sending_product':
+        msg['To'] = customer['email']
+        
+    if type == 'product_delivered':
+        pass
+
+    
+    
     # #masukkan ke msg set content
     msg.set_content(message, subtype='html')
     

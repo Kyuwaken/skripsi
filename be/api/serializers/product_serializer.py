@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .category_serializer import CategorySerializer
-from .user_serializer import UserSerializer
+from .user_serializer import UserResponseSerializer
 from ..models import Product, ProductImage
 import base64
 
@@ -12,7 +12,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ProductResponseSerializer(serializers.ModelSerializer):
     category = CategorySerializer(many=False)
-    seller = UserSerializer(many=False)
+    seller = UserResponseSerializer(many=False)
     class Meta:
         model = Product
         fields = '__all__'
@@ -43,7 +43,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 class ProductResponseImageSerializer(serializers.ModelSerializer):
     category = CategorySerializer(many=False)
     product_image = ProductImageSerializer(many=True)
-    seller = UserSerializer(many=False)
+    seller = UserResponseSerializer(many=False)
     class Meta:
         model = Product
         fields = ['id','name','category','seller',

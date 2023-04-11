@@ -158,7 +158,7 @@ WSGI_APPLICATION = 'skripsi.wsgi.application'
 schema_skripsi = "public"
 host_names = "localhost"
 user_names = "postgres"
-password_names = "password"
+password_names = "ian012"
 port_names = "5432"
 db_names = "postgres"
 

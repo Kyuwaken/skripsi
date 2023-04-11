@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .master_status_serializer import MasterStatusSerializer
-from .user_serializer import UserSerializer
+from .user_serializer import UserResponseSerializer
 from ..models import TransactionStatus, Transaction
 
 class TransactionStatusSerializer(serializers.ModelSerializer):
@@ -9,8 +9,8 @@ class TransactionStatusSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TransactionResponseSerializer(serializers.ModelSerializer):
-    seller = UserSerializer(many=False)
-    customer = UserSerializer(many=False)
+    seller = UserResponseSerializer(many=False)
+    customer = UserResponseSerializer(many=False)
     class Meta:
         model = Transaction
         fields = '__all__'

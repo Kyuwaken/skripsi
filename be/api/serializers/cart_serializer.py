@@ -1,4 +1,4 @@
-from .user_serializer import UserSerializer
+from .user_serializer import UserResponseSerializer
 from .product_serializer import ProductResponseImageSerializer
 from rest_framework import serializers
 from ..models import Cart
@@ -11,7 +11,7 @@ class CartSerializer(serializers.ModelSerializer):
 
 
 class CartResponseSerializer(serializers.ModelSerializer):
-    user = UserSerializer(many=False)
+    user = UserResponseSerializer(many=False)
     product = ProductResponseImageSerializer(many=False)
     class Meta:
         model = Cart
