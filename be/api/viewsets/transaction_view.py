@@ -167,18 +167,22 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         }
         return Response(data,status=200)
     
+    @transaction.atomic
     @action(detail=False, methods=['post'], url_path='full-payment')
     def fullPayment(self, request, *args, **kwargs):
         validate_input(request.data,['transaction','paymentMethod','nominal'])
         transaction = request.data['transaction']
         paymentMethod = request.data['paymentMethod']
         nominal = request.data['nominal']
+        payment = Payment.objects.create(transaction_id=transaction,paymentMethod_id=paymentMethod,nominal=nominal,paymentType_id=2)
+        transaction_status = TransactionStatus.objects.create(transaction_id=transaction,masterStatus_id=4)
+        transaction_query = self.queryset.get(pk=transaction)
+        serz = TransactionResponseDetailSerializer(transaction_query, many=False)
         send_notification('NO REPLY - NEED TO SEND PRODUCTS - [NAMEAPPS]',transaction,'product_need_to_send')
         send_notification('NO REPLY - ALREADY PAY FULL PAYMENT - [NAMEAPPS]',transaction,'already_pay_fp')
-        payment = Payment.objects.create(transaction_id=transaction,paymentMethod=paymentMethod,nominal=nominal,paymentType_id=2)
-        serz = PaymentSerializer(payment, many=False)
         return Response(serz.data,status=200)
     
+    @transaction.atomic
     @action(detail=False, methods=['post'], url_path='deliver-product')
     def deliverProduct(self, request, *args, **kwargs):
         validate_input(request.data,['noResi','courierName','transaction'])

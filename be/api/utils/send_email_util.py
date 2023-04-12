@@ -80,7 +80,7 @@ def already_pay_dp(data):
         payload.append(container)
     # breakpoint()
     
-    return payload, seller, customer, rupiah_format(total), 
+    return payload, seller, customer, total
     
 
 
@@ -134,21 +134,21 @@ def send_notification(subject,tr_id,type):
         for i in data['transaction_status']:
             if i['masterStatus']['id'] == 1:
                 time_limit = ((datetime.datetime.strptime(i['dateOrdered'],'%Y-%m-%dT%H:%M:%S.%f%z')).date() + datetime.timedelta(days=3)).strftime('%d %B %Y')
-        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':total,'dp':dp,'timelimit':time_limit})
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'dp':dp,'timelimit':time_limit})
     
     if type == 'confirmation_product':
         msg['To'] = customer['email']
         for i in data['transaction_status']:
             if i['masterStatus']['id'] == 2:
                 time_limit = ((datetime.datetime.strptime(i['dateOrdered'],'%Y-%m-%dT%H:%M:%S.%f%z')).date() + datetime.timedelta(days=data['preOrderTime'])).strftime('%d %B %Y')
-        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':total,'timelimit':time_limit})
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'timelimit':time_limit})
 
     if type == 'seller_buy_product':
         msg['To'] = seller['email']
         for i in data['transaction_status']:
             if i['masterStatus']['id'] == 2:
                 time_limit = ((datetime.datetime.strptime(i['dateOrdered'],'%Y-%m-%dT%H:%M:%S.%f%z')).date() + datetime.timedelta(days=data['preOrderTime'])).strftime('%d %B %Y')
-        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':total,'timelimit':time_limit})
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'timelimit':time_limit})
     if type == 'seller_reject_transaction':
         pass
     
@@ -156,13 +156,14 @@ def send_notification(subject,tr_id,type):
         msg['To'] = customer['email']
         for i in data['payment']:
             if i['paymentType']['name'] == 'Down Payment':
-                dp = rupiah_format(i['nominal'])
-            if i['paymentType']['name'] == 'Full Payment':
-                fp = rupiah_format(i['nominal'])
+                dp = i['nominal']
+        fp = total - dp
+        dp = rupiah_format(dp)
+        fp = rupiah_format(fp)
         for i in data['transaction_status']:
             if i['masterStatus']['id'] == 3:
                 time_limit = ((datetime.datetime.strptime(i['dateOrdered'],'%Y-%m-%dT%H:%M:%S.%f%z')).date() + datetime.timedelta(days=3)).strftime('%d %B %Y')
-        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':total,'fp':fp,'dp':dp,'timelimit':time_limit})
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'fp':fp,'dp':dp,'timelimit':time_limit})
     
     if type == 'time_limit_confirmation':
         pass
@@ -184,7 +185,7 @@ def send_notification(subject,tr_id,type):
         for i in data['transaction_status']:
             if i['masterStatus']['id'] == 4:
                 time_limit = ((datetime.datetime.strptime(i['dateOrdered'],'%Y-%m-%dT%H:%M:%S.%f%z')).date() + datetime.timedelta(days=3)).strftime('%d %B %Y')
-        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':total,'fp':fp,'timelimit':time_limit})
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'fp':fp,'timelimit':time_limit})
 
     if type == 'product_need_to_send':
         msg['To'] = seller['email']
@@ -192,13 +193,14 @@ def send_notification(subject,tr_id,type):
         for i in data['transaction_status']:
             if i['masterStatus']['id'] == 4:
                 time_limit = ((datetime.datetime.strptime(i['dateOrdered'],'%Y-%m-%dT%H:%M:%S.%f%z')).date() + datetime.timedelta(days=3)).strftime('%d %B %Y')
-        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':total,'timelimit':time_limit,'address':address})
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'timelimit':time_limit,'address':address})
     
     if type == 'sending_product':
         msg['To'] = customer['email']
         no_resi = data['noResi']
         courier_name = data['courierName']
-        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':total,'address':address,'no_resi':no_resi,'courier_name':courier_name})
+        address = data['address']
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'address':address,'no_resi':no_resi,'courier_name':courier_name})
         
     if type == 'product_delivered':
         pass
