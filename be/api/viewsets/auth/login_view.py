@@ -33,7 +33,8 @@ class LoginView(APIView):
         jwt = generate_token(login_user.id, login_user.username, login_user.name, login_user.role.name)
 
         response = Response({
-            'username': username,
+            'id':login_user.id,
+            'username': login_user.username,
             'name': login_user.name,
             'role': login_user.role.name
         })
