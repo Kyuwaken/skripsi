@@ -106,7 +106,7 @@ def send_notification(subject,tr_id,type):
         'to_full_payment':'notification_to_full_payment.html', #to customer
         'time_limit_confirmation': 'notification_time_limit_confirmation.html', #to customer and seller
         'time_limit_preorder': 'notification_time_limit_preorder.html', #to customer and seller
-        'time_limit_full_payment': 'notification_time_limit_payment.html', #to customer and seller
+        'time_limit_full_payment': 'notification_time_limit_full_payment.html', #to customer and seller
         'time_limit_send_product':'notification_time_limit_send_product.html', #to customer and seller
         'product_need_to_send': 'notification_product_need_to_send.html', #to seller send the product that already fp by customer
         'already_pay_fp':'notification_already_pay_fp.html', #to customer
@@ -151,8 +151,13 @@ def send_notification(subject,tr_id,type):
             if i['masterStatus']['id'] == 2:
                 time_limit = ((datetime.datetime.strptime(i['dateOrdered'],'%Y-%m-%dT%H:%M:%S.%f%z')).date() + datetime.timedelta(days=data['preOrderTime'])).strftime('%d %B %Y')
         message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'timelimit':time_limit})
+
     if type == 'seller_reject_transaction':
-        pass
+        msg['To'] = customer['email'] + ', ' + seller['email']
+        for i in data['payment']:
+            if i['paymentType']['name'] == 'Down Payment':
+                dp = rupiah_format(i['nominal'])
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'dp':dp})
     
     if type == 'to_full_payment':
         msg['To'] = customer['email']
@@ -168,16 +173,26 @@ def send_notification(subject,tr_id,type):
         message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'fp':fp,'dp':dp,'timelimit':time_limit})
     
     if type == 'time_limit_confirmation':
-        pass
+        msg['To'] = customer['email'] + ', ' + seller['email']
+        for i in data['payment']:
+            if i['paymentType']['name'] == 'Down Payment':
+                dp = rupiah_format(i['nominal'])
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'dp':dp})
 
     if type == 'time_limit_preorder':
-        pass
+        msg['To'] = customer['email'] + ', ' + seller['email']
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total)})
 
     if type == 'time_limit_full_payment':
-        pass
+        msg['To'] = customer['email'] + ', ' + seller['email']
+        for i in data['payment']:
+            if i['paymentType']['name'] == 'Down Payment':
+                dp = rupiah_format(i['nominal'])
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'dp':dp})
 
     if type == 'time_limit_send_product':
-        pass
+        msg['To'] = customer['email'] + ', ' + seller['email']
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total)})
 
     if type == 'already_pay_fp':
         msg['To'] = customer['email']

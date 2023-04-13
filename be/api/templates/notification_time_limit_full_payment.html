@@ -29,7 +29,7 @@
         </style>
       </head>
     <body>
-        <p>The transaction from customer {{customer.name}} already time limit because the seller {{seller.name}}'store doesn't send the products after 3 days of full payment</p>
+        <p>The transaction from customer {{customer.name}} already time limit because after the product bought by seller {{seller.name}}'s store, the customer doesn't pay the full payment until 3 days</p>
         <p>Here is the detail of the product</p>
         <table>
             <tr>
@@ -51,7 +51,7 @@
                 <td class="money-value">{{total}}</td>
             </tr>
         </table>
-        <p>All the payment will be returned to customer {{customer.name}} bank account</p>
+        <p>The DP (Down Payment) {{dp}} will be transfered to seller {{seller.name}}'s store bank account</p>
         <p>We're really sorry for this uncomfortable transaction</p>
         <p>Thank you</p>
     </body>
