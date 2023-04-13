@@ -111,7 +111,9 @@ def send_notification(subject,tr_id,type):
         'product_need_to_send': 'notification_product_need_to_send.html', #to seller send the product that already fp by customer
         'already_pay_fp':'notification_already_pay_fp.html', #to customer
         'sending_product': 'notification_sending_product.html', #to_customer
-        'product_delivered': 'notification_product_delivered.html', #to customer and seller
+        'seller_confirm_product_delivered':'notification_seller_confirm_product_delivered.html', #to customer
+        'customer_product_delivered': 'notification_product_delivered.html', #to customer
+        'seller_product_delivered': 'notification_seller_product_delivered.html', #to seller
         'complain_delivering':'notification_complain_delivering.html' #to admin
     }
     # breakpoint()
@@ -201,9 +203,23 @@ def send_notification(subject,tr_id,type):
         courier_name = data['courierName']
         address = data['address']
         message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'address':address,'no_resi':no_resi,'courier_name':courier_name})
-        
-    if type == 'product_delivered':
-        pass
+    
+    if type == 'seller_confirm_product_delivered':
+        msg['To'] = customer['email']
+        no_resi = data['noResi']
+        courier_name = data['courierName']
+        address = data['address']
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'address':address,'no_resi':no_resi,'courier_name':courier_name})
+
+    if type == 'customer_product_delivered':
+        msg['To'] = customer['email']
+        address = data['address']
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'address':address})
+
+    if type == 'seller_product_delivered':
+        msg['To'] = seller['email']
+        address = data['address']
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'address':address})
 
     
     
