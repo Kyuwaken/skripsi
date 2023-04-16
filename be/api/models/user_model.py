@@ -19,7 +19,3 @@ class User(TimestampModel, UserTrackModel, SoftDeleteModel):
         'Country', on_delete=models.CASCADE, null=True, db_constraint=False)
     def __str__(self) -> str:
         return self.name
-    
-    def save(self, *args, **kwargs):
-        self.password = encrypt_data(self.password)
-        return super().save(*args,**kwargs)
