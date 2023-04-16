@@ -10,6 +10,7 @@ const login = {
     namespaced: true,
     state:{
         loginData:{
+            id:"",
             username:"",
             name:"",
             role:""
@@ -22,6 +23,7 @@ const login = {
     },
     actions:{
         postLogin({commit},body){
+            console.log("body",body)
             return new Promise((resolve, reject) => {
                 getAPI
                   .post(ENDPOINT.LOGIN, body)

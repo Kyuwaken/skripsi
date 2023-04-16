@@ -21,10 +21,12 @@
   
   <script>
   import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
+  import crypto from '@/plugins/crypto'
   export default {
     computed:{
       ...mapState("login",["loginData"])
     },
+    mixins: [crypto],
     data() {
       return {
         username: '',
@@ -43,9 +45,19 @@
     methods: {
       ...mapActions("login", ["postLogin"]),
       async submit() {
-        console.log(this.valid)
         if (this.valid) {
-          this.postLogin({username:this.username,password:this.password})
+          var encryptPass = this.encryptData(this.password)
+          var decryptPass = this.decryptData(encryptPass)
+          console.log(encryptPass)
+          console.log('decrypt',decryptPass)
+          this.postLogin({username:this.username,password:encryptPass})
+            .then(()=>{
+              const encryptedData = this.encryptLocalStorage(this.loginData)
+              localStorage.setItem('encryptedData', encryptedData)
+              // var tes = this.decryptLocalStorage(localStorage.getItem('encryptedData'))  --> how to get from localstorage
+              this.$router.push({path:"/home"})
+            })
+          
           // try {
             //   const response = await axios.post('login/', {
               //     username: this.username,

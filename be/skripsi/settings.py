@@ -29,8 +29,9 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-FERNET_KEY = '4aEZPz1CoUWbujbe-_lYERfZuV_bSatnFj4y_R2L1W0='
-
+# SECRET_KEY = '4aEZPz1CoUWbujbe-_lYERfZuV_bSatnFj4y_R2L1W0='
+SECRET_KEY = '6c33d4abde09fe1c4ac9b76f245d7df4'
+IV = 'ddc5b6c4d6e4b6c4'
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 SESSION_COOKIE_SAMESITE = 'None'
