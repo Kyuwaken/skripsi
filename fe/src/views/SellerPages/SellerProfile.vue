@@ -98,7 +98,7 @@ export default {
       {
         title: 'Transactions',
         icon: 'mdi-history',
-        link: '/seller/transactions'
+        link: '/sellertransactionlist'
       },
       
     ],

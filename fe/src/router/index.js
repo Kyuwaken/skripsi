@@ -7,8 +7,13 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    name: 'Login',
+    component: () => import("../views/Login.vue")
+  },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: () => import('../views/SignUp.vue')
   },
   {
     path: '/about',
@@ -26,37 +31,37 @@ const routes = [
   {
     path: '/customerprofile',
     name: 'customerprofile',
-    component: () => import('../views/CustomerProfile.vue')
+    component: () => import('../views/CustomerPages/CustomerProfile.vue')
   },
   {
     path: '/customerhome',
     name: 'customerhome',
-    component: () => import('../views/CustomerHome.vue')
+    component: () => import('../views/CustomerPages/CustomerHome.vue')
   },
   {
     path: '/customerregistration',
-    name: 'customerregis',
-    component: () => import('../views/CustomerRegistration.vue')
+    name: 'customerregistration',
+    component: () => import('../views/CustomerPages/CustomerRegistration.vue')
   },
   {
     path: '/customereditprofile',
     name: 'customereditprofile',
-    component: () => import('../views/CustomerEditProfile.vue')
+    component: () => import('../views/CustomerPages/CustomerEditProfile.vue')
   },
   {
     path: '/customerfavorite',
     name: 'customerfavorite',
-    component: () => import('../views/CustomerFavorite.vue')
+    component: () => import('../views/CustomerPages/CustomerFavorite.vue')
   },
   {
     path: '/customercart',
     name: 'customercart',
-    component: () => import('../views/CustomerCart.vue')
+    component: () => import('../views/CustomerPages/CustomerCart.vue')
   },
   {
     path: '/customersearch',
     name: 'customersearch',
-    component: () => import('../views/CustomerSearch.vue')
+    component: () => import('../views/CustomerPages/CustomerSearch.vue')
   },
   {
     path: "/sellerregistration",
@@ -67,11 +72,6 @@ const routes = [
     path: "/sellerprofile",
     name: "sellerprofile",
     component: () => import("../views/SellerPages/SellerProfile.vue")
-  },
-  {
-    path: "/login",
-    name: "login",
-    component: () => import("../views/Login.vue")
   },
   {
     path: "/sellereditprofile",

@@ -62,11 +62,11 @@ export default {
   data() {
     return {
       profile: {
-        name: 'test1',
-        phoneNumber: 'tes2',
-        email: 'tes3',
-        country: 'test4',
-        description: 'test5',
+        name: '',
+        phoneNumber: '',
+        email: '', 
+        country: '',
+        description: '',
       },
       editMode: false,
     };

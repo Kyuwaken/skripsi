@@ -55,7 +55,12 @@
               const encryptedData = this.encryptLocalStorage(this.loginData)
               localStorage.setItem('encryptedData', encryptedData)
               // var tes = this.decryptLocalStorage(localStorage.getItem('encryptedData'))  --> how to get from localstorage
-              this.$router.push({path:"/home"})
+              if (this.loginData["role"] === "Seller"){
+                this.$router.push({path:"/sellerprofile"})
+              }else{
+                this.$router.push({path:"/sellerprofile"})
+              }
+              
             })
           
           // try {
@@ -88,6 +93,7 @@
       signup() {
         // Redirect to sign up page
         alert('Redirect to sign up page');
+        this.$router.push({path:"/signup"})
       }
     },
     watch: {
