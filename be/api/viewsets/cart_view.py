@@ -19,7 +19,7 @@ class CartViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     
     def retrieve(self, request, *args, **kwargs):
         try:
-            cart =  self.queryset.get(pk=kwargs['pk']).select_related('user','product')
+            cart =  self.queryset.get(pk=kwargs['pk'])
         except ObjectDoesNotExist:
             raise NotFoundException("Cart")
         serializer = CartResponseSerializer(cart, many=False)

@@ -19,7 +19,7 @@ class FavouriteViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     
     def retrieve(self, request, *args, **kwargs):
         try:
-            favourite =  self.queryset.get(pk=kwargs['pk']).select_related('user','product')
+            favourite =  self.queryset.get(pk=kwargs['pk'])
         except ObjectDoesNotExist:
             raise NotFoundException("Favourite")
         serializer = FavouriteResponseSerializer(favourite, many=False)

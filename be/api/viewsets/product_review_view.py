@@ -19,7 +19,7 @@ class ProductReviewViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     
     def retrieve(self, request, *args, **kwargs):
         try:
-            product_review =  self.queryset.get(pk=kwargs['pk']).select_related('user','product')
+            product_review =  self.queryset.get(pk=kwargs['pk'])
         except ObjectDoesNotExist:
             raise NotFoundException("Product Review")
         serializer = ProductReviewResponseSerializer(product_review, many=False)
