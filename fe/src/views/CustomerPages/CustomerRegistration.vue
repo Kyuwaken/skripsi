@@ -18,12 +18,6 @@
                 required
               ></v-text-field>
               <v-text-field
-                  v-model="nik"
-                  :rules="nikRules"
-                  label="Nomor Induk Kependudukan (NIK)"
-                  required
-              ></v-text-field>
-              <v-text-field
                   v-model="phone"
                   :rules="phoneRules"
                   label="Phone Number"
@@ -59,7 +53,6 @@
         username: '',
         password: '',
         confirmPassword: '',
-        nik:'',
         valid: false,
         emailRules: [
           (v) => !!v || 'Email is required',
@@ -68,10 +61,6 @@
         usernameRules: [
             (v) => !!v || 'Username is required',
             (v) => v.length >= 6 || 'Username must be at least 6 characters'
-        ],
-        nikRules: [
-            (v) => !!v || 'NIK is required',
-            (v) => v.length == 16 || 'NIK must be 16 characters',
         ],
         passwordRules: [
           (v) => !!v || 'Password is required',

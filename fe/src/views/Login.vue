@@ -58,7 +58,7 @@
               if (this.loginData["role"] === "Seller"){
                 this.$router.push({path:"/sellerprofile"})
               }else{
-                this.$router.push({path:"/sellerprofile"})
+                this.$router.push({path:"/customerhome"})
               }
               
             })

@@ -14,6 +14,8 @@ function interceptSuccess(response) {
   ) {
     return Promise.resolve(response);
   } else {
+    console.log("masuk error1")
+
     return Promise.reject(response);
   }
 }
@@ -94,6 +96,8 @@ export default function interceptors() {
       return interceptSuccess(response);
     },
     (error) => {
+      console.log("masuk error")
+
       return interceptError(error);
     }
   );

@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import ProductBox from "../components/ProductBox.vue";
+import ProductBox from "@/components/ProductBox.vue";
 export default {
     data() {
         return {

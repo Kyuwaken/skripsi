@@ -18,20 +18,34 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     permission_classes = (IsAuthenticated, IsSellerOrReadOnly)
 
     def validate_max_size(self,request):
-        dataExcel = request.data['productPhoto']
-        if dataExcel.size > 1000000:
-            raise ValidationException("Size excel must less than 1 MB")
+        print(request.data)
+        temp = copy.deepcopy(request.data)
+        data = temp.pop('productPhoto')
+        print("ini data : " + str(data))
+        for i in data:
+            print(i)
+            if i.size > 1000000:
+                raise ValidationException("Size must less than 1 MB")
     
     def validate_type_file(self,request):
-        dataExcel = request.data['productPhoto']
-        name = dataExcel._name
-        arr = name.split('.')
-        index = len(arr)-1
-        if arr[index].strip() not in ['png','jpg','jpeg']:
-            raise ValidationException("Must input image type png or jpg or jpeg")
+        temp = copy.deepcopy(request.data)
+        data = temp.pop('productPhoto')
+        for i in data:
+            name = i._name
+            arr = name.split('.')
+            index = len(arr)-1
+            if arr[index].strip() not in ['png','jpg','jpeg']:
+                raise ValidationException("Must input image type png or jpg or jpeg")
 
     def list(self, request):
         queryset = self.queryset.select_related('category').prefetch_related('product_image')
+        serializer = ProductResponseImageSerializer(queryset, many=True)
+        return Response(serializer.data, status=200)
+
+    @action(detail=False, methods=['post'], url_path='seller')
+    def get_by_seller_id(self, request, *args, **kwargs):
+        validate_input(request.data,['id'])
+        queryset = self.queryset.filter(seller_id=request.data['id']).select_related('category').prefetch_related('product_image')
         serializer = ProductResponseImageSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
     
@@ -112,12 +126,14 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     
     @transaction.atomic
     @action(detail=False, methods=['post'], url_path='create-product-with-image')
-    def create_product_with_image(self, request, *args, **kwargs):
+    def create_product_with_image(self, request, *args, **kwargs): 
+        # breakpoint()
+        print(request.data)
         # validate_input(request.data,['name','price','productDescription','productPhoto'])
         product = Product.objects.filter(name__iexact = request.data['name'],seller_id=request.custom_user['id'])
         if product:
             raise ValidationException('Product ' + request.data['name'] + ' in seller '+ request.custom_user['name'] + ' already exists')
-        request.data._mutable=True
+        # request.data._mutable=True
         request.data['seller']=request.custom_user['id']
         super().create(request, *args, **kwargs)
         product = Product.objects.get(name = request.data['name'],seller_id=request.custom_user['id'],price=request.data['price'])
@@ -167,4 +183,6 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
+    
+
     

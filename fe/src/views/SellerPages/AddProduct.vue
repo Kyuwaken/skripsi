@@ -14,7 +14,8 @@
                 required></v-text-field>
             <v-text-field v-model.number="preorderTime" label="Pre-Order Time (in days)"
                 :rules="[requiredRule, numericRule]" required></v-text-field>
-            <v-select v-model="category" :items="categories" label="Category" :rules="[requiredRule]" required></v-select>
+            <v-select v-model="category" :items=categories item-text="name" item-title="name" item-value="id"
+                label="Category" return-object :rules="[requiredRule]" required></v-select>
             <v-file-input v-model="productPhoto" accept="image/*" label="Product Images" multiple></v-file-input>
             <v-layout justify-end align-end>
                 <v-btn type="submit" color="primary">Submit</v-btn>
@@ -28,12 +29,9 @@ import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import Swal from 'sweetalert2'
 
 export default {
-    created() {
-        this.fetchCategories();
-    },
     computed: {
-        ...mapState("category", ["categories"]),
-        // other computed properties for this component
+        ...mapState("category", ['categories']),
+
     },
     data() {
         return {
@@ -42,17 +40,22 @@ export default {
             price: '',
             preorderTime: '',
             productPhoto: [],
-            seller: '2',
-            category: 'books',
+            category: '',
             requiredRule: [v => !!v || 'Field is required'],
             numericRule: [v => /^\d+$/.test(v) || 'Input must be a number']
         }
+    },
+    mounted() {
+        //console.log("masuk mounted")
+        this.fetchCategories();
+        console.log(getCategory)
     },
     methods: {
         ...mapActions("category", ["fetchCategories"]),
         ...mapActions('product', ['postProductData']),
         handleSubmit() {
             // Validate form data here
+            console.log(this.category)
             if (!this.$refs.form.validate()) {
                 Swal.fire({
                     icon: 'error',
@@ -120,43 +123,54 @@ export default {
             }
 
             // Submit form data here
-            console.log({
-                name: this.name,
-                description: this.productDescription,
-                price: this.price,
-                preOrderTime: this.preorderTime,
-                productPhoto: this.productPhoto,
-                category: this.category
-            });
+            // console.log({
+            //     name: this.name,
+            //     description: this.productDescription,
+            //     price: this.price,
+            //     preOrderTime: this.preorderTime,
+            //     productPhoto: this.productPhoto,
+            //     category: this.category.id
+            // });
+
+
+
             this.postProductData({
                 name: this.name,
                 productDescription: this.productDescription,
                 price: this.price,
                 preorderTime: this.preorderTime,
-                productPhoto: this.productPhoto,
-                seller: this.seller,
-                category: this.category
-            })//.then(() => {
-            //     // Success message
-            //     Swal.fire({
-            //       icon: 'success',
-            //       title: 'Product added successfully',
-            //       text: 'Your product has been added to the store.'
-            //     })
-            //     // Reset form data
-            //     this.name = ''
-            //     this.description = ''
-            //     this.price = null
-            //     this.preOrderTime = null
-            //     this.images = null
-            //   }).catch((error) => {
-            //     // Error message
-            //     Swal.fire({
-            //       icon: 'error',
-            //       title: 'Error adding product',
-            //       text: error.message || 'An unknown error occurred.'
-            //     })
-            //   })
+                category: this.category.id,
+                productPhoto: this.productPhoto
+            }).then(() => {
+                // Success message
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Product added successfully',
+                    text: 'Your product has been added to the store.'
+                })
+                // Reset form data
+                this.name = ''
+                this.productDescription = ''
+                this.price = ''
+                this.preorderTime = ''
+                this.category = ''
+                this.productPhoto = []
+
+                this.$router.push({path:"/sellerprofile"})
+            }).catch((error) => {
+                // Error message
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error adding product',
+                    text: error.message || 'An unknown error occurred.'
+                })
+                this.name = ''
+                this.productDescription = ''
+                this.price = ''
+                this.preorderTime = ''
+                this.category = ''
+                this.productPhoto = []
+            })
         }
     }
 }

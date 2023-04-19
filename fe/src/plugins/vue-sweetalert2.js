@@ -1,5 +1,5 @@
 /* eslint-disable */
 import Vue from "vue";
-import VueSweetAlert from 'vue-sweetalert2'
+import VueSweetAlert2 from 'vue-sweetalert2'
 
-Vue.use(VueSweetAlert);
+Vue.use(VueSweetAlert2);

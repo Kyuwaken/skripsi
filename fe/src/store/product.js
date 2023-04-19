@@ -14,7 +14,6 @@ const product = {
             price: null,
             preorderTime: null,
             productDescription: "",
-            seller: "2",
         },
     },
     mutations: {
@@ -24,11 +23,20 @@ const product = {
     },
     actions: {
         postProductData({ commit }, productData) {
+            let formData = new FormData();
+            formData.append('name', productData.name);
+            formData.append('productDescription', productData.productDescription);
+            formData.append('price', productData.price);
+            formData.append('preorderTime', productData.preorderTime);
+            formData.append('category', productData.category);
+            productData.productPhoto.forEach(photo => {
+                formData.append('productPhoto', photo, photo.name);
+            });
             return new Promise((resolve, reject) => {
                 getAPI
-                    .post(ENDPOINT.CREATE_PRODUCT_WITH_IMAGE, productData)
+                    .post(ENDPOINT.CREATE_PRODUCT_WITH_IMAGE, formData)
                     .then((response) => {
-                        commit("SET_PRODUCT_DATA", response.data);
+                        //commit("SET_PRODUCT_DATA", response.data);
                         resolve(response.data);
                     })
                     .catch((error) => {
@@ -36,6 +44,8 @@ const product = {
                     });
             });
         },
+
+        fetchProductbySeller({commit}, )
     },
 };
 

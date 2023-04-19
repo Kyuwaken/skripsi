@@ -14,17 +14,24 @@ const ENDPOINT = {
         state.categories = categories;
       },
     },
+    getters: {
+      getCategory: state => {
+        return state.categories
+      }
+    },
     actions: {
       fetchCategories({ commit }) {
         return new Promise((resolve, reject) => {
           getAPI(ENDPOINT.CATEGORY)
             .then((response) => {
-              const categories = response.data.map((category) => ({
-                id: category.id,
-                name: category.name,
-              }));
-              commit("SET_CATEGORIES", categories);
-              resolve(categories);
+              console.log("masuk js category")
+              // const categories = response.data.map((category) => ({
+              //   id: category.id,
+              //   name: category.name,
+              // }));
+              console.log(response.data)
+              commit("SET_CATEGORIES", response.data);
+              resolve(response);
             })
             .catch((error) => {
               reject(error);

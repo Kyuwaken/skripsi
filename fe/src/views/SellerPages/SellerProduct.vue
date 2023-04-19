@@ -37,9 +37,18 @@ export default {
     products: {
       type: Array,
       required: true
+    },
+    userdata: {
+      type: Object,
+      required: true
     }
+  },
+  mounted(){
+    console.log("userdata", this.userdata.id)
   }
 };
+
+
 </script>
 
 <style scoped>
