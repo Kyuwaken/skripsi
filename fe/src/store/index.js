@@ -5,6 +5,7 @@ import login from "./login";
 import product from "./product";
 import category from "./category";
 import register from "./register";
+import profile from './profile';
 
 Vue.use(Vuex)
 
@@ -45,6 +46,7 @@ const store = new Vuex.Store({
     product,
     category,
     register,
+    profile,
   }
 })
 

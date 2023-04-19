@@ -15,6 +15,12 @@
             :readonly="!editMode"
             :rules="[v => !!v || 'Name is required']"
           ></v-text-field>
+          <v-text-field
+            v-model="profile.username"
+            label="Username"
+            :readonly="!editMode"
+            :rules="[v => !!v || 'Username is required']"
+          ></v-text-field>
   
           <v-text-field
             v-model="profile.phoneNumber"
@@ -45,19 +51,38 @@
   </template>
 
 <script>
+import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   data() {
     return {
       profile: {
-        name: 'test1',
-        phoneNumber: 'tes2',
-        email: 'tes3',
+        name: '',
+        username:'',
+        phoneNumber: '',
+        email: '',
       },
       editMode: false,
     };
   },
+  props: {
+    userdata: {
+      type: Object,
+      required: true,
+    },
+  },
+  computed: {
+    ...mapState("profile", ["profileData"]),
+  },
+  created(){
+    this.getProfileData(this.userdata.id);
+    this.profile.name=this.profileData.name;
+    this.profile.phoneNumber=this.profileData.phone;
+    this.profile.email=this.profileData.email;
+    this.profile.username = this.profileData.username
+  },
 
   methods: {
+    ...mapActions("profile", ["getProfileData"]),
     openPhotoDialog() {
       // Show photo upload dialog
     },

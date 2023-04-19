@@ -95,8 +95,13 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import ProductBox from "@/components/ProductBox.vue";
 export default {
+    computed: {
+        ...mapState("category", ['categories']),
+
+    },
     data() {
         return {
             colors: [
@@ -114,6 +119,14 @@ export default {
                 'Fifth',
             ],
         }
+    },
+    mounted() {
+        //console.log("masuk mounted")
+        this.fetchCategories();
+        console.log(getCategory)
+    },
+    methods:{
+        ...mapActions("category", ["fetchCategories"]),
     },
     components: { ProductBox },
     props: ["products"]

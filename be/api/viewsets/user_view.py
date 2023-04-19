@@ -3,7 +3,7 @@ from ..serializers import UserSerializer, UserResponseSerializer
 from ..models import User
 from api.permissions import IsAuthenticated
 from django.db.models.base import ObjectDoesNotExist
-from api.exceptions import NotAuthorizedException,NotFoundException
+from api.exceptions import NotAuthorizedException,NotFoundException,ValidationException
 from rest_framework.response import Response
 from api.permissions import IsSignUp
 class UserViewSet(viewsets.ModelViewSet):
@@ -23,3 +23,16 @@ class UserViewSet(viewsets.ModelViewSet):
             raise NotFoundException("User")
         serializer = UserResponseSerializer(user, many=False)
         return Response(serializer.data,status=200)
+    
+    def create(self, request, *args, **kwargs):
+        all_username = [i.username for i in self.queryset]
+        if request.data['username'] in all_username:
+            raise ValidationException('Username already exists')
+        return super().create(request, *args, **kwargs)
+    
+    def update(self, request, *args, **kwargs):
+        all_username = [i.username for i in self.queryset if i.id != kwargs]
+        if request.data['username'] in all_username:
+            raise ValidationException('Username already exists')
+        return super().update(request, *args, **kwargs)
+    
