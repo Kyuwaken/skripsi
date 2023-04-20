@@ -180,8 +180,15 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
             i.name = str(index+1) + '.'+last[-1]
             ProductImage.objects.create(productPhoto=i,product_id=product.id)
         return Response(status=200)
-    
     def destroy(self, request, *args, **kwargs):
+        product_images = ProductImage.objects.filter(product_id=kwargs['pk'])
+        path = []
+        for i in product_images:
+            path.append(i.productPhoto.path)
+        product_images.delete()
+        for i in path:
+            if os.path.isfile(i):
+                os.remove(i)
         return super().destroy(request, *args, **kwargs)
     
 
