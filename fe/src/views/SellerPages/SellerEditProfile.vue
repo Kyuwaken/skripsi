@@ -14,7 +14,7 @@
             label="Username"
             :rules="[v => !!v || 'username is required']"
           ></v-text-field>
-          
+
           <v-text-field
             v-model="profile.name"
             label="Name"
@@ -46,10 +46,10 @@
           <v-select v-model="profile.country" :items=countries item-text="name" item-title="name" item-value="id"
                 label="Country" return-object :rules="[v => !!v || 'Country is required']" required></v-select>
   
-          <!-- <v-textarea
-            v-model="profileData.description"
+          <v-textarea
+            v-model="profile.description"
             label="Description"
-          ></v-textarea> -->
+          ></v-textarea>
   
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -75,8 +75,8 @@ export default {
         name: '',
         phone: '',
         email: '', 
-        country: 1,
-        // description: '',
+        country: '',
+        description: '',
       }
     };
   },
@@ -97,6 +97,7 @@ export default {
     this.profile.email=this.profileData.email;
     this.profile.username = this.profileData.username
     this.profile.country = this.profileData.country
+    this.profile.description = this.profileData.description
     console.log(
       "Masuk profil",this.profile
     )

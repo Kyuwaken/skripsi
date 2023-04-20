@@ -17,5 +17,6 @@ class User(TimestampModel, UserTrackModel, SoftDeleteModel):
     email = models.CharField(max_length=255, blank=True, null=True)
     country = auto_prefetch.ForeignKey(
         'Country', on_delete=models.CASCADE, null=True, db_constraint=False)
+    description = models.TextField(blank=True,null=True)
     def __str__(self) -> str:
         return self.name

@@ -44,7 +44,7 @@
             <v-card-text>
               <div class="info-box">
                 <div class="info-title">Description:</div>
-                <!-- <div class="info-value">{{ profileData.description }}</div> -->
+                <div class="info-value">{{ profileData.description }}</div>
               </div>
             </v-card-text>
             <v-card-actions class="justify-end mr-6">
