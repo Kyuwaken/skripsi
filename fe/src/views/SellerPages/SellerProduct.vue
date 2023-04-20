@@ -10,8 +10,8 @@
     <div class="text-center">
       <h4 class="mb-4">Your Products</h4>
     </div>
-    <v-row justify="space-between" class="mt-4" v-if="products.length > 0">
-      <v-col v-for="product in products" :key="product.id" cols="12" sm="6" md="4" lg="3">
+    <v-row class="mt-4" v-if="productData.length > 0">
+      <v-col v-for="product in productData" :key="product.id" cols="12" sm="6" md="4" lg="3">
         <ProductBox :product="product" />
       </v-col>
     </v-row>
@@ -27,24 +27,40 @@
 
 <script>
 import ProductBox from "@/components/ProductBox.vue";
-
+import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   name: "ProductList",
   components: {
     ProductBox
   },
   props: {
-    products: {
-      type: Array,
-      required: true
-    },
     userdata: {
       type: Object,
       required: true
     }
   },
+  computed:{
+    ...mapState("product", ['productData'])
+  },
+  data() {
+        return {
+            name: '',
+            productDescription: '',
+            price: '',
+            preorderTime: '',
+            productPhoto: [],
+            category: ''
+        }
+    },
   mounted(){
-    console.log("userdata", this.userdata.id)
+    //console.log("userdata", this.userdata.id)
+    let data = {"id": this.userdata.id}
+    console.log(data)
+    this.fetchProductbySeller(data)
+    console.log("view product data", this.productData)
+  },
+  methods:{
+    ...mapActions('product', ['fetchProductbySeller']),
   }
 };
 

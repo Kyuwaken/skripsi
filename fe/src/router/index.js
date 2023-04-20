@@ -65,7 +65,7 @@ const routes = [
   },
   {
     path: "/sellerregistration",
-    name: "sellerregis",
+    name: "sellerregistration",
     component: () => import("../views/SellerPages/SellerRegistration.vue")
   },
   {
@@ -92,6 +92,12 @@ const routes = [
     path: "/sellertransactionlist",
     name: "sellertransactionlist",
     component: () => import("../views/SellerPages/SellerTransactionList.vue")
+  },
+  {
+    path: "/sellerproductdetails",
+    name: "sellerproductdetails",
+    component: () => import("../views/SellerPages/SellerProductDetails.vue"),
+    props: true
   },
 ]
 

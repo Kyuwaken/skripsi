@@ -1,9 +1,8 @@
 <template>
   <div>
-    <v-app-bar app color="primary" dark>
-      <v-app-bar-nav-icon @click="$router.push('/signup')"></v-app-bar-nav-icon>
-      <v-toolbar-title>Register as Seller</v-toolbar-title>
-    </v-app-bar>
+    <v-btn icon class="back-btn" @click="$router.push('/signup')">
+      <v-icon>mdi-arrow-left</v-icon>
+    </v-btn>
     <v-container>
       <v-card>
         <v-card-text>
@@ -12,8 +11,6 @@
             <v-text-field v-model="username" :rules="usernameRules" label="Username" required></v-text-field>
             <v-text-field v-model="storeName" :rules="storenameRules" label="Store Name" required></v-text-field>
             <v-text-field v-model="phone" :rules="phoneRules" label="Phone Number" required></v-text-field>
-            <v-select v-model="country" :hint="`${select.state}, ${select.abbr}`" :items="items" item-title="name"
-              item-value="id" label="Select" persistent-hint return-object single-line></v-select>
             <v-text-field v-model="password" :rules="passwordRules" label="Password" type="password"
               required></v-text-field>
             <v-text-field v-model="confirmPassword" :rules="confirmPasswordRules" label="Confirm Password" type="password"

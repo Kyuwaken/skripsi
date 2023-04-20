@@ -3,7 +3,7 @@
         <v-card-title class="pa-0">
             <img 
                 class="card-image" 
-                :src="product.imageURL"
+                :src="'data:' + product.product_image[0].imageType + ';base64,' + product.product_image[0].stringBase64"
                 :alt="product.name"
             />
         </v-card-title>
@@ -12,7 +12,7 @@
             <p>{{ product.description }}</p>
         </v-card-subtitle>
         <v-card-actions class="d-flex justify-center">
-            <v-btn class="hover" color="primary">See Details</v-btn>
+            <v-btn class="hover" color="primary" :to="{ name: 'sellerproductdetails', params: { id: product.id } }">See Details</v-btn>
         </v-card-actions>
     </v-card>
 </template>
