@@ -31,7 +31,6 @@ const profile = {
                   //   id: category.id,
                   //   name: category.name,
                   // }));
-                  console.log(response.data)
                   commit("SET_PROFILE_DATA", response.data);
                   resolve(response);
                 })
@@ -39,7 +38,17 @@ const profile = {
                   reject(error);
                 });
             });
-          },
+        },
+        updateProfileData({commit},data){
+            console.log(data)
+            return new Promise((resolve,reject)=>{
+                getAPI
+                .patch(ENDPOINT.USER+data.id+"/",data.body)
+                .then((response)=>{
+                    resolve(response.data)
+                })
+            })
+        }
 
     },
 };

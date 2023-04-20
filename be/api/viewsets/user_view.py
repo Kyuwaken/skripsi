@@ -31,7 +31,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return super().create(request, *args, **kwargs)
     
     def update(self, request, *args, **kwargs):
-        all_username = [i.username for i in self.queryset if i.id != kwargs['pk']]
+        all_username = [i.username for i in self.queryset if i.id != int(kwargs['pk'])]
         if request.data['username'] in all_username:
             raise ValidationException('Username already exists')
         return super().update(request, *args, **kwargs)

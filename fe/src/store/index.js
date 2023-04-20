@@ -6,6 +6,7 @@ import product from "./product";
 import category from "./category";
 import register from "./register";
 import profile from './profile';
+import country from './country';
 
 Vue.use(Vuex)
 
@@ -47,6 +48,7 @@ const store = new Vuex.Store({
     category,
     register,
     profile,
+    country,
   }
 })
 

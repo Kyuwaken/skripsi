@@ -14,39 +14,43 @@
       <v-col cols="9">
         <v-card class="fill-height">
           <v-card-title>
-            <span style="text-indent: 15px">{{ sellerName }}</span>
+            <span style="text-indent: 15px">{{ profileData.name }}</span>
           </v-card-title>
           <v-card-text>
             <v-card-text>
               <div class="info-box">
                 <div class="info-title">Username:</div>
-                <div class="info-value">{{ sellerUsername }}</div>
+                <div class="info-value">{{ profileData.username }}</div>
               </div>
             </v-card-text>
             <v-card-text>
               <div class="info-box">
                 <div class="info-title">Email:</div>
-                <div class="info-value">{{ sellerEmail }}</div>
+                <div class="info-value">{{ profileData.email }}</div>
               </div>
             </v-card-text>
             <v-card-text>
               <div class="info-box">
                 <div class="info-title">Phone Number:</div>
-                <div class="info-value">{{ sellerPhoneNumber }}</div>
+                <div class="info-value">{{ profileData.phone }}</div>
               </div>
             </v-card-text>
             <v-card-text>
               <div class="info-box">
                 <div class="info-title">Seller Country:</div>
-                <div class="info-value">{{ sellerCountry }}</div>
+                <div class="info-value">{{ profileData.country?.name }}</div>
               </div>
             </v-card-text>
             <v-card-text>
               <div class="info-box">
                 <div class="info-title">Description:</div>
-                <div class="info-value">{{ description }}</div>
+                <!-- <div class="info-value">{{ profileData.description }}</div> -->
               </div>
             </v-card-text>
+            <v-card-actions class="justify-end mr-6">
+              <v-btn variant="outlined"
+              @click="editProfile"> Update </v-btn>
+            </v-card-actions>
             <router-view></router-view>
           </v-card-text>
         </v-card>
@@ -56,27 +60,20 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   name: 'SellerProfile',
   computed: {
-    sellerName() {
-      return this.$store.getters.sellerName;
+    ...mapState("profile", ["profileData"]),
+  },
+  props: {
+    userdata: {
+      type: Object,
+      required: true,
     },
-    sellerUsername() {
-      return this.$store.getters.sellerUsername;
-    },
-    sellerEmail() {
-      return this.$store.getters.sellerEmail;
-    },
-    sellerPhoneNumber() {
-      return this.$store.getters.sellerPhoneNumber;
-    },
-    sellerCountry() {
-      return this.$store.getters.sellerCountry;
-    },
-    description() {
-      return this.$store.getters.sellerDescription;
-    },
+  },
+  created() {
+    this.getProfileData(this.userdata.id);
   },
   data: () => ({
     items: [
@@ -103,6 +100,28 @@ export default {
       
     ],
   }),
+  methods: {
+    ...mapActions("profile", ["getProfileData"]),
+    editProfile(){
+        this.$router.push({path:"/sellereditprofile"})
+    },
+    saveProfile() {
+      // send data to server to save
+      axios
+        .post("/api/profile", {
+          name: this.name,
+          phone: this.phone,
+          email: this.email,
+          photo: this.photo,
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  },
 };
 </script>
 

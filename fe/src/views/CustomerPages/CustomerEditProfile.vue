@@ -12,38 +12,33 @@
           <v-text-field
             v-model="profile.name"
             label="Name"
-            :readonly="!editMode"
             :rules="[v => !!v || 'Name is required']"
           ></v-text-field>
           <v-text-field
             v-model="profile.username"
             label="Username"
-            :readonly="!editMode"
             :rules="[v => !!v || 'Username is required']"
           ></v-text-field>
   
           <v-text-field
-            v-model="profile.phoneNumber"
+            v-model="profile.phone"
             label="Phone Number"
-            :readonly="!editMode"
             pattern="[0-9]*"
-            maxlength="10"
-            :rules="[v => !!v || 'Phone number is required', v => /^\d{10}$/.test(v) || 'Phone number must be 10 digits']"
+            maxlength="15"
+            :rules="[v => !!v || 'Phone number is required', v => /^\d{15}$/.test(v) || 'Phone number must be 10 digits']"
           ></v-text-field>
 
           <v-text-field
             v-model="profile.email"
             label="Email"
-            :readonly="!editMode"
             type="email"
             :rules="[v => !!v || 'Email is required', v => /.+@.+\..+/.test(v) || 'Email must be valid']"
           ></v-text-field>
   
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" v-if="editMode" @click="submitProfile">Submit</v-btn>
-            <v-btn color="error" v-if="editMode" @click="resetProfile">Cancel</v-btn>
-            <v-btn color="primary" v-else @click="editMode = $refs.form.validate()">Edit Profile</v-btn>
+            <v-btn color="error" @click="resetProfile">Cancel</v-btn>
+            <v-btn color="primary" @click="submitProfile">Submit</v-btn>
           </v-card-actions>
         </v-form>
       </v-card-text>
@@ -52,16 +47,16 @@
 
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
+import Swal from 'sweetalert2';
 export default {
   data() {
     return {
       profile: {
         name: '',
         username:'',
-        phoneNumber: '',
+        phone: '',
         email: '',
-      },
-      editMode: false,
+      }
     };
   },
   props: {
@@ -76,48 +71,29 @@ export default {
   created(){
     this.getProfileData(this.userdata.id);
     this.profile.name=this.profileData.name;
-    this.profile.phoneNumber=this.profileData.phone;
+    this.profile.phone=this.profileData.phone;
     this.profile.email=this.profileData.email;
     this.profile.username = this.profileData.username
   },
 
   methods: {
-    ...mapActions("profile", ["getProfileData"]),
+    ...mapActions("profile", ["getProfileData","updateProfileData"]),
     openPhotoDialog() {
       // Show photo upload dialog
     },
-
     submitProfile() {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'You are about to submit your changes.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, submit',
-        cancelButtonText: 'Cancel',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          axios.put('/api/profile', this.profile)
-            .then(() => {
-              Swal.fire({
-                title: 'Success!',
-                text: 'Your profile has been updated.',
-                icon: 'success',
-              });
-              this.editMode = false;
-            })
-            .catch(() => {
-              Swal.fire({
-                title: 'Error',
-                text: 'An error occurred while updating your profile.',
-                icon: 'error',
-              });
-            });
-        }
-      });
+      this.updateProfileData({id:this.userdata.id,body:this.profile}).then(()=>{
+        Swal.fire({
+          icon: 'success',
+          title: 'Update Profile',
+          text: 'Your profile has been updated.'
+        })
+        this.$router.push('/customerprofile')
+      })
     },
 
     resetProfile() {
+      this.$router.push('/customerprofile')
       // Reset profile data
     },
   },
