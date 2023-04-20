@@ -38,7 +38,7 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
                 raise ValidationException("Must input image type png or jpg or jpeg")
 
     def list(self, request):
-        queryset = self.queryset.select_related('category').prefetch_related('product_image')
+        queryset = self.queryset.filter(is_deleted=False).select_related('category').prefetch_related('product_image')
         serializer = ProductResponseImageSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
 
