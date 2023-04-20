@@ -45,7 +45,7 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     @action(detail=False, methods=['post'], url_path='seller')
     def get_by_seller_id(self, request, *args, **kwargs):
         validate_input(request.data,['id'])
-        queryset = self.queryset.filter(seller_id=request.data['id']).select_related('category').prefetch_related('product_image')
+        queryset = self.queryset.filter(seller_id=request.data['id'], is_deleted=False).select_related('category').prefetch_related('product_image')
         serializer = ProductResponseImageSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
     
@@ -77,27 +77,9 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     def getByCategory(self, request, *args, **kwargs):
         validate_integer(request.data,['id'])
         category_id = request.data['id']
-        queryset = self.queryset.filter(category_id=category_id).select_related('category')
-        serializer = ProductResponseSerializer(queryset, many=True)
-        data = copy.deepcopy(serializer.data)
-        
-        images = ProductImage.objects.all()
-        image_path = {}
-        for i in images:
-            if i.product.id not in image_path:
-                image_path[i.product.id] = i.productPhoto.path
-        for i in data:
-            image = {}
-            path = image_path[i['id']]
-            with open(path,'rb') as img_file:
-                extension = str(path).split('.')[-1].lower()
-                b64_string = base64.b64encode(img_file.read())
-                image['id'] = i['id']
-                image['path'] = path
-                image['imageType']= "image/"+extension
-                image['stringBase64'] = b64_string
-            i['product_image'] = image
-        return Response(data, status=200)
+        queryset = self.queryset.filter(category_id=category_id, is_deleted=False).select_related('category')
+        serializer = ProductResponseImageSerializer(queryset, many=True)
+        return Response(serializer.data, status=200)
     
     @action(detail=True, methods=['get'], url_path='retrieve-with-image')
     def retrieve_with_image(self, request, *args, **kwargs):
