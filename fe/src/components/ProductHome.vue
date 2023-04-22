@@ -13,7 +13,7 @@
         </v-card-subtitle>
         <v-card-actions class="d-flex justify-center">
             <v-btn class="hover" color="primary" :to="{ name: 'sellerproductdetails', params: { id: product.id } }">See Details</v-btn>
-            <v-btn class="hover" color="primary" onclick="addToCart(product.id)">Add to cart</v-btn>
+            <v-btn class="hover" color="primary" @click="addToCart">Add to cart</v-btn>
         </v-card-actions>
     </v-card>
 </template>
@@ -22,23 +22,16 @@
     export default {
         name: "ProductHome",
         props: ["product"],
-        props: {
-            userdata: {
-            type: Object,
-            required: true,
-            },
-        },
         methods:{
-            ...mapActions("cart",["postCart"]),
-            addToCart(productId){
-                this.postCart({product:productId,user:this.userdata.id})
+            addToCart(){
+                this.$emit('add-to-cart', this.product.id)
             }
-        }
+        },
     }
 </script>
 
 <style scoped>
-    .card-image {
+.card-image {
     height: 200px;
     width: 100%;
 }

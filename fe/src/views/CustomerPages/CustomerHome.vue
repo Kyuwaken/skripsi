@@ -51,7 +51,7 @@
         <v-divider class="mt-5 mb-5"></v-divider>
         <v-row cols=12 class="mt-4" v-if="productData.length > 0">
             <v-col v-for="product in productData" :key="product.id" cols="12" sm="6" md="4" lg="3">
-                <ProductHome :product="product" />
+                <ProductHome @add-to-cart="addToCart" :product="product" />
             </v-col>
         </v-row>
         <!-- <v-row>
@@ -124,15 +124,26 @@ export default {
             ],
         }
     },
+    props: {
+    userdata: {
+      type: Object,
+      required: true,
+    },
+  },
     mounted() {
         //console.log("masuk mounted")
         this.fetchProduct();
         this.fetchCategories();
-        console.log(getCategory)
     },
     methods:{
         ...mapActions("category", ["fetchCategories"]),
         ...mapActions("product", ["fetchProduct"]),
+        ...mapActions("cart",["postCart"]),
+        addToCart(productId){
+            console.log(this.userdata)
+            debugger
+            this.postCart({product:productId,user:this.userdata.id})
+        },
     },
     components: { ProductHome },
     props: ["products"]

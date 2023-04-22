@@ -74,6 +74,7 @@ export default {
   },
   created() {
     this.getProfileData(this.userdata.id);
+    console.log(this.userdata)
   },
   methods: {
     ...mapActions("profile", ["getProfileData"]),
