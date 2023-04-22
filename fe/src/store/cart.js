@@ -20,12 +20,13 @@ const ENDPOINT = {
       }
     },
     actions: {
-      fetchCartById({ commit }, customerId) {
+      fetchCartById({ commit }, body) {
         return new Promise((resolve, reject) => {
             getAPI
-                .post(ENDPOINT.CART + 'user/', customerId)
+                .post(ENDPOINT.CART + 'user/', body)
                 .then((response) => {
-                    commit("SET_PRODUCT_DATA", response.data);
+                    console.log(response.data)
+                    commit("SET_CART", response.data);
                     resolve(response.data);
                 })
                 .catch((error) => {
