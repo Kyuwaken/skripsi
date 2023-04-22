@@ -64,7 +64,7 @@ export default {
     ],
   }),
   computed: {
-    ...mapState("profile", ["profileData"]),
+    ...mapState("profile", ["profileData"])
   },
   props: {
     userdata: {

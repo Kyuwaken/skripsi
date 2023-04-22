@@ -116,8 +116,9 @@ export default {
           icon: 'success',
           title: 'Update Profile',
           text: 'Your profile has been updated.'
+        }).then(()=>{
+          this.$router.push('/sellerprofile')
         })
-        this.$router.push('/sellerprofile')
       })
     },
 

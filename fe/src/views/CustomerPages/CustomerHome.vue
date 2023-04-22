@@ -49,8 +49,12 @@
         </v-row>
 
         <v-divider class="mt-5 mb-5"></v-divider>
-
-        <v-row>
+        <v-row cols=12 class="mt-4" v-if="productData.length > 0">
+            <v-col v-for="product in productData" :key="product.id" cols="12" sm="6" md="4" lg="3">
+                <ProductHome :product="product" />
+            </v-col>
+        </v-row>
+        <!-- <v-row>
             <v-col cols=12>
                 <v-sheet outlined color="white" elevation="5">
                     <v-row class="justify-center mt-4">
@@ -80,7 +84,7 @@
                     </v-row>
                 </v-sheet>
             </v-col>
-        </v-row>
+        </v-row> -->
 
 
         <!-- <v-row class="ma-5">
@@ -96,11 +100,11 @@
 
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
-import ProductBox from "@/components/ProductBox.vue";
+import ProductHome from "@/components/ProductHome.vue";
 export default {
     computed: {
         ...mapState("category", ['categories']),
-
+        ...mapState("product", ["productData"]),
     },
     data() {
         return {
@@ -122,13 +126,15 @@ export default {
     },
     mounted() {
         //console.log("masuk mounted")
+        this.fetchProduct();
         this.fetchCategories();
         console.log(getCategory)
     },
     methods:{
         ...mapActions("category", ["fetchCategories"]),
+        ...mapActions("product", ["fetchProduct"]),
     },
-    components: { ProductBox },
+    components: { ProductHome },
     props: ["products"]
 }
 </script>
