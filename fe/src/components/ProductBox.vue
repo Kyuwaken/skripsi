@@ -12,21 +12,48 @@
             <p>{{ product.description }}</p>
         </v-card-subtitle>
         <v-card-actions class="d-flex justify-center">
-            <v-btn class="hover" color="primary" :to="{ name: 'sellerproductdetails', params: { id: product.id } }">See Details</v-btn>
+            <v-btn class="hover" color="primary"  @click="goTo">See Details</v-btn>
         </v-card-actions>
     </v-card>
 </template>
 
 <script>
 import { created } from 'vue-popperjs';
-
+import crypto from '@/plugins/crypto';
 
     export default {
         name: "ProductBox",
-        props: ["product"],
-
+        props: {
+            userdata: {
+                type: Object,
+                required: true,
+            },
+            product: {
+                type: Object,
+                required: true,
+            },
+        },
+        mixins: [crypto],
         created(){
             console.log(this.product)
+        },
+        methods:{
+            goTo(){
+                var user = this.decryptLocalStorage(localStorage.getItem('encryptedData'))
+                console.log("role",user)
+                if(user.role == "Seller"){
+                    this.$router.push({
+                        name: 'sellerproductdetails',
+                        params: { id: this.product.id }
+                    })
+                }
+                else{
+                    this.$router.push({
+                        name: 'customerproductdetails',
+                        params: { id: this.product.id }
+                    })
+                }
+            }
         }
     }
 

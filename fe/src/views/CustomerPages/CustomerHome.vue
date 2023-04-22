@@ -101,6 +101,7 @@
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import ProductHome from "@/components/ProductHome.vue";
+import crypto from '@/plugins/crypto';
 export default {
     computed: {
         ...mapState("category", ['categories']),
@@ -124,6 +125,7 @@ export default {
             ],
         }
     },
+    mixins: [crypto],
     props: {
     userdata: {
       type: Object,
@@ -140,9 +142,8 @@ export default {
         ...mapActions("product", ["fetchProduct"]),
         ...mapActions("cart",["postCart"]),
         addToCart(productId){
-            console.log(this.userdata)
-            debugger
-            this.postCart({product:productId,user:this.userdata.id})
+            var user = this.decryptLocalStorage(localStorage.getItem('encryptedData'))
+            this.postCart({product:productId,user:user.id})
         },
     },
     components: { ProductHome },

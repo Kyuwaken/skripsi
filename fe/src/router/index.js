@@ -65,6 +65,12 @@ const routes = [
     component: () => import('../views/CustomerPages/CustomerSearch.vue')
   },
   {
+    path: "/customerproductdetails",
+    name: "customerproductdetails",
+    component: () => import("../views/CustomerPages/CustomerProductDetails.vue"),
+    props: true
+  },  
+  {
     path: "/sellerregistration",
     name: "sellerregistration",
     component: () => import("../views/SellerPages/SellerRegistration.vue")

@@ -20,7 +20,7 @@
         <v-icon>mdi-history</v-icon>
       </v-btn>
 
-      <v-btn icon>
+      <v-btn icon @click="$router.push('/customercart/')">
         <v-icon>mdi-cart-outline</v-icon>
       </v-btn>
 

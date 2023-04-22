@@ -3,7 +3,7 @@
         <v-card-title class="pa-0">
             <img 
                 class="card-image" 
-                :src="'data:' + product.product_image[0].imageType + ';base64,' + product.product_image[0].stringBase64"
+                :src="product.product_image[0].path"
                 :alt="product.name"
             />
         </v-card-title>
@@ -12,7 +12,7 @@
             <p>{{ product.price }}</p>
         </v-card-subtitle>
         <v-card-actions class="d-flex justify-center">
-            <v-btn class="hover" color="primary" :to="{ name: 'sellerproductdetails', params: { id: product.id } }">See Details</v-btn>
+            <v-btn class="hover" color="primary" @click="goTo">See Details</v-btn>
             <v-btn class="hover" color="primary" @click="addToCart">Add to cart</v-btn>
         </v-card-actions>
     </v-card>
@@ -25,6 +25,9 @@
         methods:{
             addToCart(){
                 this.$emit('add-to-cart', this.product.id)
+            },
+            goTo(){
+                this.$router.push({name: 'customerproductdetails', params: { id: this.product.id }})
             }
         },
     }
