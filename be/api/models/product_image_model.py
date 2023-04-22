@@ -13,5 +13,5 @@ def file_path(instance, filename):
 class ProductImage(TimestampModel, UserTrackModel):
     product = auto_prefetch.ForeignKey(
         'Product', on_delete=models.CASCADE, null=True, db_constraint=False, related_name='product_image')
-    productPhoto = models.ImageField(upload_to=file_path, null=True)
+    image = models.ImageField(upload_to=file_path, null=True)
     

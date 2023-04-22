@@ -20,7 +20,7 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     def validate_max_size(self,request):
         print(request.data)
         temp = copy.deepcopy(request.data)
-        data = temp.pop('productPhoto')
+        data = temp.pop('image')
         print("ini data : " + str(data))
         for i in data:
             print(i)
@@ -29,7 +29,7 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     
     def validate_type_file(self,request):
         temp = copy.deepcopy(request.data)
-        data = temp.pop('productPhoto')
+        data = temp.pop('image')
         for i in data:
             name = i._name
             arr = name.split('.')
@@ -59,7 +59,7 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         image_path = {}
         for i in images:
             if i.product.id not in image_path:
-                image_path[i.product.id] = i.productPhoto.path
+                image_path[i.product.id] = i.image.path
         for i in data:
             image = {}
             path = image_path[i['id']]
@@ -93,7 +93,7 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         for i in images:
             # breakpoint()
             image = {}
-            path = i.productPhoto.path
+            path = i.image.path
             with open(path, 'rb') as img_file:
                 extension = str(path).split('.')[-1].lower()
                 b64_string = base64.b64encode(img_file.read())
@@ -111,7 +111,7 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     def create_product_with_image(self, request, *args, **kwargs): 
         # breakpoint()
         print(request.data)
-        # validate_input(request.data,['name','price','productDescription','productPhoto'])
+        # validate_input(request.data,['name','price','productDescription','image'])
         product = Product.objects.filter(name__iexact = request.data['name'],seller_id=request.custom_user['id'])
         if product:
             raise ValidationException('Product ' + request.data['name'] + ' in seller '+ request.custom_user['name'] + ' already exists')
@@ -121,11 +121,11 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         product = Product.objects.get(name = request.data['name'],seller_id=request.custom_user['id'],price=request.data['price'])
         self.validate_max_size(request)
         self.validate_type_file(request)
-        data = request.data.pop('productPhoto')
+        data = request.data.pop('image')
         for index,i in enumerate(data):
             last = str(i.name).split('.')
             i.name = str(index+1) + '.'+last[-1]
-            ProductImage.objects.create(productPhoto=i,product_id=product.id)
+            ProductImage.objects.create(image=i,product_id=product.id)
         return Response(status=200)
     
     def retrieve(self, request, *args, **kwargs):
@@ -148,11 +148,11 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
             raise NotFoundException("Product")
         self.validate_max_size(request)
         self.validate_type_file(request)
-        data = request.data.pop('productPhoto')
+        data = request.data.pop('image')
         product_images = ProductImage.objects.filter(product_id=kwargs['pk'])
         path = []
         for i in product_images:
-            path.append(i.productPhoto.path)
+            path.append(i.image.path)
         product_images.delete()
         for i in path:
             if os.path.isfile(i):
@@ -160,13 +160,13 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         for index,i in enumerate(data):
             last = str(i.name).split('.')
             i.name = str(index+1) + '.'+last[-1]
-            ProductImage.objects.create(productPhoto=i,product_id=product.id)
+            ProductImage.objects.create(image=i,product_id=product.id)
         return Response(status=200)
     def destroy(self, request, *args, **kwargs):
         product_images = ProductImage.objects.filter(product_id=kwargs['pk'])
         path = []
         for i in product_images:
-            path.append(i.productPhoto.path)
+            path.append(i.image.path)
         product_images.delete()
         for i in path:
             if os.path.isfile(i):

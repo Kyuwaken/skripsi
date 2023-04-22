@@ -36,16 +36,16 @@ class ProductImageSerializer(serializers.ModelSerializer):
         fields = ['id','path']
     
     def get_path(self,obj):
-        with open(obj.productPhoto.path, 'rb') as img_file:
-            imageType = "image/" + str(obj.productPhoto.path).split('.')[-1].lower()
+        with open(obj.image.path, 'rb') as img_file:
+            imageType = "image/" + str(obj.image.path).split('.')[-1].lower()
             stringBase64 = base64.b64encode(img_file.read()).decode()
             return "data:" + imageType + ";base64," + stringBase64
     # def get_imageType(self,obj):
-    #     with open(obj.productPhoto.path, 'rb') as img_file:
-    #         extension = str(obj.productPhoto.path).split('.')[-1].lower()
+    #     with open(obj.image.path, 'rb') as img_file:
+    #         extension = str(obj.image.path).split('.')[-1].lower()
     #         return "image/"+extension
     # def get_stringBase64(self,obj):
-    #     with open(obj.productPhoto.path, 'rb') as img_file:
+    #     with open(obj.image.path, 'rb') as img_file:
     #         return base64.b64encode(img_file.read())
 
 class ProductResponseImageSerializer(serializers.ModelSerializer):
