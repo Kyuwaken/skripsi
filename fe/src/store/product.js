@@ -84,6 +84,21 @@ const product = {
                         reject(error);
                     });
             });
+        },        
+        deleteProductbyId({commit}, productId){
+            console.log("masuk delete product by id")
+            return new Promise((resolve, reject) => {
+                getAPI
+                    .delete(ENDPOINT.GET_ALL_PRODUCT.concat(productId, "/"))
+                    .then((response) => {
+                       // commit("SET_PRODUCT_DATA", response.data);
+                        //console.log("data di get by id", this.productData)
+                        resolve(response.data);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            });
         },
     },
 };

@@ -36,7 +36,8 @@ const routes = [
   {
     path: '/customerhome',
     name: 'customerhome',
-    component: () => import('../views/CustomerPages/CustomerHome.vue')
+    component: () => import('../views/CustomerPages/CustomerHome.vue'),
+    props: true
   },
   {
     path: '/customerregistration',
@@ -97,6 +98,18 @@ const routes = [
     path: "/sellerproductdetails",
     name: "sellerproductdetails",
     component: () => import("../views/SellerPages/SellerProductDetails.vue"),
+    props: true
+  },  
+  {
+    path: "/sellereditproduct",
+    name: "sellereditproduct",
+    component: () => import("../views/SellerPages/SellerEditProduct.vue"),
+    props: true
+  },  
+  {
+    path: "/testing",
+    name: "xxxx",
+    component: () => import("../App.vue"),
     props: true
   },
 ]

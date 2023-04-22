@@ -5,7 +5,7 @@
         </v-btn>
         <v-carousel v-if="productData">
             <v-carousel-item v-for="(image, index) in productData.product_image" :key="index">
-                <v-img :src="'data:' + image.imageType + ';base64,' + image.stringBase64"></v-img>
+                <v-img :src="image.path"></v-img>
             </v-carousel-item>
         </v-carousel>
         <v-card>
@@ -36,6 +36,7 @@ export default {
     mounted() {
         console.log(this.$route.params.id);
         this.fetchProductbyId(this.$route.params.id);
+
     },
     methods: {
         ...mapActions("product", ["fetchProductbyId", "deleteProductbyId"]),

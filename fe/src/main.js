@@ -5,6 +5,8 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import "@/plugins/vue-sweetalert2"
 import interceptorsSetup from "@/plugins/interceptors";
+import 'vue-popperjs/dist/vue-popper.css';
+
 
 Vue.config.productionTip = false
 interceptorsSetup();
