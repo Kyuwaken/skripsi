@@ -3,7 +3,7 @@
         <v-card-title class="pa-0">
             <img 
                 class="card-image" 
-                :src="'data:' + product.product_image[0].imageType + ';base64,' + product.product_image[0].stringBase64"
+                :src="product.product_image[0].path"
                 :alt="product.name"
             />
         </v-card-title>
@@ -18,10 +18,18 @@
 </template>
 
 <script>
+import { created } from 'vue-popperjs';
+
+
     export default {
         name: "ProductBox",
-        props: ["product"]
+        props: ["product"],
+
+        created(){
+            console.log(this.product)
+        }
     }
+
 </script>
 
 <style scoped>

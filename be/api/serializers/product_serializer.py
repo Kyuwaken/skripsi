@@ -27,18 +27,26 @@ class ProductResponseSerializer(serializers.ModelSerializer):
         return None
 
 class ProductImageSerializer(serializers.ModelSerializer):
-    imageType = serializers.SerializerMethodField()
-    stringBase64 = serializers.SerializerMethodField()
+    # imageType = serializers.SerializerMethodField()
+    # stringBase64 = serializers.SerializerMethodField()
+    path = serializers.SerializerMethodField()
     class Meta:
         model = ProductImage
-        fields = ['id','imageType','stringBase64']
-    def get_imageType(self,obj):
+        # fields = ['id','imageType','stringBase64']
+        fields = ['id','path']
+    
+    def get_path(self,obj):
         with open(obj.productPhoto.path, 'rb') as img_file:
-            extension = str(obj.productPhoto.path).split('.')[-1].lower()
-            return "image/"+extension
-    def get_stringBase64(self,obj):
-        with open(obj.productPhoto.path, 'rb') as img_file:
-            return base64.b64encode(img_file.read())
+            imageType = "image/" + str(obj.productPhoto.path).split('.')[-1].lower()
+            stringBase64 = base64.b64encode(img_file.read()).decode()
+            return "data:" + imageType + ";base64," + stringBase64
+    # def get_imageType(self,obj):
+    #     with open(obj.productPhoto.path, 'rb') as img_file:
+    #         extension = str(obj.productPhoto.path).split('.')[-1].lower()
+    #         return "image/"+extension
+    # def get_stringBase64(self,obj):
+    #     with open(obj.productPhoto.path, 'rb') as img_file:
+    #         return base64.b64encode(img_file.read())
 
 class ProductResponseImageSerializer(serializers.ModelSerializer):
     category = CategorySerializer(many=False)
