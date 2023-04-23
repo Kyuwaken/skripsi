@@ -20,27 +20,32 @@ const product = {
     },
     actions: {
         postProductData({ commit }, productData) {
-             console.log("masuk post product")
-            let formData = new FormData();
-            formData.append('name', productData.name);
-            formData.append('productDescription', productData.productDescription);
-            formData.append('price', productData.price);
-            formData.append('preorderTime', productData.preorderTime);
-            formData.append('category', productData.category);
-            productData.productPhoto.forEach(photo => {
-                formData.append('productPhoto', photo, photo.name);
-            });
-            return new Promise((resolve, reject) => {
-                getAPI
-                    .post(ENDPOINT.CREATE_PRODUCT_WITH_IMAGE, formData)
-                    .then((response) => {
-                        resolve(response.data);
-                    })
-                    .catch((error) => {
-                        reject(error);
-                    });
-            });
-        },
+            console.log("masuk post product")
+           let formData = new FormData();
+           formData.append('name', productData.name);
+           formData.append('productDescription', productData.productDescription);
+           formData.append('price', productData.price);
+           formData.append('preorderTime', productData.preorderTime);
+           formData.append('category', productData.category);
+           
+           productData.productPhoto.forEach(photo => {
+               console.log("product js",photo)
+               formData.append('image', photo, photo.file.name);
+           });
+           for (let pair of formData.entries()) {
+            console.log(pair[0] + ": " + pair[1]);
+          }
+           return new Promise((resolve, reject) => {
+               getAPI
+                   .post(ENDPOINT.CREATE_PRODUCT_WITH_IMAGE, formData)
+                   .then((response) => {
+                       resolve(response.data);
+                   })
+                   .catch((error) => {
+                       reject(error);
+                   });
+           });
+       },
 
         fetchProductbySeller({commit}, sellerId){
             console.log("masuk sellerproduct")
@@ -114,6 +119,30 @@ const product = {
                     })
             })
           },
+        updateProductData({ commit }, productData) {
+            console.log("masuk update product")
+            //console.log(productId)
+
+           let formData = new FormData();
+           formData.append('name', productData.name);
+           formData.append('productDescription', productData.productDescription);
+           formData.append('price', productData.price);
+           formData.append('preorderTime', productData.preorderTime);
+           formData.append('category', productData.category);
+           productData.productPhoto.forEach(photo => {
+               formData.append('image', photo, photo.name);
+           });
+           return new Promise((resolve, reject) => {
+               getAPI
+                   .patch(ENDPOINT.GET_ALL_PRODUCT.concat(productData.id, '/'), formData)
+                   .then((response) => {
+                       resolve(response.data);
+                   })
+                   .catch((error) => {
+                       reject(error);
+                   });
+           });
+       },
     },
 };
 

@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import { created } from 'vue-popperjs';
 import crypto from '@/plugins/crypto';
 
     export default {

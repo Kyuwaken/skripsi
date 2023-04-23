@@ -7,12 +7,12 @@
             <v-toolbar-title>Edit Product Form</v-toolbar-title>
         </v-toolbar>
         <v-form ref="form" @submit.prevent="handleSubmit">
-            <vue-upload-multiple-image :dataImages = "productPhoto" @upload-success="uploadImageSuccess" @edit-image="editImage"
-                @mark-is-primary="markIsPrimary" @limit-exceeded="limitExceeded" @before-remove="beforeRemove"
-                id-upload="myIdUpload" id-edit="myIdEdit" :max-image=20 primary-text="Default"
+            <vue-upload-multiple-image :dataImages="productPhoto" @upload-success="uploadImageSuccess"
+                @edit-image="editImage" @mark-is-primary="markIsPrimary" @limit-exceeded="limitExceeded"
+                @before-remove="beforeRemove" id-upload="myIdUpload" id-edit="myIdEdit" :max-image=20 primary-text="Default"
                 browse-text="Browse picture(s)" drag-text="Drag pictures" mark-is-primary-text="Set as default"
-                popup-text="This image will be displayed as default" :multiple=true
-                :show-edit=true :show-delete=true :show-add=true>
+                popup-text="This image will be displayed as default" :multiple=true :show-edit=true :show-delete=true
+                :show-add=true>
             </vue-upload-multiple-image>
             <v-text-field v-model="name" label="Product Name" :rules="[requiredRule]" required></v-text-field>
             <v-textarea v-model="productDescription" label="Product Description" :rules="[requiredRule]"
@@ -49,6 +49,7 @@ export default {
             preorderTime: "",
             productPhoto: [],
             category: "",
+            newProductPhoto: [],
             requiredRule: [v => !!v || "Field is required"],
             numericRule: [v => /^\d+$/.test(v) || "Input must be a number"],
         };
@@ -143,14 +144,46 @@ export default {
             // });
 
 
+            this.productPhoto.forEach(photo => {
+                if (!('size' in photo)) {
+                    const imageData = photo.path;
+                    const splitData1 = imageData.split('data:');
+                    const imageType1 = splitData1[1].split(';')[0]; // get the image type (e.g. jpeg, png, etc.)
+                    const splitData2 = imageData.split('data:image/');
+                    const imageType2 = splitData2[1].split(';')[0];
+                    const base64String = imageData.split(',')[1];
+                    const binaryString = atob(base64String);
+                    const arrayBuffer = new ArrayBuffer(binaryString.length);
+                    const uint8Array = new Uint8Array(arrayBuffer);
+                    for (let i = 0; i < binaryString.length; i++) {
+                        uint8Array[i] = binaryString.charCodeAt(i);
+                    }
+                    const blob = new Blob([uint8Array], { type: imageType1 });
+                    const filename = "image." + imageType2;
+                    const fileSize = blob.size;
 
-            this.postProductData({
+                    // Create a new File object from the Blob
+                    const file = new File([blob], filename, { type: imageType1 });
+                    const fileName = file.name;
+
+                    // Add the file to the form data
+                    this.newProductPhoto.push(file);
+                }
+                else {
+
+                    //console.log("di looping productphoto else", photo)
+                    this.newProductPhoto.push(photo)
+                }
+            });
+            console.log("id di postingg", this.productData.id)
+            this.updateProductData({
                 name: this.name,
                 productDescription: this.productDescription,
                 price: this.price,
                 preorderTime: this.preorderTime,
                 category: this.category.id,
-                productPhoto: this.productPhoto
+                productPhoto: this.newProductPhoto,
+                id:  this.productData.id
             }).then(() => {
                 // Success message
                 Swal.fire({
@@ -182,22 +215,25 @@ export default {
                 this.productPhoto = []
             })
         },
-        uploadImageSuccess(formData, index, fileList) {
-            console.log('data', formData, index, fileList)
+        uploadImageSuccess(formData, index, fileList, imageList) {
+            console.log('data', formData, index, 'file', fileList, 'image', imageList)
+            this.productPhoto = imageList
             // Upload image api
             // axios.post('http://your-url-upload', formData).then(response => {
             //   console.log(response)
             // })
         },
-        beforeRemove(index, removeCallBack) {
+        beforeRemove(index, removeCallBack, imageList) {
             console.log('index', index)
             var r = confirm("remove image")
             if (r == true) {
                 removeCallBack()
             }
+            this.productPhoto = imageList
         },
-        editImage(formData, index, fileList) {
+        editImage(formData, index, fileList, imageList) {
             console.log('edit data', formData, index, fileList)
+            this.productPhoto = imageList
         },
         markIsPrimary(index, fileList) {
             console.log('markIsPrimary data', index, fileList)
@@ -212,8 +248,9 @@ export default {
             this.productDescription = productData.productDescription;
             this.price = productData.price;
             this.preorderTime = productData.preorderTime;
-            this.productPhoto = productData.productPhoto;
+            this.productPhoto = productData.product_image;
             this.category = productData.category;
+            console.log("watch seller edit", this.productPhoto)
         }
     }
 }

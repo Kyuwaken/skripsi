@@ -305,13 +305,17 @@ export default {
             reader.onload = (e) => {
                 let dataURI = e.target.result
                 if (dataURI) {
+                    let newFile = new File ([file], file.name, {type: file.type})
+                    newFile.path = dataURI
+                    console.log("file baru di created image", newFile)
                     if (!this.images.length) {
                         this.images.push({ name: file.name, path: dataURI, highlight: 1, default: 1 })
                         this.currentIndexImage = 0
-                        this.files.push(file)
+                        
+                        this.files.push({file: file, path: dataURI})
                     } else {
                         this.images.push({ name: file.name, path: dataURI, highlight: 0, default: 0 })
-                        this.files.push(file)
+                        this.files.push({file: file, path: dataURI})
                     }
                     this.$emit('upload-success', formData, this.images.length - 1, this.images, this.files)
                 }
@@ -326,10 +330,12 @@ export default {
             reader.onload = (e) => {
                 let dataURI = e.target.result
                 if (dataURI) {
+                    let newFile = new File ([file], file.name, {type: file.type})
+                    newFile.path = dataURI
                     if (this.images.length && this.images[this.currentIndexImage]) {
                         this.images[this.currentIndexImage].path = dataURI
                         this.images[this.currentIndexImage].name = file.name
-                        this.files[this.currentIndexImage] = file
+                        this.files[this.currentIndexImage] = newFile
                     }
                 }
             }
@@ -432,7 +438,10 @@ export default {
     watch: {
         dataImages: {
             handler: function (newVal) {
+                console.log("masuk watch component multiple", newVal.length-1)
                 this.images = cloneDeep(newVal)
+                this.files = cloneDeep(newVal)
+                this.currentIndexImage = newVal.length-1
             },
             deep: true
         }
@@ -447,6 +456,8 @@ export default {
     created() {
         this.images = []
         this.images = cloneDeep(this.dataImages)
+        this.files = cloneDeep(this.dataImages)
+        this.currentIndexImage = this.dataImages.length-1
     }
 }
 </script>
