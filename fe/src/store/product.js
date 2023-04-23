@@ -143,6 +143,20 @@ const product = {
                    });
            });
        },
+        fetchFavoriteById({ commit }, body) {
+            return new Promise((resolve, reject) => {
+                getAPI
+                    .post(ENDPOINT.FAVORITE + 'user/', body)
+                    .then((response) => {
+                        console.log(response.data)
+                        commit("SET_PRODUCT_DATA", response.data);
+                        resolve(response.data);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            })
+        }
     },
 };
 

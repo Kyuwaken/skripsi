@@ -49,17 +49,17 @@ export default {
       {
         title: "History",
         icon: "mdi-history",
-        link: "/seller/transactions",
+        link: "/customertransaction/",
       },
       {
         title: "Favorite",
         icon: "mdi-heart-outline",
-        link: "/seller/profile/update",
+        link: "/customerfavorite/",
       },
       {
         title: "Cart",
         icon: "mdi-cart-outline",
-        link: "/seller/products/update",
+        link: "/customercart/",
       },
     ],
   }),

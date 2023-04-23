@@ -1,6 +1,6 @@
 <template>
     <v-toolbar flat max-width="auto">
-      <v-toolbar-title>Spider</v-toolbar-title>
+      <v-toolbar-title @click="$router.push('/customerhome/')">Spider</v-toolbar-title>
     <!-- mau dibikin ada text searchnya dan bkn button -->
     <!-- <v-spacer></v-spacer> -->
       <!-- <v-btn icon width="auto">
@@ -12,7 +12,7 @@
       </v-btn> -->
       
       <v-spacer></v-spacer>
-      <v-btn icon>
+      <v-btn icon @click="$router.push('/customerfavorite/')">
         <v-icon>mdi-heart-outline</v-icon>
       </v-btn>
 
@@ -24,7 +24,7 @@
         <v-icon>mdi-cart-outline</v-icon>
       </v-btn>
 
-      <v-btn icon>
+      <v-btn icon @click="$router.push('/customerprofile/')">
         <v-icon>mdi-account-outline</v-icon>
       </v-btn>
 

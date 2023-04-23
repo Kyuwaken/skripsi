@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-btn icon left @click="goBack">
+    <v-btn icon left @click="$router.push('/customerhome/')">
       <v-icon>mdi-arrow-left</v-icon>
     </v-btn>
     <h1 class="text-center my-6">My Cart</h1>
@@ -183,9 +183,6 @@ export default {
     goToDetailsPage(transaction) {
       this.$router.push({name: 'customerproductdetails', params: { id: transaction.product.id }})
       // Navigate to the transaction details page
-    },
-    goBack() {
-      this.$router.go(-1);
     },
   },
 };

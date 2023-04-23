@@ -48,6 +48,6 @@ class FavoriteViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     @action(detail=False, methods=['post'], url_path='user')
     def get_favorite_by_id(self, request, *args, **kwargs):
         validate_input(request.data,['id'])
-        favorite = self.queryset.filter(user_id=request.data['id'])
-        serializer = FavoriteResponseSerializer(favorite, many=True)
+        products = [i.product for i in self.queryset.filter(user_id=request.data['id'])]
+        serializer = ProductResponseImageSerializer(products, many=True)
         return Response(serializer.data,status=200)
