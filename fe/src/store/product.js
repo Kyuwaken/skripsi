@@ -4,6 +4,7 @@ const ENDPOINT = {
     CREATE_PRODUCT_WITH_IMAGE: "/product/create-product-with-image/",
     GET_SELLER_PRODUCT: "/product/seller/",
     GET_ALL_PRODUCT: "/product/",
+    FAVORITE: "/favorite/"
 };
 
 const product = {
@@ -100,6 +101,19 @@ const product = {
                     });
             });
         },
+        clickFavorite({commit},body){
+            return new Promise((resolve, reject) => {
+                getAPI
+                    .post(ENDPOINT.FAVORITE,body)
+                    .then((response)=>{
+                        commit("SET_PRODUCT_DATA",response.data)
+                        resolve(response.data);
+                    })
+                    .catch((error)=>{
+                        reject(error);
+                    })
+            })
+          },
     },
 };
 

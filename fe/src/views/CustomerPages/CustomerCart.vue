@@ -12,62 +12,76 @@
         :style="index == 0 ? 'border-top: 5px solid rgba(0, 0, 0, 0.12)' : ''"
       >
         <v-row v-if="index == 0" class="mt-6 mb-6">
-          <v-col cols="2">
-            <v-img :src="transaction.productPhoto" height="100"></v-img>
-          </v-col>
-          <v-col cols="7">
-            <v-list-item-content>
-              <div class="text-h6">{{ transaction.productName }}</div>
-              <div class="mt-2">Price: {{ transaction.price }}</div>
-              <div>
-                Quantity:
-                {{
-                  transaction.quantity
-                }}
-                function(transaction.transaction_detail)
-              </div>
-            </v-list-item-content>
-            return len(Transaction_detail)
-          </v-col>
-          <v-col>
-            <v-list-item-action>
-              <v-btn
-                class="mt-8"
-                color="primary"
-                @click="goToDetailsPage(transaction)"
-                >View Details</v-btn
-              >
-            </v-list-item-action>
-          </v-col>
+            <v-col cols="2">
+                <img :src="transaction.product.product_image[0].path" :alt="transaction.product.name" height="100">
+            </v-col>
+            <v-col cols="7">
+                <v-list-item-content>
+                <div class="text-h6">{{ transaction.product.name }}</div>
+                <div class="mt-2">Price: {{ transaction.product.price }}</div>
+                <div>
+                    Quantity:
+                    {{
+                    transaction.quantity
+                    }}
+                    function(transaction.transaction_detail)
+                </div>
+                </v-list-item-content>
+                return len(Transaction_detail)
+            </v-col>
+            <v-col>
+                <v-list-item-action>
+                <v-btn
+                    class="mt-8"
+                    color="primary"
+                    @click="goToDetailsPage(transaction)"
+                    >View Details</v-btn
+                >
+                <v-btn
+                    icon
+                    @click="goToDetailsPage(transaction)"
+                    ><v-icon>
+                      mdi-minus-box-outline
+                    </v-icon>
+                </v-btn>
+                <v-btn
+                    icon
+                    @click="goToDetailsPage(transaction)"
+                    ><v-icon>
+                      mdi-plus-box-outline
+                    </v-icon>
+                </v-btn>
+                </v-list-item-action>
+            </v-col>
         </v-row>
         <v-row v-else class="mb-6">
-          <v-col cols="2">
-            <v-img :src="transaction.productPhoto" height="100"></v-img>
-          </v-col>
-          <v-col cols="7">
-            <v-list-item-content>
-              <div class="text-h6">{{ transaction.productName }}</div>
-              <div class="mt-2">Price: {{ transaction.price }}</div>
-              <div>
-                Quantity:
-                {{
-                  transaction.quantity
-                }}
-                function(transaction.transaction_detail)
-              </div>
-            </v-list-item-content>
-            return len(Transaction_detail)
-          </v-col>
-          <v-col>
-            <v-list-item-action>
-              <v-btn
-                class="mt-8"
-                color="primary"
-                @click="goToDetailsPage(transaction)"
-                >View Details</v-btn
-              >
-            </v-list-item-action>
-          </v-col>
+            <v-col cols="2">
+                <img :src="transaction.product.product_image[0].path" :alt="transaction.product.name" height="100">
+            </v-col>
+            <v-col cols="7">
+                <v-list-item-content>
+                <div class="text-h6">{{ transaction.product.name }}</div>
+                <div class="mt-2">Price: {{ transaction.product.price }}</div>
+                <div>
+                    Quantity:
+                    {{
+                    transaction.quantity
+                    }}
+                    function(transaction.transaction_detail)
+                </div>
+                </v-list-item-content>
+                return len(Transaction_detail)
+            </v-col>
+            <v-col>
+                <v-list-item-action>
+                <v-btn
+                    class="mt-8"
+                    color="primary"
+                    @click="goToDetailsPage(transaction)"
+                    >View Details</v-btn
+                >
+                </v-list-item-action>
+            </v-col>
         </v-row>
       </v-list-item>
     </v-list>
@@ -88,55 +102,55 @@ export default {
     return {
       transactions: [
         {
-          productPhoto: "https://via.placeholder.com/150",
+          image: "https://via.placeholder.com/150",
           productName: "Product 1",
           price: 10.99,
           quantity: 1,
         },
         {
-          productPhoto: "https://via.placeholder.com/150",
+          image: "https://via.placeholder.com/150",
           productName: "Product 2",
           price: 5.99,
           quantity: 2,
         },
         {
-          productPhoto: "https://via.placeholder.com/150",
+          image: "https://via.placeholder.com/150",
           productName: "Product 3",
           price: 8.99,
           quantity: 3,
         },
         {
-          productPhoto: "https://via.placeholder.com/150",
+          image: "https://via.placeholder.com/150",
           productName: "Product 3",
           price: 8.99,
           quantity: 3,
         },
         {
-          productPhoto: "https://via.placeholder.com/150",
+          image: "https://via.placeholder.com/150",
           productName: "Product 3",
           price: 8.99,
           quantity: 3,
         },
         {
-          productPhoto: "https://via.placeholder.com/150",
+          image: "https://via.placeholder.com/150",
           productName: "Product 3",
           price: 8.99,
           quantity: 3,
         },
         {
-          productPhoto: "https://via.placeholder.com/150",
+          image: "https://via.placeholder.com/150",
           productName: "Product 3",
           price: 8.99,
           quantity: 3,
         },
         {
-          productPhoto: "https://via.placeholder.com/150",
+          image: "https://via.placeholder.com/150",
           productName: "Product 3",
           price: 8.99,
           quantity: 3,
         },
         {
-          productPhoto: "https://via.placeholder.com/150",
+          image: "https://via.placeholder.com/150",
           productName: "Product 3",
           price: 8.99,
           quantity: 3,
@@ -156,7 +170,7 @@ export default {
   created() {
     this.fetchCartById({id:this.userdata.id}).then(()=>{
         console.log("cart",this.cart)
-
+        this.transactions = this.cart
     })
   },
   methods: {
@@ -167,10 +181,11 @@ export default {
       "customCart",
     ]),
     goToDetailsPage(transaction) {
+      this.$router.push({name: 'customerproductdetails', params: { id: transaction.product.id }})
       // Navigate to the transaction details page
     },
     goBack() {
-      this.$router.push("/sellerprofile");
+      this.$router.go(-1);
     },
   },
 };

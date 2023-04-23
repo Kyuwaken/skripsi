@@ -2,7 +2,7 @@ from .cart_serializer import CartSerializer, CartResponseSerializer
 from .category_serializer import CategorySerializer
 from .country_serializer import CountrySerializer
 from .courier_serializer import CourierSerializer
-from .favourite_serializer import FavouriteSerializer, FavouriteResponseSerializer
+from .favorite_serializer import FavoriteSerializer, FavoriteResponseSerializer
 from .master_status_serializer import MasterStatusSerializer
 from .payment_method_serializer import PaymentMethodSerializer
 from .payment_serializer import PaymentSerializer, PaymentResponseSerializer

@@ -1,18 +1,18 @@
 from .user_serializer import UserSerializer
 from .product_serializer import ProductResponseImageSerializer
 from rest_framework import serializers
-from ..models import Favourite
+from ..models import Favorite
 
-class FavouriteSerializer(serializers.ModelSerializer):
+class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Favourite
+        model = Favorite
         fields = '__all__'
 
-class FavouriteResponseSerializer(serializers.ModelSerializer):
+class FavoriteResponseSerializer(serializers.ModelSerializer):
     product = ProductResponseImageSerializer(many=False)
     user = UserSerializer(many=False)
     class Meta:
-        model = Favourite
+        model = Favorite
         fields = '__all__'
     
     def get_created_by(self, obj):

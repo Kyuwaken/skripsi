@@ -18,12 +18,17 @@
                 <v-btn color="error" @click="deleteProduct(productData.id)">Delete</v-btn>
             </v-card-actions> -->
         </v-card>
+        <v-card-actions>
+            <v-btn class="hover" color="primary" @click="addToCart">Add to cart</v-btn>
+            <v-btn class="hover" color="primary" @click="clickedFavorite"><v-icon v-if="!productData.favorite">mdi-heart-outline</v-icon> <v-icon v-if="productData.favorite">mdi-heart</v-icon></v-btn>
+        </v-card-actions>
     </v-container>
 </template>
   
 <script>
 import { mapState, mapActions } from "vuex";
 import VueCarousel from "vue-carousel";
+import crypto from '@/plugins/crypto';
 // import Swal from "sweetalert2";
 export default {
     name: "CustomerProductDetails",
@@ -38,9 +43,18 @@ export default {
         this.fetchProductbyId(this.$route.params.id);
 
     },
+    mixins: [crypto],
     methods: {
-        ...mapActions("product", ["fetchProductbyId"]),
-
+        ...mapActions("product", ["fetchProductbyId","clickFavorite"]),
+        ...mapActions("cart",["postCart"]),
+        addToCart(){
+            var user = this.decryptLocalStorage(localStorage.getItem('encryptedData'))
+            this.postCart({product:this.productData.id,user:user.id})
+        },
+        clickedFavorite(){
+            var user = this.decryptLocalStorage(localStorage.getItem('encryptedData'))
+            this.clickFavorite({product:this.productData.id,user:user.id})
+        }
         // deleteProduct() {
         //     Swal.fire({
         //         title: 'Are you sure you want to delete this product?',

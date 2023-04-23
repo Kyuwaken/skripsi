@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from ..serializers import ProductSerializer, ProductResponseSerializer, ProductImageSerializer, ProductResponseImageSerializer
 from rest_framework.response import Response
-from ..models import Product, ProductImage
+from ..models import Product, ProductImage, Favorite
 from api.permissions import IsAuthenticated, IsSellerOrReadOnly
 from api.exceptions import NotAuthorizedException,NotFoundException
 from django.db.models.base import ObjectDoesNotExist
@@ -134,8 +134,15 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         except ObjectDoesNotExist:
             raise NotFoundException("Product")
         serializer = ProductResponseImageSerializer(product, many=False)
+        data = copy.deepcopy(serializer.data)
+        if request.custom_user['role'] == "Customer":
+            try:
+                favorite = Favorite.objects.get(product_id=kwargs['pk'],user_id=request.custom_user['id'])
+                data['favorite'] = True
+            except:
+                data['favorite'] = False
             
-        return Response(serializer.data,status=200)
+        return Response(data,status=200)
     
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)

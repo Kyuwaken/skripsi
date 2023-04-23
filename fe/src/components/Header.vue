@@ -28,6 +28,10 @@
         <v-icon>mdi-account-outline</v-icon>
       </v-btn>
 
+      <v-btn icon>
+        <v-icon>mdi-logout</v-icon>
+      </v-btn>
+
     </v-toolbar>
 </template>
 
