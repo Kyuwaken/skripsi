@@ -115,7 +115,7 @@ const routes = [
   {
     path: "/testing",
     name: "xxxx",
-    component: () => import("../App.vue"),
+    component: () => import("../views/CustomerPages/testcart.vue"),
     props: true
   },
 ]
