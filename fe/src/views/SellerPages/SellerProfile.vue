@@ -1,5 +1,8 @@
 <template>
   <v-container fluid>
+    <v-app-bar app color="white" flat>
+      <Header></Header>
+    </v-app-bar>
     <v-row>
       <v-col cols="3">
         <v-list class="d-flex flex-column align-content-space-between">
@@ -61,19 +64,28 @@
 
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
+import crypto from "@/plugins/crypto";
+import Header from "../../components/Header.vue";
 export default {
   name: 'SellerProfile',
+  components:{
+    Header
+  },
+  mixins: [crypto],
   computed: {
     ...mapState("profile", ["profileData"]),
   },
-  props: {
-    userdata: {
-      type: Object,
-      required: true,
-    },
-  },
+  // props: {
+  //   userdata: {
+  //     type: Object,
+  //     required: true,
+  //   },
+  // },
   created() {
-    this.getProfileData(this.userdata.id);
+    var user = this.decryptLocalStorage(
+        localStorage.getItem("encryptedData")
+    );
+    this.getProfileData(user.id);
   },
   data: () => ({
     items: [

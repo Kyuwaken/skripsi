@@ -1,5 +1,8 @@
 <template>
     <v-container>
+        <v-app-bar app color="white" flat>
+        <Header></Header>
+        </v-app-bar>
         <v-btn icon left @click="goBack">
             <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
@@ -32,8 +35,12 @@
 </template>
   
 <script>
+import Header from "../../components/Header.vue";
 export default {
     name: 'TransactionList',
+    components:{
+        Header
+    },
     data() {
         return {
             transactions: [

@@ -1,5 +1,8 @@
 <template>
     <v-container>
+      <v-app-bar app color="white" flat>
+        <Header></Header>
+      </v-app-bar>
       <v-card class="mx-auto mt-8" max-width="400">
         <v-card-title>Login</v-card-title>
         <v-card-text>
@@ -22,9 +25,13 @@
   <script>
   import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
   import crypto from '@/plugins/crypto'
+  import Header from "../components/Header.vue";
   export default {
     computed:{
       ...mapState("login",["loginData"])
+    },
+    components:{
+      Header
     },
     mixins: [crypto],
     data() {

@@ -42,8 +42,12 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import crypto from '@/plugins/crypto';
+import Header from "../../components/Header.vue";
 export default {
     mixins: [crypto],
+    components:{
+        Header,
+    },
     data: () => ({
         user: {},
         products: [

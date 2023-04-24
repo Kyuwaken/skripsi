@@ -35,7 +35,7 @@
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import Swal from "sweetalert2";
 import VueUploadMultipleImage from '@/components/vue-upload-multiple-image.vue';
-
+import Header from "../../components/Header.vue";
 export default {
     computed: {
         ...mapState("category", ["categories"]),
@@ -56,6 +56,7 @@ export default {
     },
     components: {
         VueUploadMultipleImage,
+        Header
     },
     created() {
         const id = this.$route.params.id;

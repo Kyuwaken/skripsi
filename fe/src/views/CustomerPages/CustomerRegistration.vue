@@ -28,8 +28,12 @@
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import crypto from '@/plugins/crypto'
 import Swal from "sweetalert2";
+import Header from "../../components/Header.vue";
 export default {
   mixins: [crypto],
+  components: {
+    Header,
+  },
   data() {
     return {
       email: '',

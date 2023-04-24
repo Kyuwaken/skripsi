@@ -1,5 +1,8 @@
 <template>
   <v-container>
+    <v-app-bar app color="white" flat>
+      <Header></Header>
+    </v-app-bar>
     <v-row>
       <v-col cols="12" class="mb-3">
         <v-text-field
@@ -112,7 +115,7 @@
 import { mapState, mapActions } from "vuex";
 import ProductHome from "@/components/ProductHome.vue";
 import crypto from "@/plugins/crypto";
-
+import Header from "../../components/Header.vue";
 export default {
   computed: {
     ...mapState("category", ["categories"]),
@@ -202,7 +205,7 @@ export default {
         console.log(category)
     }
   },
-  components: { ProductHome },
+  components: { ProductHome, Header },
   props: ["products"],
 };
 </script>

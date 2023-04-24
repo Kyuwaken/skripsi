@@ -25,10 +25,12 @@
 import { mapState, mapActions } from "vuex";
 import VueCarousel from "vue-carousel";
 import Swal from "sweetalert2";
+import Header from "../../components/Header.vue";
 export default {
     name: "ProductDetails",
     components: {
         VueCarousel,
+        Header
     },
     computed: {
         ...mapState("product", ["productData"]),

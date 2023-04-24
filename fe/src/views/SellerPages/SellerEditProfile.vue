@@ -64,7 +64,11 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import Swal from 'sweetalert2';
+import Header from "../../components/Header.vue";
 export default {
+  components:{
+    Header
+  },
   computed:{
     ...mapState("country",['countries']),
     ...mapState("profile", ["profileData"]),

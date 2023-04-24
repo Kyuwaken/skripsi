@@ -96,8 +96,12 @@
   
 <script>
 import { mapActions, mapState } from "vuex";
+import Header from "../../components/Header.vue";
 export default {
   name: "TransactionList",
+  components:{
+    Header
+  },
   data() {
     return {
       transactions: [

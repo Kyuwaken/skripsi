@@ -40,11 +40,13 @@
 import { mapState, mapActions } from "vuex";
 import VueCarousel from "vue-carousel";
 import crypto from '@/plugins/crypto';
+import Header from "../../components/Header.vue";
 // import Swal from "sweetalert2";
 export default {
     name: "CustomerProductDetails",
     components: {
         VueCarousel,
+        Header,
     },
     computed: {
         ...mapState("product", ["productData"]),

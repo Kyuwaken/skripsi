@@ -48,6 +48,7 @@
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import Swal from 'sweetalert2';
+import Header from "../../components/Header.vue";
 export default {
   data() {
     return {

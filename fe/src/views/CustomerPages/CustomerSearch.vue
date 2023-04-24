@@ -58,7 +58,7 @@
   
 <script>
 import axios from 'axios';
-
+import Header from "../../components/Header.vue";
 export default {
     data() {
         return {
@@ -110,6 +110,9 @@ export default {
             // ]
         };
     },
+    components: {
+    Header,
+  },
     computed: {
         search() {
             // Fungsi untuk melakukan pencarian berdasarkan kategori atau nama produk

@@ -38,8 +38,12 @@
   
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
+import Header from "../../components/Header.vue";
 export default {
   name: "BuyerProfile",
+  components: {
+    Header,
+  },
   data: () => ({
     buyerName: "JohnyDoe",
     phone: "",
