@@ -28,7 +28,7 @@
         <v-icon>mdi-account-outline</v-icon>
       </v-btn>
 
-      <v-btn icon>
+      <v-btn icon @click="setLogOut">
         <v-icon>mdi-logout</v-icon>
       </v-btn>
 
@@ -42,10 +42,20 @@
 </style>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
     name: 'Header',
     data: () => ({
 
     }),
+    methods:{
+      ...mapActions("login", ["logOut"]),
+      setLogOut(){
+        this.logOut().then(()=>{
+          localStorage.clear()
+          this.$router.push({name:"Login"})
+        })
+      }
+    }
 }
 </script>

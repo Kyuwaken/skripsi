@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col cols="3">
+      <!-- <v-col cols="3">
         <v-list class="d-flex flex-column align-content-space-between">
           <v-list-item
             v-for="item in items"
@@ -15,8 +15,8 @@
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
         </v-list>
-      </v-col>
-      <v-col cols="9">
+      </v-col> -->
+      <v-col cols="12">
         <v-card class="fill-height">
           <v-card-title>
             <div>{{ profileData.name }}</div>

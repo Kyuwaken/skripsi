@@ -3,6 +3,7 @@ import { getAPI } from "@/plugins/axios-api.js";
 
 const ENDPOINT = {
     LOGIN: "login/",
+    LOGOUT: "/logout/",
 };
 
 
@@ -29,6 +30,22 @@ const login = {
                   .post(ENDPOINT.LOGIN, body)
                   .then((response) => {
                     commit("SET_LOGIN", response.data);
+                    // commit("SET_USERNAME", response.data["username"]);
+                    // commit("SET_NAME", response.data["name"]);
+                    // commit("SET_ROLE", response.data["role"]);
+                    resolve(response.data);
+                  })
+                  .catch((error) => {
+                    reject(error);
+                  });
+              });
+        },
+        logOut({commit}){
+            return new Promise((resolve, reject) => {
+                getAPI
+                  .get(ENDPOINT.LOGOUT)
+                  .then((response) => {
+                    // commit("SET_LOGIN", response.data);
                     // commit("SET_USERNAME", response.data["username"]);
                     // commit("SET_NAME", response.data["name"]);
                     // commit("SET_ROLE", response.data["role"]);
