@@ -1,14 +1,20 @@
 [
     {
-        "name": "Electronics"
-    },
-    {
-        "name": "Food and Beverage"
+        "name": "Clothes"
     },
     {
         "name": "Shoes"
     },
     {
-        "name": "Clothes"
+        "name": "Electronics"
+    },
+    {
+        "name": "Houseware"
+    },
+    {
+        "name": "Food and Beverage"
+    },
+    {
+        "name": "Others"
     }
 ]

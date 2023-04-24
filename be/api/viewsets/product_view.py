@@ -15,7 +15,7 @@ from django.db import transaction
 class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
-    permission_classes = (IsAuthenticated, IsSellerOrReadOnly)
+    permission_classes = (IsAuthenticated,)
 
     def validate_max_size(self,request):
         print(request.data)

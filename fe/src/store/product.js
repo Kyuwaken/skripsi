@@ -4,6 +4,7 @@ const ENDPOINT = {
     CREATE_PRODUCT_WITH_IMAGE: "/product/create-product-with-image/",
     GET_SELLER_PRODUCT: "/product/seller/",
     GET_ALL_PRODUCT: "/product/",
+    GET_CATEGORY_PRODUCT: "product/get-by-category/",
     FAVORITE: "/favorite/"
 };
 
@@ -90,7 +91,20 @@ const product = {
                         reject(error);
                     });
             });
-        },        
+        },    
+        fetchProductbyCategory({commit}, categoryId){
+            return new Promise((resolve, reject) => {
+                getAPI
+                    .post(ENDPOINT.GET_CATEGORY_PRODUCT, categoryId)
+                    .then((response) => {
+                        commit("SET_PRODUCT_DATA", response.data);
+                        resolve(response.data);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            });
+        },    
         deleteProductbyId({commit}, productId){
             console.log("masuk delete product by id")
             return new Promise((resolve, reject) => {

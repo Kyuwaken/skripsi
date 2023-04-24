@@ -16,6 +16,9 @@
           </v-list-item>
         </v-list>
       </v-col> -->
+      <v-btn icon left @click="$router.push('/customerhome/')">
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
       <v-col cols="12">
         <v-card class="fill-height">
           <v-card-title>
@@ -25,8 +28,7 @@
           <v-card-text> Phone : {{ profileData.phone }} </v-card-text>
           <v-card-text> Email : {{ profileData.email }} </v-card-text>
           <v-card-actions class="justify-end mr-6">
-            <v-btn variant="outlined"
-            @click="editProfile"> Update </v-btn>
+            <v-btn variant="outlined" @click="editProfile"> Update </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -64,7 +66,7 @@ export default {
     ],
   }),
   computed: {
-    ...mapState("profile", ["profileData"])
+    ...mapState("profile", ["profileData"]),
   },
   props: {
     userdata: {
@@ -74,12 +76,12 @@ export default {
   },
   created() {
     this.getProfileData(this.userdata.id);
-    console.log(this.userdata)
+    console.log(this.userdata);
   },
   methods: {
     ...mapActions("profile", ["getProfileData"]),
-    editProfile(){
-        this.$router.push({path:"/customereditprofile"})
+    editProfile() {
+      this.$router.push({ path: "/customereditprofile" });
     },
     saveProfile() {
       // send data to server to save

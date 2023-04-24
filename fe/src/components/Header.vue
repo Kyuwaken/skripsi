@@ -12,7 +12,7 @@
       </v-btn> -->
       
       <v-spacer></v-spacer>
-      <v-btn icon @click="$router.push('/customerfavorite/')">
+      <v-btn icon @click="$router.push('/customerfavorite/')" v-if="user.role==='Customer'">
         <v-icon>mdi-heart-outline</v-icon>
       </v-btn>
 
@@ -20,15 +20,15 @@
         <v-icon>mdi-history</v-icon>
       </v-btn>
 
-      <v-btn icon @click="$router.push('/customercart/')">
+      <v-btn icon @click="$router.push('/customercart/')" v-if="user.role==='Customer'">
         <v-icon>mdi-cart-outline</v-icon>
       </v-btn>
 
-      <v-btn icon @click="$router.push('/customerprofile/')">
+      <v-btn icon @click="$router.push('/customerprofile/')" v-if="user.role==='Customer'">
         <v-icon>mdi-account-outline</v-icon>
       </v-btn>
 
-      <v-btn icon @click="setLogOut">
+      <v-btn icon @click="setLogOut" v-if="user">
         <v-icon>mdi-logout</v-icon>
       </v-btn>
 
@@ -43,11 +43,24 @@
 
 <script>
 import { mapActions } from 'vuex'
+import crypto from '@/plugins/crypto'
 export default {
     name: 'Header',
-    data: () => ({
-
-    }),
+    mixins: [crypto],
+    data(){
+      return{
+        user:'',
+      }
+    },
+    created(){
+      var localS = localStorage.getItem('encryptedData')
+      if(localS){
+        this.user = this.decryptLocalStorage(localS)
+      }
+      else{
+        this.user=''
+      }
+    },
     methods:{
       ...mapActions("login", ["logOut"]),
       setLogOut(){
@@ -55,6 +68,15 @@ export default {
           localStorage.clear()
           this.$router.push({name:"Login"})
         })
+      },
+      checkLogin(){
+        var localS = localStorage.getItem('encryptedData')
+        if(localS){
+          this.user = this.decryptLocalStorage(localS)
+        }
+        else{
+          this.user=''
+        }
       }
     }
 }
