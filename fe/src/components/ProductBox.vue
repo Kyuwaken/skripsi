@@ -23,10 +23,6 @@ import crypto from '@/plugins/crypto';
     export default {
         name: "ProductBox",
         props: {
-            userdata: {
-                type: Object,
-                required: true,
-            },
             product: {
                 type: Object,
                 required: true,
@@ -41,6 +37,7 @@ import crypto from '@/plugins/crypto';
                 var user = this.decryptLocalStorage(localStorage.getItem('encryptedData'))
                 console.log("role",user)
                 if(user.role == "Seller"){
+                    localStorage.setItem('id', this.product.id)
                     this.$router.push({
                         name: 'sellerproductdetails',
                         params: { id: this.product.id }

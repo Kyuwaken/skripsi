@@ -46,10 +46,13 @@ const ENDPOINT = {
                 })
         })
       },
-      decreaseCart({commit},body){
+      updateQuantity({commit}, body){
+        let id = body.id
+        delete body.id
+        console.log("di cart js",body)
         return new Promise((resolve, reject) => {
-            getAPI
-                .post(ENDPOINT.CART + 'decrease-quantity/',body)
+          getAPI
+                .patch(ENDPOINT.CART + id + '/', body)
                 .then((response)=>{
                     resolve(response.data);
                 })
@@ -58,10 +61,10 @@ const ENDPOINT = {
                 })
         })
       },
-      customCart({commit},body){
+      deleteCart({commit}, body){
         return new Promise((resolve, reject) => {
-            getAPI
-                .post(ENDPOINT.CART + 'custom-quantity/',body)
+          getAPI
+                .delete(ENDPOINT.CART + body + '/')
                 .then((response)=>{
                     resolve(response.data);
                 })
@@ -69,7 +72,7 @@ const ENDPOINT = {
                     reject(error);
                 })
         })
-      },
+      }
     },
   };
   

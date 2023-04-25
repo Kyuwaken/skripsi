@@ -59,7 +59,7 @@ export default {
         Header
     },
     created() {
-        const id = this.$route.params.id;
+        const id = localStorage.getItem('id');
         this.fetchProductbyId(id);
     },
     methods: {

@@ -111,7 +111,13 @@ const routes = [
     name: "sellereditproduct",
     component: () => import("../views/SellerPages/SellerEditProduct.vue"),
     props: true
-  },  
+  },    
+  {
+    path: "/checkout",
+    name: "checkout",
+    component: () => import("../views/CustomerPages/checkout.vue"),
+    props: true
+  }, 
   {
     path: "/testing",
     name: "xxxx",

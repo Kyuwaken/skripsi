@@ -20,9 +20,6 @@ class CartViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     
     def retrieve(self, request, *args, **kwargs):
         pass
-
-    def update(self, request, *args, **kwargs):
-        pass
     
     @transaction.atomic
     def create(self, request, *args, **kwargs):

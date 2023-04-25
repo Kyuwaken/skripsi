@@ -1,99 +1,67 @@
 <template>
   <v-container>
-    <v-btn icon left @click="$router.push('/customerhome/')">
-      <v-icon>mdi-arrow-left</v-icon>
-    </v-btn>
-    <h1 class="text-center my-6">My Cart</h1>
-    <v-list class="my-4" style="max-height: 600px; overflow-y: auto">
-      <v-list-item
-        v-for="(transaction, index) in transactions"
-        :key="index"
-        class="mb-16 list_item"
-        :style="index == 0 ? 'border-top: 5px solid rgba(0, 0, 0, 0.12)' : ''"
-      >
-        <v-row v-if="index == 0" class="mt-6 mb-6">
-            <v-col cols="2">
-                <img :src="transaction.product.product_image[0].path" :alt="transaction.product.name" height="100">
-            </v-col>
-            <v-col cols="7">
+    <v-card>
+      <v-card-title>
+        <h2>My Cart</h2>
+      </v-card-title>
+      <v-divider></v-divider>
+      <v-card-text>
+        <v-list>
+          <v-list-item-group v-for="(group) in groupedCart" :key="group.seller.id">
+            <v-row align="center">
+              <v-col cols="1">
+                <v-checkbox :label="`${group && group.seller ? group.seller.name : 'no name'}`" v-model="selectedSeller"
+                  :value="group.seller" :disabled="selectedSeller && selectedSeller.id !== group.seller.id"></v-checkbox>
+              </v-col>
+            </v-row>
+            <template>
+              <v-list-item v-for="item in group.items" :key="item.id">
                 <v-list-item-content>
-                <div class="text-h6">{{ transaction.product.name }}</div>
-                <div class="mt-2">Price: {{ transaction.product.price }}</div>
-                <div>
-                    Quantity:
-                    {{
-                    transaction.quantity
-                    }}
-                    function(transaction.transaction_detail)
-                </div>
+                  <v-list-item-title>{{ item.name }}</v-list-item-title>
+                  <v-list-item-subtitle>Price: {{ item.price }} {{ item.currency }}</v-list-item-subtitle>
+                  <v-list-item-subtitle>
+                    <template v-if="item.editing">
+                      Quantity:
+                      <v-btn class="mr-1" fab small color="primary" @click="decrementQuantity(item)">
+                        <v-icon>mdi-minus</v-icon>
+                      </v-btn>
+                      {{ item.newQuantity }}
+                      <v-btn class="ml-1" fab small color="primary" @click="incrementQuantity(item)">
+                        <v-icon>mdi-plus</v-icon>
+                      </v-btn>
+                      <v-icon @click="confirmEdit(item)">mdi-check</v-icon>
+                      <v-icon @click="cancelEdit(item)">mdi-close</v-icon>
+                    </template>
+                    <template v-else>
+                      Quantity:
+                      {{ item.quantity }}
+                      <v-btn class="ml-1" fab small color="primary" @click="toggleEditing(item)">
+                        <v-icon>mdi-pencil</v-icon>
+                      </v-btn>
+                      <v-btn class="ml-1" fab small color="primary" @click="confirmDelete(item)">
+                        <v-icon>mdi-delete</v-icon>
+                      </v-btn>
+                    </template>
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle>Total: {{ item.price * item.quantity }} {{ item.currency
+                  }}</v-list-item-subtitle>
                 </v-list-item-content>
-                return len(Transaction_detail)
-            </v-col>
-            <v-col>
-                <v-list-item-action>
-                <v-btn
-                    class="mt-8"
-                    color="primary"
-                    @click="goToDetailsPage(transaction)"
-                    >View Details</v-btn
-                >
-                <v-btn
-                    icon
-                    @click="goToDetailsPage(transaction)"
-                    ><v-icon>
-                      mdi-minus-box-outline
-                    </v-icon>
-                </v-btn>
-                <v-btn
-                    icon
-                    @click="goToDetailsPage(transaction)"
-                    ><v-icon>
-                      mdi-plus-box-outline
-                    </v-icon>
-                </v-btn>
-                </v-list-item-action>
-            </v-col>
-        </v-row>
-        <v-row v-else class="mb-6">
-            <v-col cols="2">
-                <img :src="transaction.product.product_image[0].path" :alt="transaction.product.name" height="100">
-            </v-col>
-            <v-col cols="7">
-                <v-list-item-content>
-                <div class="text-h6">{{ transaction.product.name }}</div>
-                <div class="mt-2">Price: {{ transaction.product.price }}</div>
-                <div>
-                    Quantity:
-                    {{
-                    transaction.quantity
-                    }}
-                    function(transaction.transaction_detail)
-                </div>
-                </v-list-item-content>
-                return len(Transaction_detail)
-            </v-col>
-            <v-col>
-                <v-list-item-action>
-                <v-btn
-                    class="mt-8"
-                    color="primary"
-                    @click="goToDetailsPage(transaction)"
-                    >View Details</v-btn
-                >
-                </v-list-item-action>
-            </v-col>
-        </v-row>
-      </v-list-item>
-    </v-list>
+              </v-list-item>
+            </template>
+          </v-list-item-group>
+        </v-list>
+      </v-card-text>
+      <v-divider></v-divider>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn :disabled="selectedSeller === null" color="primary" @click="checkout">Checkout</v-btn>
+      </v-card-actions>
+    </v-card>
   </v-container>
 </template>
 
-<style scoped>
-.list_item {
-  border-bottom: 5px solid rgba(0, 0, 0, 0.12);
-}
-</style>
-  
+
+
 <script>
 import { mapActions, mapState } from "vuex";
 import Header from "../../components/Header.vue";
@@ -104,90 +72,94 @@ export default {
   },
   data() {
     return {
-      transactions: [
-        {
-          image: "https://via.placeholder.com/150",
-          productName: "Product 1",
-          price: 10.99,
-          quantity: 1,
-        },
-        {
-          image: "https://via.placeholder.com/150",
-          productName: "Product 2",
-          price: 5.99,
-          quantity: 2,
-        },
-        {
-          image: "https://via.placeholder.com/150",
-          productName: "Product 3",
-          price: 8.99,
-          quantity: 3,
-        },
-        {
-          image: "https://via.placeholder.com/150",
-          productName: "Product 3",
-          price: 8.99,
-          quantity: 3,
-        },
-        {
-          image: "https://via.placeholder.com/150",
-          productName: "Product 3",
-          price: 8.99,
-          quantity: 3,
-        },
-        {
-          image: "https://via.placeholder.com/150",
-          productName: "Product 3",
-          price: 8.99,
-          quantity: 3,
-        },
-        {
-          image: "https://via.placeholder.com/150",
-          productName: "Product 3",
-          price: 8.99,
-          quantity: 3,
-        },
-        {
-          image: "https://via.placeholder.com/150",
-          productName: "Product 3",
-          price: 8.99,
-          quantity: 3,
-        },
-        {
-          image: "https://via.placeholder.com/150",
-          productName: "Product 3",
-          price: 8.99,
-          quantity: 3,
-        },
-      ],
+      tempCart: [],
+      groupedCart: [],
+      selectedSeller: null,
     };
-  },
-  props: {
-    userdata: {
-      type: Object,
-      required: true,
-    },
   },
   computed: {
     ...mapState("cart", ["cart"]),
   },
-  created() {
-    this.fetchCartById({id:this.userdata.id}).then(()=>{
-        console.log("cart",this.cart)
-        this.transactions = this.cart
-    })
+  props: {
+    userdata: {
+      type: Object,
+      required: true
+    }
   },
   methods: {
-    ...mapActions("cart", [
-      "fetchCartById",
-      "postCart",
-      "decreaseCart",
-      "customCart",
-    ]),
-    goToDetailsPage(transaction) {
-      this.$router.push({name: 'customerproductdetails', params: { id: transaction.product.id }})
-      // Navigate to the transaction details page
+    ...mapActions("cart", ["fetchCartById", "updateQuantity", "deleteCart"]),
+    incrementQuantity(item) {
+      item.newQuantity = item.newQuantity + 1;
+    },
+    decrementQuantity(item) {
+      if (item.quantity > 1) {
+        item.newQuantity = item.newQuantity - 1;
+      }
+    },
+    deleteProduct(item) {
+      const sellerGroup = this.groupedCart.find((group) => group.seller.id === item.seller.id);
+      sellerGroup.items = sellerGroup.items.filter((product) => product.id !== item.id);
+      if (sellerGroup.items.length === 0) {
+        this.groupedCart = this.groupedCart.filter((group) => group.seller.id !== sellerGroup.seller.id);
+      }
+      //submit ke be pake item.id
+      this.deleteCart(item.cartId)
+    },
+    confirmEdit(item) {
+      if (item.newQuantity !== item.quantity) {
+        item.quantity = item.newQuantity;
+      }
+      item.editing = false;
+      item.newQuantity = 0;
+      //submit ke be
+      this.updateQuantity({ id: item.cartId, quantity: item.quantity })
+    },
+    cancelEdit(item) {
+      item.editing = false;
+    },
+    toggleEditing(item) {
+      item.editing = true;
+      item.newQuantity = item.quantity;
+    },
+    confirmDelete(item) {
+      if (confirm(`Are you sure you want to delete ${item.name}?`)) {
+        this.deleteProduct(item);
+      }
+    },
+    checkout() {
+      if (this.selectedSeller.length === 0) {
+        alert("Please select at least one seller.");
+        return;
+      } else if (this.selectedSeller.length > 1) {
+        alert("Please select only one seller at a time.");
+        return;
+      }
+
+      // Implement checkout functionality here for the selected seller
+      const selectedSeller = this.selectedSeller;
+      localStorage.setItem('checkoutSellerId', selectedSeller.id)
+      this.$router.push('/checkout')
+      console.log(`Checking out ${selectedSeller.name}`);
+      //console.log(this.groupedCart)
     },
   },
+  mounted() {
+    this.fetchCartById({ id: this.userdata.id }).then(() => {
+      this.tempCart = this.cart;
+      //console.log("tempcart", this.tempCart)
+      const grouped = {};
+      for (const { product, id, quantity } of this.tempCart) {
+        if (!grouped[product.seller.id]) {
+          grouped[product.seller.id] = { seller: product.seller, items: [], selected: false };
+        }
+        grouped[product.seller.id].items.push({ ...product, editing: false, newQuantity: 0, cartId: id, quantity: quantity });
+      }
+      this.groupedCart = Object.values(grouped);
+    })
+
+
+    //console.log("grouped cart", this.groupedCart)
+  },
+
 };
 </script>

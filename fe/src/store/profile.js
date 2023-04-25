@@ -26,7 +26,7 @@ const profile = {
             return new Promise((resolve, reject) => {
               getAPI(ENDPOINT.USER +id+"/")
                 .then((response) => {
-                  console.log("masuk js category")
+                  console.log("masuk profile")
                   // const categories = response.data.map((category) => ({
                   //   id: category.id,
                   //   name: category.name,

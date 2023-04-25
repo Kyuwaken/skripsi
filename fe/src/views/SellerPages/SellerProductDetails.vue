@@ -36,8 +36,8 @@ export default {
         ...mapState("product", ["productData"]),
     },
     mounted() {
-        console.log(this.$route.params.id);
-        this.fetchProductbyId(this.$route.params.id);
+        console.log("product id localstorage",localStorage.getItem('id'));
+        this.fetchProductbyId(localStorage.getItem('id'));
 
     },
     methods: {
@@ -52,7 +52,7 @@ export default {
                 cancelButtonText: 'No, cancel',
             }).then((result) => {
                 if (result.value) {
-                    this.deleteProductbyId(this.$route.params.id).then(() => {
+                    this.deleteProductbyId(localStorage.getItem('id')).then(() => {
                         this.$router.push('/sellerproduct');
                     });
                 }
