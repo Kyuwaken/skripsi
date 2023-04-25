@@ -14,15 +14,21 @@
                 popup-text="This image will be displayed as default" :multiple=true :show-edit=true :show-delete=true
                 :show-add=true>
             </vue-upload-multiple-image>
-            <v-text-field v-model="name" label="Product Name" :rules="[requiredRule]" required></v-text-field>
-            <v-textarea v-model="productDescription" label="Product Description" :rules="[requiredRule]"
-                required></v-textarea>
-            <v-text-field v-model.number="price" label="Product Price" :rules="[requiredRule, numericRule]"
-                required></v-text-field>
-            <v-text-field v-model.number="preorderTime" label="Pre-Order Time (in days)"
-                :rules="[requiredRule, numericRule]" required></v-text-field>
+            <v-text-field v-model="name" label="Product Name" required></v-text-field>
+            <v-textarea v-model="productDescription" label="Product Description" required></v-textarea>
+            <v-text-field v-model="price" label="Product Price" type="number" :hint="formattedPrice" persistent-hint
+                required />
+            <v-menu v-model="readyAtMenu" :close-on-content-click="true" :nudge-right="40" transition="scale-transition"
+                offset-y min-width="290px">
+                <template v-slot:activator="{ on }">
+                    <v-text-field v-model="readyAt" label="Ready At" prepend-icon="mdi-calendar" readonly v-on="on"
+                        required></v-text-field>
+                </template>
+                <v-date-picker v-model="readyAt" no-title scrollable>
+                </v-date-picker>
+            </v-menu>
             <v-select v-model="category" :items=categories item-text="name" item-title="name" item-value="id"
-                label="Category" return-object :rules="[requiredRule]" required></v-select>
+                label="Category" return-object required></v-select>
             <v-layout justify-end align-end>
                 <v-btn type="submit" color="primary">Submit</v-btn>
             </v-layout>
@@ -38,7 +44,17 @@ import Header from "../../components/Header.vue";
 export default {
     computed: {
         ...mapState("category", ['categories']),
-
+        formattedPrice() {
+            const price = parseFloat(this.price);
+            if (!isNaN(price)) {
+                return price.toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                });
+            } else {
+                return "";
+            }
+        },
     },
     components: {
         VueUploadMultipleImage,
@@ -48,22 +64,23 @@ export default {
         return {
             name: '',
             productDescription: '',
-            price: '',
-            preorderTime: '',
+            price: null,
             productPhoto: [],
             category: '',
-            requiredRule: [v => !!v || 'Field is required'],
-            numericRule: [v => /^\d+$/.test(v) || 'Input must be a number']
+            readyAt: null,
+            readyAtMenu: false,
+            displayPrice: null,
+            newProductPhoto:[],
         }
     },
     mounted() {
         //console.log("masuk mounted")
         this.fetchCategories();
-        console.log(getCategory)
     },
     methods: {
         ...mapActions("category", ["fetchCategories"]),
         ...mapActions('product', ['postProductData']),
+
         handleSubmit() {
             // Validate form data here
             console.log(this.category)
@@ -107,19 +124,11 @@ export default {
                 });
                 return;
             }
-            if (!this.preorderTime) {
+            if (!this.readyAt) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Pre-Order Time field is empty',
-                    text: 'Please fill out the pre-order time field.'
-                });
-                return;
-            }
-            if (isNaN(this.preorderTime)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Invalid input',
-                    text: 'Please ensure that pre-order time fields are filled with numbers.'
+                    title: 'Ready At date field is empty',
+                    text: 'Please fill out the Ready At field.'
                 });
                 return;
             }
@@ -138,20 +147,50 @@ export default {
                 name: this.name,
                 description: this.productDescription,
                 price: this.price,
-                preOrderTime: this.preorderTime,
+                readyAt: this.readyAt,
                 productPhoto: this.productPhoto,
                 category: this.category.id
             });
 
+            this.productPhoto.forEach(photo => {
+                if (!('size' in photo)) {
+                    const imageData = photo.path;
+                    const splitData1 = imageData.split('data:');
+                    const imageType1 = splitData1[1].split(';')[0]; // get the image type (e.g. jpeg, png, etc.)
+                    const splitData2 = imageData.split('data:image/');
+                    const imageType2 = splitData2[1].split(';')[0];
+                    const base64String = imageData.split(',')[1];
+                    const binaryString = atob(base64String);
+                    const arrayBuffer = new ArrayBuffer(binaryString.length);
+                    const uint8Array = new Uint8Array(arrayBuffer);
+                    for (let i = 0; i < binaryString.length; i++) {
+                        uint8Array[i] = binaryString.charCodeAt(i);
+                    }
+                    const blob = new Blob([uint8Array], { type: imageType1 });
+                    const filename = "image." + imageType2;
+                    const fileSize = blob.size;
 
+                    // Create a new File object from the Blob
+                    const file = new File([blob], filename, { type: imageType1 });
+                    const fileName = file.name;
+
+                    // Add the file to the form data
+                    this.newProductPhoto.push(file);
+                }
+                else {
+
+                    //console.log("di looping productphoto else", photo)
+                    this.newProductPhoto.push(photo)
+                }
+            });
 
             this.postProductData({
                 name: this.name,
                 productDescription: this.productDescription,
                 price: this.price,
-                preorderTime: this.preorderTime,
+                readyAt: this.readyAt,
                 category: this.category.id,
-                productPhoto: this.productPhoto
+                productPhoto: this.newProductPhoto
             }).then(() => {
                 // Success message
                 Swal.fire({
@@ -185,7 +224,7 @@ export default {
             this.$router.push({ path: "/sellerprofile" })
         },
         uploadImageSuccess(formData, index, fileList, imageList) {
-            console.log('data', formData, index, 'file',fileList, 'image', imageList)
+            console.log('data', formData, index, 'file', fileList, 'image', imageList)
             this.productPhoto = imageList
             // Upload image api
             // axios.post('http://your-url-upload', formData).then(response => {
@@ -209,6 +248,11 @@ export default {
         },
         limitExceeded(amount) {
             console.log('limitExceeded data', amount)
+        }
+    },
+    watch: {
+        price(val) {
+            //this.getFormattedPrice(val)
         }
     }
 }

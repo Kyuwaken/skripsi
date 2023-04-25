@@ -6,10 +6,11 @@
     <v-row>
       <v-col cols="12" class="mb-3">
         <v-text-field
+          v-model="search"
           label="Search"
           solo-inverted
           prepend-inner-icon="mdi-magnify"
-        ></v-text-field>
+          @keydown.native.enter="submitSearch"></v-text-field>
       </v-col>
     </v-row>
 
@@ -123,6 +124,7 @@ export default {
   },
   data() {
     return {
+      search: '',
       colors: [
         "indigo",
         "warning",
@@ -180,7 +182,9 @@ export default {
   },
   mounted() {
     //console.log("masuk mounted")
-    this.fetchProduct();
+    //this.fetchProduct();
+    let data = {"id": "2"}
+    this.fetchProductbySeller(data)
     this.fetchCategories();
     if (!this.reloaded) {
       console.log(this.reloaded);
@@ -192,8 +196,12 @@ export default {
   },
   methods: {
     ...mapActions("category", ["fetchCategories"]),
-    ...mapActions("product", ["fetchProduct","fetchProductbyCategory"]),
+    ...mapActions("product", ["fetchProduct","fetchProductbyCategory", "fetchProductbySeller"]),
     ...mapActions("cart", ["postCart"]),
+    submitSearch(){
+      localStorage.setItem('searchedValue', this.search),
+      this.$router.push('/customersearch')
+    },
     addToCart(productId) {
       var user = this.decryptLocalStorage(
         localStorage.getItem("encryptedData")

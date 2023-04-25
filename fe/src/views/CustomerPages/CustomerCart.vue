@@ -65,8 +65,10 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import Header from "../../components/Header.vue";
+import crypto from "@/plugins/crypto";
 export default {
   name: "TransactionList",
+  mixins: [crypto],
   components:{
     Header
   },
@@ -80,12 +82,7 @@ export default {
   computed: {
     ...mapState("cart", ["cart"]),
   },
-  props: {
-    userdata: {
-      type: Object,
-      required: true
-    }
-  },
+
   methods: {
     ...mapActions("cart", ["fetchCartById", "updateQuantity", "deleteCart"]),
     incrementQuantity(item) {
@@ -144,7 +141,10 @@ export default {
     },
   },
   mounted() {
-    this.fetchCartById({ id: this.userdata.id }).then(() => {
+    var user = this.decryptLocalStorage(
+        localStorage.getItem("encryptedData")
+      );
+    this.fetchCartById({ id: user.id }).then(() => {
       this.tempCart = this.cart;
       //console.log("tempcart", this.tempCart)
       const grouped = {};

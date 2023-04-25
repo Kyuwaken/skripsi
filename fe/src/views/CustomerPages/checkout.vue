@@ -7,24 +7,24 @@
 
                     <v-row>
                         <v-col cols="12">
-                            <v-text-field v-model="address.address" label="Address" required></v-text-field>
+                            <v-text-field v-model="address" label="Address" required></v-text-field>
                         </v-col>
                     </v-row>
 
                     <v-row>
                         <v-col cols="12" md="6">
-                            <v-text-field v-model="address.city" label="City" required></v-text-field>
+                            <v-text-field v-model="city" label="City" required></v-text-field>
                         </v-col>
                         <v-col cols="12" md="6">
-                            <v-text-field v-model="address.state" label="State" required></v-text-field>
+                            <v-text-field v-model="state" label="State" required></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col cols="12" md="6">
-                            <v-text-field v-model="address.postalCode" label="Postal Code" required></v-text-field>
+                            <v-text-field v-model="postalCode" label="Postal Code" required></v-text-field>
                         </v-col>
                         <v-col cols="12" md="6">
-                            <v-text-field v-model="address.country" label="Country" required></v-text-field>
+                            <v-text-field v-model="country" label="Country" required></v-text-field>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -37,8 +37,9 @@
                 <v-list-item v-for="(product, index) in products" :key="index">
                     <v-list-item-content>
                         <v-list-item-title>{{ product.name }}</v-list-item-title>
-                        <v-list-item-subtitle>{{ formatPrice(product.price) }} per item</v-list-item-subtitle>
+                        <v-list-item-subtitle>Price: {{ formatPrice(product.price) }}</v-list-item-subtitle>
                         <v-list-item-subtitle>Quantity: {{ product.quantity }}</v-list-item-subtitle>
+                        <v-list-item-subtitle>Subtotal: {{ formatPrice(product.price * product.quantity) }}</v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
             </v-list>
@@ -86,24 +87,17 @@ export default {
     },
     data() {
         return {
-            address: {
-                firstName: '',
-                lastName: '',
                 address: '',
                 city: '',
                 state: '',
                 postalCode: '',
                 country: '',
-                phoneNumber: ''
-            },
-            products: [
-
-            ],
+            products: [],
             selectedPayment: '',
             paymentOptions: [
-                { id: "1", name: 'ovo' },
-                { id: "2", name: 'gopay' },
-                { id: "3", name: 'debit' }
+                { id: 1, name: 'ovo' },
+                { id: 2, name: 'gopay' },
+                { id: 3, name: 'debit' }
             ],
             // showPopup: false,
             // paid: false,
@@ -196,11 +190,14 @@ export default {
                         //create transaction
                         let product = [];
                         this.products.forEach(item => {
-                            product.push({ product_id: item.id, preordertime: item.preorderTime, productPrice: item.price, quantity: item.quantity })
+                            product.push({ product_id: item.id, readyAt: item.readyAt.substr(0, 10), productPrice: item.price, quantity: item.quantity })
                         });
                         console.log("checkout ", product)
+                        let address = `${this.address}, ${this.city}, ${this.State}, ${this.postalCode}, ${this.country}`
+                        let data = {product, payment_method : this.selectedPayment, address: address, nominal: this.downPayment}
+                        console.log(data)
                         //this.createTransaction()
-                        this.$router.push('/customerhome')
+                        //this.$router.push('/customerhome')
                     })
                 }
 

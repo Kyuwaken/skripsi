@@ -10,7 +10,8 @@
         </v-carousel>
         <v-card>
             <v-card-title>{{ productData.name }}</v-card-title>
-            <v-card-text>{{ productData.productDescription }}</v-card-text>
+            <v-card-text>Description: {{ productData.productDescription }}</v-card-text>
+            <v-card-text>Ready At: {{ productData.readyAt }}</v-card-text>
             <v-card-text>Price: {{ productData.price }}</v-card-text>
             <v-card-actions>
                 <v-btn color="primary"

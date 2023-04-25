@@ -14,16 +14,21 @@
                 popup-text="This image will be displayed as default" :multiple=true :show-edit=true :show-delete=true
                 :show-add=true>
             </vue-upload-multiple-image>
-            <v-text-field v-model="name" label="Product Name" :rules="[requiredRule]" required></v-text-field>
-            <v-textarea v-model="productDescription" label="Product Description" :rules="[requiredRule]"
-                required></v-textarea>
-            <v-text-field v-model.number="price" label="Product Price" :rules="[requiredRule, numericRule]"
-                required></v-text-field>
-            <v-text-field v-model.number="preorderTime" label="Pre-Order Time (in days)"
-                :rules="[requiredRule, numericRule]" required></v-text-field>
-            <v-select v-model="category" :items="categories" item-text="name" item-title="name" item-value="id"
-                label="Category" return-object :rules="[requiredRule]" required></v-select>
-            <v-file-input v-model="productPhoto" accept="image/*" label="Product Images" multiple></v-file-input>
+            <v-text-field v-model="name" label="Product Name" required></v-text-field>
+            <v-textarea v-model="productDescription" label="Product Description" required></v-textarea>
+            <v-text-field v-model="price" label="Product Price" type="number" :hint="formattedPrice" persistent-hint
+                required />
+            <v-menu v-model="readyAtMenu" :close-on-content-click="true" :nudge-right="40" transition="scale-transition"
+                offset-y min-width="290px">
+                <template v-slot:activator="{ on }">
+                    <v-text-field v-model="readyAt" label="Ready At" prepend-icon="mdi-calendar" readonly v-on="on"
+                        required></v-text-field>
+                </template>
+                <v-date-picker v-model="readyAt" no-title scrollable>
+                </v-date-picker>
+            </v-menu>
+            <v-select v-model="category" :items=categories item-text="name" item-title="name" item-value="id"
+                label="Category" return-object required></v-select>
             <v-layout justify-end align-end>
                 <v-btn type="submit" color="primary">Submit</v-btn>
             </v-layout>
@@ -40,14 +45,26 @@ export default {
     computed: {
         ...mapState("category", ["categories"]),
         ...mapState("product", ["productData"]),
+        formattedPrice() {
+            const price = parseFloat(this.price);
+            if (!isNaN(price)) {
+                return price.toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                });
+            } else {
+                return "";
+            }
+        },
     },
     data() {
         return {
             name: "",
             productDescription: "",
             price: "",
-            preorderTime: "",
             productPhoto: [],
+            readyAt: null,
+            readyAtMenu: false,
             category: "",
             newProductPhoto: [],
             requiredRule: [v => !!v || "Field is required"],
@@ -61,6 +78,7 @@ export default {
     created() {
         const id = localStorage.getItem('id');
         this.fetchProductbyId(id);
+        this.fetchCategories();
     },
     methods: {
         ...mapActions("category", ["fetchCategories"]),
@@ -108,19 +126,11 @@ export default {
                 });
                 return;
             }
-            if (!this.preorderTime) {
+            if (!this.readyAt) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Pre-Order Time field is empty',
-                    text: 'Please fill out the pre-order time field.'
-                });
-                return;
-            }
-            if (isNaN(this.preorderTime)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Invalid input',
-                    text: 'Please ensure that pre-order time fields are filled with numbers.'
+                    title: 'Ready At date field is empty',
+                    text: 'Please fill out the Ready At field.'
                 });
                 return;
             }
@@ -181,10 +191,10 @@ export default {
                 name: this.name,
                 productDescription: this.productDescription,
                 price: this.price,
-                preorderTime: this.preorderTime,
+                readyAt: this.readyAt,
                 category: this.category.id,
                 productPhoto: this.newProductPhoto,
-                id:  this.productData.id
+                id: this.productData.id
             }).then(() => {
                 // Success message
                 Swal.fire({
@@ -248,10 +258,11 @@ export default {
             this.name = productData.name;
             this.productDescription = productData.productDescription;
             this.price = productData.price;
-            this.preorderTime = productData.preorderTime;
+            this.readyAt = productData.readyAt;
             this.productPhoto = productData.product_image;
             this.category = productData.category;
-            console.log("watch seller edit", this.productPhoto)
+            console.log("watch seller edit", this.productData)
+
         }
     }
 }
