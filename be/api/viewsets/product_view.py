@@ -9,7 +9,7 @@ from api.utils import custom_viewset
 from rest_framework.decorators import action
 from api.utils.validation_input import validate_integer, validate_input
 from api.exceptions import NotAuthorizedException,NotFoundException, ValidationException
-import base64, copy, os
+import base64, copy, os, datetime
 from django.db import transaction
 
 class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
@@ -55,12 +55,17 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
                 rating = sum(rating)
                 i['rating'] = round((count/rating),1)
                 i['count_rating'] = count
+            if i['readyAt']: 
+                date =  datetime.datetime.strptime(i['readyAt'],'%Y-%m-%dT%H:%M:%S%z')
+                i['readyAt']=date.strftime("%d %B %Y")
         return Response(data, status=200)
 
     @action(detail=False, methods=['post'], url_path='seller')
     def get_by_seller_id(self, request, *args, **kwargs):
         validate_input(request.data,['id'])
         queryset = self.queryset.filter(seller_id=request.data['id'], is_deleted=False).select_related('category').prefetch_related('product_image')
+        # for i in queryset:
+        #     i.format_timestamp("%d %B %Y")
         serializer = ProductResponseImageSerializer(queryset, many=True)
         data = copy.deepcopy(serializer.data)
         product_review = ProductReview.objects.filter(product__seller_id = request.data['id'])
@@ -71,12 +76,15 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
             else:
                 dict_review[i.product.id] =[i.rating]
         for i in data:
-            if i.id in dict_review:
-                rating = dict_review[i.id]
+            if i['id'] in dict_review:
+                rating = dict_review[i['id']]
                 count = len(rating)
                 rating = sum(rating)
                 i['rating'] = round((count/rating),1)
                 i['count_rating'] = count
+            if i['readyAt']: 
+                date =  datetime.datetime.strptime(i['readyAt'],'%Y-%m-%dT%H:%M:%S%z')
+                i['readyAt']=date.strftime("%d %B %Y")
 
         return Response(data, status=200)
     
@@ -178,6 +186,9 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
             rating = sum(rating)
             data['rating'] = round((rating/count),1)
             data['count_rating'] = count
+        if data['readyAt']: 
+            date =  datetime.datetime.strptime(data['readyAt'],'%Y-%m-%dT%H:%M:%S%z')
+            data['readyAt']=date.strftime("%d %B %Y")
             
         return Response(data,status=200)
     

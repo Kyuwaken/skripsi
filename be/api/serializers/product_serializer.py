@@ -59,10 +59,10 @@ class ProductResponseImageSerializer(serializers.ModelSerializer):
                   'price','readyAt','productDescription',
                   'created_at','updated_at','created_by','updated_by',
                   'is_deleted','deleted_at','product_image','available']
-    
+
     def get_available(self, obj):
         if obj.readyAt:
-            if obj.readyAt>datetime.datetime.now():
+            if obj.readyAt.date()>datetime.datetime.now().date():
                 return True
         return False
 

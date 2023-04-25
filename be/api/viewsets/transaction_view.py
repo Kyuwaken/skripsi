@@ -20,7 +20,13 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     def list(self, request):
         queryset = self.queryset.select_related('seller','customer')
         serializer = TransactionResponseSerializer(queryset, many=True)
-        return Response(serializer.data, status=200)
+        data = copy.deepcopy(serializer.data)
+        for i in data:
+            if i['readyAt']: 
+                date =  datetime.datetime.strptime(i['readyAt'],'%Y-%m-%dT%H:%M:%S%z')
+                i['readyAt']=date.strftime("%d %B %Y")
+
+        return Response(data, status=200)
     
     def retrieve(self, request, *args, **kwargs):
         try:
@@ -28,19 +34,33 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         except ObjectDoesNotExist:
             raise NotFoundException("Transaction")
         serializer = TransactionResponseDetailSerializer(transaction, many=False)
-        return Response(serializer.data,status=200)
+        data = copy.deepcopy(serializer.data)
+        if data['readyAt']:
+            date =  datetime.datetime.strptime(data['readyAt'],'%Y-%m-%dT%H:%M:%S%z')
+            data['readyAt']=date.strftime("%d %B %Y")
+        return Response(data,status=200)
     
     @action(detail=False, methods=['get'], url_path='seller')
     def getAllTransactionByIdSeller(self, request, *args, **kwargs):
         queryset = self.queryset.filter(seller_id=request.custom_user['id'])
         serializer = TransactionResponseDetailSerializer(queryset, many=True)
-        return Response(serializer.data,status=200)
+        data = copy.deepcopy(serializer.data)
+        for i in data:
+            if i['readyAt']: 
+                date =  datetime.datetime.strptime(i['readyAt'],'%Y-%m-%dT%H:%M:%S%z')
+                i['readyAt']=date.strftime("%d %B %Y")
+        return Response(data,status=200)
     
     @action(detail=False, methods=['get'], url_path='customer')
     def getAllTransactionByIdCustomer(self, request, *args, **kwargs):
         queryset = self.queryset.filter(customer_id=request.custom_user['id'])
         serializer = TransactionResponseDetailSerializer(queryset, many=True)
-        return Response(serializer.data,status=200)
+        data = copy.deepcopy(serializer.data)
+        for i in data:
+            if i['readyAt']: 
+                date =  datetime.datetime.strptime(i['readyAt'],'%Y-%m-%dT%H:%M:%S%z')
+                i['readyAt']=date.strftime("%d %B %Y")
+        return Response(data,status=200)
     
     # create transaction, banyak transaction detail tergantung barang dan status transaksi, 1 payment
     # total ada lebih dari 1 transaction detail, 2 payment yaitu DP dan FP
@@ -58,8 +78,8 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         for index,i in enumerate(products):
             if index == 0: 
                 seller = Product.objects.get(pk=i['product_id']).seller.id
-                readyAt = i['readyAt']
-            if readyAt < i['readyAt']: readyAt = i['readyAt']
+                readyAt = i['readyAt'].date()
+            if readyAt.date() < i['readyAt'].date(): readyAt = i['readyAt']
             # detail = {}
             # product = i['product_id']
             # product_price = i['product_price']
