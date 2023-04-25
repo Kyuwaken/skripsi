@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .category_serializer import CategorySerializer
 from .user_serializer import UserResponseSerializer
 from ..models import Product, ProductImage
-import base64
+import base64, datetime
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -52,13 +52,20 @@ class ProductResponseImageSerializer(serializers.ModelSerializer):
     category = CategorySerializer(many=False)
     product_image = ProductImageSerializer(many=True)
     seller = UserResponseSerializer(many=False)
+    available = serializers.SerializerMethodField()
     class Meta:
         model = Product
         fields = ['id','name','category','seller',
-                  'price','preorderTime','productDescription',
+                  'price','readyAt','productDescription',
                   'created_at','updated_at','created_by','updated_by',
-                  'is_deleted','deleted_at','product_image']
+                  'is_deleted','deleted_at','product_image','available']
     
+    def get_available(self, obj):
+        if obj.readyAt:
+            if obj.readyAt>datetime.datetime.now():
+                return True
+        return False
+
     def get_created_by(self, obj):
         if obj.created_by:
             return obj.created_by.display_name

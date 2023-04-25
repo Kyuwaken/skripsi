@@ -26,7 +26,7 @@ class TransactionResponseDetailSerializer(serializers.ModelSerializer):
     customer = UserResponseSerializer(many=False)
     class Meta:
         model = Transaction
-        fields = ['id','seller','customer','noResi','preOrderTime','courierName',
+        fields = ['id','seller','customer','noResi','readyAt','courierName',
                   'address','created_at','updated_at','created_by',
                   'updated_by', 'is_deleted','deleted_at',
                   'transaction_detail','transaction_status','payment']
@@ -49,7 +49,7 @@ class TransactionResponseNotificationSerializer(serializers.ModelSerializer):
     customer = UserResponseSerializer(many=False)
     class Meta:
         model = Transaction
-        fields = ['id','seller','customer','noResi','preOrderTime','courierName',
+        fields = ['id','seller','customer','noResi','readyAt','courierName',
                   'address','created_at','updated_at','created_by',
                   'updated_by', 'is_deleted','deleted_at',
                   'transaction_detail','transaction_status','payment']

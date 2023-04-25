@@ -142,15 +142,17 @@ def send_notification(subject,tr_id,type):
         msg['To'] = customer['email']
         for i in data['transaction_status']:
             if i['masterStatus']['id'] == 2:
-                time_limit = ((datetime.datetime.strptime(i['dateOrdered'],'%Y-%m-%dT%H:%M:%S.%f%z')).date() + datetime.timedelta(days=data['preOrderTime'])).strftime('%d %B %Y')
-        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'timelimit':time_limit})
+                time_limit = data['readyAt']
+                time_limit2 = data['readyAt'].date() + datetime.timedelta(days=1)
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'timelimit':time_limit,'timelimit2':time_limit2})
 
     if type == 'seller_buy_product':
         msg['To'] = seller['email']
         for i in data['transaction_status']:
             if i['masterStatus']['id'] == 2:
-                time_limit = ((datetime.datetime.strptime(i['dateOrdered'],'%Y-%m-%dT%H:%M:%S.%f%z')).date() + datetime.timedelta(days=data['preOrderTime'])).strftime('%d %B %Y')
-        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'timelimit':time_limit})
+                time_limit = data['readyAt']
+                time_limit2 = data['readyAt'].date() + datetime.timedelta(days=1)
+        message = render_to_string(dict_type[type],{'body': body,'seller':seller,'customer':customer,'total':rupiah_format(total),'timelimit':time_limit,'timelimit2':time_limit2})
 
     if type == 'seller_reject_transaction':
         msg['To'] = customer['email'] + ', ' + seller['email']

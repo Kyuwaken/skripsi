@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from ..serializers import ProductSerializer, ProductResponseSerializer, ProductImageSerializer, ProductResponseImageSerializer
 from rest_framework.response import Response
-from ..models import Product, ProductImage, Favorite
+from ..models import Product, ProductImage, Favorite, ProductReview
 from api.permissions import IsAuthenticated, IsSellerOrReadOnly
 from api.exceptions import NotAuthorizedException,NotFoundException
 from django.db.models.base import ObjectDoesNotExist
@@ -40,14 +40,45 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     def list(self, request):
         queryset = self.queryset.filter(is_deleted=False).select_related('category').prefetch_related('product_image')
         serializer = ProductResponseImageSerializer(queryset, many=True)
-        return Response(serializer.data, status=200)
+        data = copy.deepcopy(serializer.data)
+        product_review = ProductReview.objects.filter(product__seller_id = request.data['id'])
+        dict_review = {}
+        for i in product_review:
+            if i.product.id in dict_review:
+                dict_review[i.product.id].append(i.rating) 
+            else:
+                dict_review[i.product.id] =[i.rating]
+        for i in data:
+            if i.id in dict_review:
+                rating = dict_review[i.id]
+                count = len(rating)
+                rating = sum(rating)
+                i['rating'] = round((count/rating),1)
+                i['count_rating'] = count
+        return Response(data, status=200)
 
     @action(detail=False, methods=['post'], url_path='seller')
     def get_by_seller_id(self, request, *args, **kwargs):
         validate_input(request.data,['id'])
         queryset = self.queryset.filter(seller_id=request.data['id'], is_deleted=False).select_related('category').prefetch_related('product_image')
         serializer = ProductResponseImageSerializer(queryset, many=True)
-        return Response(serializer.data, status=200)
+        data = copy.deepcopy(serializer.data)
+        product_review = ProductReview.objects.filter(product__seller_id = request.data['id'])
+        dict_review = {}
+        for i in product_review:
+            if i.product.id in dict_review:
+                dict_review[i.product.id].append(i.rating) 
+            else:
+                dict_review[i.product.id] =[i.rating]
+        for i in data:
+            if i.id in dict_review:
+                rating = dict_review[i.id]
+                count = len(rating)
+                rating = sum(rating)
+                i['rating'] = round((count/rating),1)
+                i['count_rating'] = count
+
+        return Response(data, status=200)
     
     @action(detail=False, methods=['get'], url_path='list-with-image')
     def list_with_image(self, request):
@@ -141,11 +172,17 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
                 data['favorite'] = True
             except:
                 data['favorite'] = False
+        rating = [i.rating for i in ProductReview.objects.filter(product_id = kwargs['pk'])]
+        if rating:
+            count = len(rating)
+            rating = sum(rating)
+            data['rating'] = round((rating/count),1)
+            data['count_rating'] = count
             
         return Response(data,status=200)
     
     def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+        pass
     
     @transaction.atomic
     def update(self, request, *args, **kwargs):

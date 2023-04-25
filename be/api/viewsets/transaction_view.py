@@ -53,11 +53,13 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         payment_method = request.data['payment_method']
         address = request.data['address']
         nominal = request.data['nominal']
-        preOrderTime = 0
+        readyAt = ''
         # tr_detail = []
         for index,i in enumerate(products):
-            if index == 0: seller = Product.objects.get(pk=i['product_id']).seller.id
-            if preOrderTime<i['preorderTime']: preOrderTime = i['preorderTime']
+            if index == 0: 
+                seller = Product.objects.get(pk=i['product_id']).seller.id
+                readyAt = i['readyAt']
+            if readyAt < i['readyAt']: readyAt = i['readyAt']
             # detail = {}
             # product = i['product_id']
             # product_price = i['product_price']
@@ -66,11 +68,11 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
             # detail['product_price'] = product_price
             # detail['quantity'] = quantity
             # tr_detail.append(copy.deepcopy(detail))
-        transaction = Transaction.objects.create(customer_id = customer, seller_id = seller, address = address,preOrderTime=preOrderTime)
+        transaction = Transaction.objects.create(customer_id = customer, seller_id = seller, address = address,readyAt=readyAt)
         serz = TransactionSerializer(transaction,many=False)
         id_transaction = serz.data['id']
         for i in products:
-            i.pop('preorderTime')
+            i.pop('readyAt')
             transaction_detail = TransactionDetail.objects.create(transaction_id=id_transaction,**i)
         transaction_status = TransactionStatus.objects.create(transaction_id=id_transaction, masterStatus_id=1)
         payment = Payment.objects.create(transaction_id=id_transaction, paymentType_id=1, paymentMethod_id=payment_method, nominal=nominal)
@@ -98,7 +100,7 @@ class TransactionViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         transaction_status_exclude = [i.id for i in TransactionStatus.objects.filter(transaction__id__in=list_tr_id) if i.masterStatus.id > 2]
         transaction_status_to_check = TransactionStatus.objects.filter(masterStatus_id=2).exclude(id__in = transaction_status_exclude)
         for i in transaction_status_to_check:
-            if i.dateOrdered.date() + datetime.timedelta(days=i.transaction.preOrderTime) < datetime.datetime.now().date():
+            if i.transaction.readyAt.date() + datetime.timedelta(days=1) < datetime.datetime.now().date():
                 send_notification('NO REPLY - TIME LIMIT PRE ORDER - [NAMEAPPS]' ,i.transaction.id, 'time_limit_preorder')
                 TransactionStatus.objects.create(transaction_id=i.transaction.id, masterStatus_id=10)
         return Response(status=200)

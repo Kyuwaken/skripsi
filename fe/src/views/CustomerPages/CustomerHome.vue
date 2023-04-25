@@ -150,16 +150,21 @@ export default {
         },
         {
           id: 3,
+          name: "Electronics",
+          icon: "mdi-devices",
+        },
+        {
+          id: 4,
           name: "Houseware",
           icon: "mdi-home-lightbulb",
         },
         {
-          id: 4,
+          id: 5,
           name: "Food & Baverage",
           icon: "mdi-food-outline",
         },
         {
-          id: 5,
+          id: 6,
           name: "Others",
           icon: "mdi-dots-horizontal-circle-outline",
         },

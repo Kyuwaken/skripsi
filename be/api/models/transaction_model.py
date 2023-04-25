@@ -11,7 +11,7 @@ class Transaction(TimestampModel, UserTrackModel, SoftDeleteModel):
     # dateOrdered = models.DateTimeField(auto_now_add=True)
     # statusTransaksi = models.CharField(max_length=255)
     noResi = models.TextField(blank=True, null=True)
-    preOrderTime = models.IntegerField(blank=True,null=True)
+    readyAt = models.DateTimeField(blank=True, null=True)
     courierName = models.CharField(max_length=255,blank=True,null=True)
     address = models.TextField()
     

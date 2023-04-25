@@ -12,7 +12,7 @@ class Product(TimestampModel, UserTrackModel, SoftDeleteModel):
     seller = auto_prefetch.ForeignKey(
         'User', on_delete=models.CASCADE, null=True, db_constraint=False)
     price = models.IntegerField(default=0)
-    preorderTime = models.IntegerField(null=True,blank=True)
+    readyAt = models.DateTimeField(blank=True, null=True)
     productDescription = models.TextField()
     def __str__(self) -> str:
         return self.name
