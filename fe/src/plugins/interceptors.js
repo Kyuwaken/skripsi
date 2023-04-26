@@ -79,6 +79,8 @@ export default function interceptors() {
         var id = data.id.toString()
         var tokens = crypto.methods.encryptData(id)
         config.headers["Authorization"] = `Token ${tokens}`;
+        console.log(config)
+        console.log(config.headers)
       }
       return config;
     },
