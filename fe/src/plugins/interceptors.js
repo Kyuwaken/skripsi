@@ -1,7 +1,7 @@
 import { getAPI, employeeAPI } from "@/plugins/axios-api";
 import router from "@/router";
 import store from "@/store";
-import { encryptStorage } from "@/main";
+import crypto from "./crypto";
 // import { encrypt, now } from "./Fernet";
 
 import Swal from "sweetalert2";
@@ -71,23 +71,21 @@ function alertError(title, text, timer = 3000, timerProgressBar = true) {
 export default function interceptors() {
   // const tokenEmployee = process.env.VUE_APP_APIKEY;
   // intercept requests, adds token to request header
-  // getAPI.interceptors.request.use(
-  //   (config) => {
-  //     var token = encryptStorage.getItem("Token");
-  //     let app_id = "PANDA_DASHBOARD_ITHC";
-  //     if (token) {
-  //       // append token with current datetime, then encrypt
-  //       token = token + salt + now() + salt + app_id;
-  //       token = encrypt(token);
-  //       config.headers.common["Authorization"] = `Token ${token}`;
-  //       // config.headers.common["Client-ID"] = `Client ${token}`;
-  //     }
-  //     return config;
-  //   },
-  //   (error) => {
-  //     return Promise.reject(error);
-  //   }
-  // );
+  getAPI.interceptors.request.use(
+    (config) => {
+      var token = localStorage.getItem('encryptedData')
+      if (token) {
+        var data = crypto.methods.decryptLocalStorage(token);
+        var id = data.id.toString()
+        var tokens = crypto.methods.encryptData(id)
+        config.headers["Authorization"] = `Token ${tokens}`;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
 
   // intercept responses
   getAPI.interceptors.response.use(

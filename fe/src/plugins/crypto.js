@@ -21,7 +21,6 @@ export default {
         },
         encryptLocalStorage(data){
             const json = JSON.stringify(data)
-            console.log(data)
             const encrypted = CryptoJS.AES.encrypt(json, key, {
                 iv: iv,
                 mode: CryptoJS.mode.CBC,
