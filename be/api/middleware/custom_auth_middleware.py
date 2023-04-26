@@ -46,7 +46,5 @@ class CustomAuthMiddleware(object):
             user_data = {"id":user.id,"name":user.name,"username":user.username,'role':user.role}
             request.custom_user = user_data
             set_current_user(user_data)
-            
-            response = self.get_response(request)
 
-            return response
+        return None
