@@ -41,7 +41,7 @@ class ProductViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         queryset = self.queryset.filter(is_deleted=False).select_related('category').prefetch_related('product_image')
         serializer = ProductResponseImageSerializer(queryset, many=True)
         data = copy.deepcopy(serializer.data)
-        product_review = ProductReview.objects.filter(product__seller_id = request.data['id'])
+        product_review = ProductReview.objects.all()
         dict_review = {}
         for i in product_review:
             if i.product.id in dict_review:
