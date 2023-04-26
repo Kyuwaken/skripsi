@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const getAPI = axios.create({
-  baseURL: "http://localhost:8000/",
+  baseURL: "https://backend-skripsi-production.up.railway.app/",
   timeout: 170000,
   withCredentials: true
 });
