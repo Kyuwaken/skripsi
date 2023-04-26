@@ -35,11 +35,8 @@ SECRET_KEY = '6c33d4abde09fe1c4ac9b76f245d7df4'
 IV = 'ddc5b6c4d6e4b6c4'
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
-SESSION_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-
-ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
+ALLOWED_HOSTS = ['*','skripsi-git-main-kyuwaken.vercel.app','skripsi-lw1kmu3jn-kyuwaken.vercel.app','skripsi-production.up.railway.app']
 
 ENV_VARIABLE = {
     'MAX_LEVEL_INCLUDE': 5,
