@@ -142,5 +142,5 @@ dmypy.json
 # backup file
 *.bak
 .env
-
+be/.vs/
 # End of https://www.toptal.com/developers/gitignore/api/django

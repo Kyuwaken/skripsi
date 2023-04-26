@@ -1,0 +1,59 @@
+{% block page_content %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Product Details</title>
+        <style>
+          /* Table styles */
+          table {
+            border-collapse: collapse;
+            /* margin: 10px auto; */
+            font-size: 14px;
+          }
+          th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+          }
+          th {
+            background-color: #f2f2f2;
+          }
+          /* Total row style */
+          .total-row {
+            font-weight: bold;
+          }
+          /* Sub-total and Total styles */
+          .money-value {
+            text-align: right;
+        }
+        </style>
+      </head>
+      <body>
+        <p>Dear {{customer.name}},</p>
+        <p>Here is the detail of the products that you ordered from {{seller.name}}'s store</p>
+        <table>
+            <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Sub-total</th>
+            </tr>
+            {% for tab in body %}
+            <tr>
+                <td>{{tab.name}}</td>
+                <td>{{tab.price}}</td>
+                <td>{{tab.quantity}}</td>
+                <td class="money-value">{{tab.sub_total}}</td>
+            </tr>
+            {% endfor %}
+            <tr class="total-row">
+                <td colspan="3" align="right">Total</td>
+                <td class="money-value">{{total}}</td>
+            </tr>
+        </table>
+        <p>You already pay {{dp}} for this transaction, so you need to pay off the transaction {{total}} - {{dp}} = {{fp}}</p>
+        <p>You have to pay the FP (Full Payment) for this transaction {{fp}} before {{timelimit}}</p>
+        <p>If it's time limit, your DP (Down Payment) will be sended to seller</p>
+    </body>
+</html>
+{% endblock %}

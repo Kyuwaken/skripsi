@@ -1,20 +1,50 @@
 [
     {
-        "name":"Customer request the products to the Seller, waiting to Seller calculate the price include expedition"
+        "name":"Customer already paid the down payment (DP), waiting the Seller confirmation",
+        "id":1
     },
     {
-        "name":"Seller already calculate the price, waiting the Customer to pay the DP"
+        "name":"Seller accept the transaction, waiting the Seller to buy the products",
+        "id":2
     },
     {
-        "name":"Customer already paid the DP, waiting the Seller to buy the products"
+        "name":"The products already bought by Seller, waiting to be fully paid by Customer",
+        "id":3
     },
     {
-        "name":"The products already bought by Seller, waiting to be fully paid by Customer"
+        "name":"Customer already paid the full payment (FP), waiting the Seller to send the products",
+        "id":4
     },
     {
-        "name":"Customer already fully paid the DP, waiting the Seller to send the products"
+        "name":"The product is being delivered by expedition service, waiting the product to be delivered to Customer",
+        "id":5
     },
     {
-        "name":"The products already received by Customer"
+        "name":"The product has arrived, waiting for Customer's confirmation",
+        "id":6
+    },
+    {
+        "name":"The products already received by Customer",
+        "id":7
+    },
+    {
+        "name":"Seller reject the transaction, transaction/order cancelled",
+        "id":8
+    },
+    {
+        "name":"Seller exceeded the confirmation time limit, refund will be made to the customer",
+        "id":9
+    },
+    {
+        "name":"Seller exceeded pre order time limit, refund will be made to the customer",
+        "id":10
+    },
+    {
+        "name":"Customer exceeded payment time limit, the DP will be forwarded to the seller",
+        "id":11
+    },
+    {
+        "name":"Seller exceeded sending time limit, refund will be made to the customer",
+        "id":12
     }
 ]

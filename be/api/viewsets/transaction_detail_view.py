@@ -19,7 +19,7 @@ class TransactionDetailViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     
     def retrieve(self, request, *args, **kwargs):
         try:
-            transaction_detail =  self.queryset.get(pk=kwargs['pk']).select_related('transaction','product')
+            transaction_detail =  self.queryset.get(pk=kwargs['pk'])
         except ObjectDoesNotExist:
             raise NotFoundException("Transaction Detail")
         serializer = TransactionDetailResponseSerializer(transaction_detail, many=False)

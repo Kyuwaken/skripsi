@@ -2,7 +2,7 @@ from .cart_model import Cart
 from .category_model import Category
 from .country_model import Country
 from .courier_model import Courier
-from .favourite_model import Favourite
+from .favorite_model import Favorite
 from .master_status_model import MasterStatus
 from .payment_method_model import PaymentMethod
 from .payment_model import Payment
@@ -26,7 +26,7 @@ app = [
     'Category',
     'Country',
     'Courier',
-    'Favourite',
+    'Favorite',
     'MasterStatus',
     'PaymentMethod',
     'Payment',

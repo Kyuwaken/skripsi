@@ -2,7 +2,7 @@ from .cart_view import CartViewSet
 from .category_view import CategoryViewSet
 from .country_view import CountryViewSet
 from .courier_viewset import CourierViewSet
-from .favourite_view import FavouriteViewSet
+from .favorite_view import FavoriteViewSet
 from .master_status_view import MasterStatusViewSet
 from .payment_method_view import PaymentMethodViewSet
 from .payment_type_view import PaymentTypeViewSet

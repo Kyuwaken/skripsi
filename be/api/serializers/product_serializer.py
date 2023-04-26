@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from .category_serializer import CategorySerializer
-from .user_serializer import UserSerializer
+from .user_serializer import UserResponseSerializer
 from ..models import Product, ProductImage
+import base64, datetime
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -11,23 +12,66 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ProductResponseSerializer(serializers.ModelSerializer):
     category = CategorySerializer(many=False)
-    seller = UserSerializer(many=False)
+    seller = UserResponseSerializer(many=False)
     class Meta:
         model = Product
         fields = '__all__'
+    def get_created_by(self, obj):
+        if obj.created_by:
+            return obj.created_by.display_name
+        return None
+
+    def get_updated_by(self, obj):
+        if obj.updated_by:
+            return obj.updated_by.display_name
+        return None
 
 class ProductImageSerializer(serializers.ModelSerializer):
+    # imageType = serializers.SerializerMethodField()
+    # stringBase64 = serializers.SerializerMethodField()
+    path = serializers.SerializerMethodField()
     class Meta:
         model = ProductImage
-        fields = ['id','productPhoto']
+        # fields = ['id','imageType','stringBase64']
+        fields = ['id','path']
+    
+    def get_path(self,obj):
+        with open(obj.image.path, 'rb') as img_file:
+            imageType = "image/" + str(obj.image.path).split('.')[-1].lower()
+            stringBase64 = base64.b64encode(img_file.read()).decode()
+            return "data:" + imageType + ";base64," + stringBase64
+    # def get_imageType(self,obj):
+    #     with open(obj.image.path, 'rb') as img_file:
+    #         extension = str(obj.image.path).split('.')[-1].lower()
+    #         return "image/"+extension
+    # def get_stringBase64(self,obj):
+    #     with open(obj.image.path, 'rb') as img_file:
+    #         return base64.b64encode(img_file.read())
 
 class ProductResponseImageSerializer(serializers.ModelSerializer):
     category = CategorySerializer(many=False)
     product_image = ProductImageSerializer(many=True)
-    seller = UserSerializer(many=False)
+    seller = UserResponseSerializer(many=False)
+    available = serializers.SerializerMethodField()
     class Meta:
         model = Product
         fields = ['id','name','category','seller',
-                  'price','preorderTime','productDescription',
+                  'price','readyAt','productDescription',
                   'created_at','updated_at','created_by','updated_by',
-                  'is_deleted','deleted_at','product_image']
+                  'is_deleted','deleted_at','product_image','available']
+
+    def get_available(self, obj):
+        if obj.readyAt:
+            if obj.readyAt.date()>datetime.datetime.now().date():
+                return True
+        return False
+
+    def get_created_by(self, obj):
+        if obj.created_by:
+            return obj.created_by.display_name
+        return None
+
+    def get_updated_by(self, obj):
+        if obj.updated_by:
+            return obj.updated_by.display_name
+        return None

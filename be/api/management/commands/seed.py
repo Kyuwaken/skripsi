@@ -1,6 +1,7 @@
 import json
 from django.core.management.base import BaseCommand
 from api.models import Category, User, Role, MasterStatus, PaymentMethod, PaymentType, Country
+from api.utils.pycrypto import encrypt_data
 
 
 class Command(BaseCommand):
@@ -28,6 +29,7 @@ class Command(BaseCommand):
         for data in data_list:
             role = Role.objects.get(pk=data['role'])
             data['role'] = role
+            data['password'] = encrypt_data(data['password'])
             User.objects.get_or_create(
                 name=data['name'], defaults=data)
         self.comment("Seeding User")

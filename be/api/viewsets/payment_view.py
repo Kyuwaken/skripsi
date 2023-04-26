@@ -19,7 +19,7 @@ class PaymentViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     
     def retrieve(self, request, *args, **kwargs):
         try:
-            payment =  self.queryset.get(pk=kwargs['pk']).select_related('transaction','paymentType','paymentMethod')
+            payment =  self.queryset.get(pk=kwargs['pk'])
         except ObjectDoesNotExist:
             raise NotFoundException("Payment")
         serializer = PaymentResponseSerializer(payment, many=False)

@@ -131,7 +131,7 @@ def audit_trail_deleted(sender, instance, **kwargs):
 # def helloworld(sender,update_fields,*args,**kwargs):
 #     print("helloworlds" ,update_fields)
 
-model_classes = [Cart, Category, Country, Courier, Favourite, MasterStatus, PaymentMethod, Payment, PaymentType, Product, ProductReview, Role, TransactionDetail, Transaction, TransactionStatus, User]
+model_classes = [Category, Country, Courier, MasterStatus, PaymentMethod, Payment, PaymentType, Product, ProductReview, Role, TransactionDetail, Transaction, TransactionStatus, User]
 
 for model_class in model_classes:
     signals.post_save.connect(audit_trail_created_updated, sender=model_class)

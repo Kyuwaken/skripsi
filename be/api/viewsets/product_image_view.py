@@ -45,12 +45,12 @@ class ProductImageViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         except ObjectDoesNotExist:
             raise NotFoundException("Product Image")
         serializer = ProductImageSerializer(product_image, many=False)
-        # url = product_image.productPhoto
+        # url = product_image.image
         # with open('img.png', 'wb') as out_file:
             # out_file.write(url.content)
         # resp = {}
         # with open('img.png', 'rb') as img_file:
-        #     extension = str(product_image.productPhoto.url).split('.')[-1].lower()
+        #     extension = str(product_image.image.url).split('.')[-1].lower()
         #     b64_string = base64.b64encode(img_file.read())
         #     resp['imageType']= "image/"+extension
         #     resp['stringBase64'] = b64_string
@@ -65,12 +65,12 @@ class ProductImageViewSet(custom_viewset.CustomModelWithHistoryViewSet):
         return super().create(request, *args, **kwargs)
     
     def validate_max_size(self,request):
-        dataExcel = request.data['productPhoto']
+        dataExcel = request.data['image']
         if dataExcel.size > 1000000:
             raise ValidationException("Size excel must less than 1 MB")
     
     def validate_type_file(self,request):
-        dataExcel = request.data['productPhoto']
+        dataExcel = request.data['image']
         name = dataExcel._name
         arr = name.split('.')
         index = len(arr)-1
@@ -79,7 +79,7 @@ class ProductImageViewSet(custom_viewset.CustomModelWithHistoryViewSet):
     
     def destroy(self, request, *args, **kwargs):
         id = kwargs['pk']
-        data = ProductImage.objects.get(pk=id).productPhoto
+        data = ProductImage.objects.get(pk=id).image
         if data:
             if os.path.isfile(data.path):
                 os.remove(data.path)
