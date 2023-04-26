@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+# import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,7 +38,7 @@ CORS_ALLOW_CREDENTIALS = True
 SESSION_COOKIE_SAMESITE = 'None'
 SESSION_COOKIE_SECURE = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 ENV_VARIABLE = {
     'MAX_LEVEL_INCLUDE': 5,
@@ -66,6 +67,7 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 
     # buat allow origin
@@ -157,25 +159,28 @@ WSGI_APPLICATION = 'skripsi.wsgi.application'
 # db_names = str(os.getenv('name'))
 
 schema_skripsi = "public"
-host_names = "localhost"
-user_names = "postgres"
-password_names = "password"
-port_names = "5432"
 db_names = "postgres"
+user_names = "postgres"
+password_names = "admin123"
+host_names = "localhost"
+port_names = "5432"
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'OPTIONS': {
-            'options': '-c search_path={}'.format(schema_skripsi)
-        },
-        'NAME': db_names,
-        'USER': user_names,
-        'PASSWORD': password_names,
-        'HOST': host_names,
-        'PORT': port_names,
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'ErmiMbksTkLraqZjFspM',
+        'HOST': 'containers-us-west-140.railway.app',
+        'PORT': '7355',
     }
 }
+        # 'OPTIONS': {
+        #     'options': '-c search_path={}'.format(schema_skripsi)
+        # },
+
+# db_from_env = dj_database_url.config()
+# DATABASES['default'].update(db_from_env)
 
 
 # Password validation
@@ -212,7 +217,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = 'static/'
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_ROOT, 'static'),
+)
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
