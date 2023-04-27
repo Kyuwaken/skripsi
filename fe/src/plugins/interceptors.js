@@ -33,6 +33,10 @@ function interceptError(error) {
     switch (error.response.status) {
       case 400:
         // bad request
+        console.log("interceptor",error)
+        let errors = Object.entries(error.response.data).map(([attr,msg]) =>`${msg}`)
+        if(errors=="Username already exists") alertError(errors,"Username has to be unique")
+        else alertError(errors ? errors : ("Unknown Error","Please try again later"))
         break;
       case 401:
         // 401 - unauthorized

@@ -39,13 +39,13 @@ const register = {
                   })
                   .catch((error) => {
                     console.log(error)
-                    Swal.fire({
-                        icon: "error",
-                        title: "Username already exist",
-                        text: "Username has to be unique",
-                        footer:
-                          "<small>If this problem persists, please contact Admin</small>",
-                      });
+                    // Swal.fire({
+                    //     icon: "error",
+                    //     title: "Username already exist",
+                    //     text: "Username has to be unique",
+                    //     footer:
+                    //       "<small>If this problem persists, please contact Admin</small>",
+                    //   });
                   });
               });
         }

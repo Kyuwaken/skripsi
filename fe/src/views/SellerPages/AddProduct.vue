@@ -197,6 +197,8 @@ export default {
                     icon: 'success',
                     title: 'Product added successfully',
                     text: 'Your product has been added to the store.'
+                }).then(()=>{
+                    this.$router.push({ path: "/sellerprofile" })
                 })
                 // Reset form data
                 this.name = ''
@@ -209,10 +211,11 @@ export default {
 
             }).catch((error) => {
                 // Error message
+                console.log("add product", error)
                 Swal.fire({
                     icon: 'error',
                     title: 'Error adding product',
-                    text: error.message || 'An unknown error occurred.'
+                    text: error.response.data.message || 'An unknown error occurred.'
                 })
                 this.name = ''
                 this.productDescription = ''
@@ -221,7 +224,7 @@ export default {
                 this.category = ''
                 this.productPhoto = []
             })
-            this.$router.push({ path: "/sellerprofile" })
+            
         },
         uploadImageSuccess(formData, index, fileList, imageList) {
             console.log('data', formData, index, 'file', fileList, 'image', imageList)
