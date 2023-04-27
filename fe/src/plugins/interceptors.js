@@ -76,8 +76,9 @@ export default function interceptors() {
       var token = localStorage.getItem('encryptedData')
       if (token) {
         var data = crypto.methods.decryptLocalStorage(token);
-        var id = data.id.toString()
-        var tokens = crypto.methods.encryptData(id)
+        var tokens = crypto.methods.encryptDataToken(data)
+        // var id = data.id.toString()
+        // var tokens = crypto.methods.encryptData(id)
         config.headers["Authorization"] = `Token ${tokens}`;
         console.log(config)
         console.log(config.headers)
