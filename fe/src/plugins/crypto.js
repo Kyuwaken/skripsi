@@ -36,6 +36,22 @@ export default {
             })
             const json = decrypted.toString(CryptoJS.enc.Utf8)
             return JSON.parse(json)
-          }
+        },
+        // encryptDataToken(data){
+        //     const json = JSON.stringify(data)
+        //     const encrypted = CryptoJS.AES.encrypt(json, key, {
+        //         iv: iv,
+        //         mode: CryptoJS.mode.CBC
+        //     })
+        //     return encrypted.toString()
+        // },
+        encryptDataToken(data){
+            const json = JSON.stringify(data)
+            var keys = CryptoJS.enc.Utf8.parse(key);
+            var ivs = CryptoJS.enc.Utf8.parse(iv);
+            var encrypted = CryptoJS.AES.encrypt(json, keys, { iv: ivs, mode: CryptoJS.mode.CBC});
+            var text = encrypted.toString()
+            return text;
+        }
     }
 }

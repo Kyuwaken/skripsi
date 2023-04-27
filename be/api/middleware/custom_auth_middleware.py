@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from re import sub
 from rest_framework.authentication import get_authorization_header
-from api.utils.pycrypto import decrypt_data
+from api.utils.pycrypto import decrypt_data_fe
 from ..models import User
 
 class CustomAuthMiddleware(object):
@@ -40,11 +40,13 @@ class CustomAuthMiddleware(object):
             token = sub('Token ', '', request.META.get('HTTP_AUTHORIZATION', None))
             # auth = get_authorization_header(request).split()
             # token = decode_token(auth[1].decode())
-            data = decrypt_data(token)
-            data = data.decode()
-            user = User.objects.get(pk=data)
-            user_data = {"id":user.id,"name":user.name,"username":user.username,'role':user.role}
-            request.custom_user = user_data
-            set_current_user(user_data)
+            # breakpoint()
+            data = decrypt_data_fe(token)
+            request.custom_user = data
+            set_current_user = data
+            # user = User.objects.get(pk=data)
+            # user_data = {"id":user.id,"name":user.name,"username":user.username,'role':user.role}
+            # request.custom_user = user_data
+            # set_current_user(user_data)
 
         return None
