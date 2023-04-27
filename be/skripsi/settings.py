@@ -170,7 +170,7 @@ WSGI_APPLICATION = 'skripsi.wsgi.application'
 schema_skripsi = "public"
 db_names = "postgres"
 user_names = "postgres"
-password_names = "admin123"
+password_names = "ian012"
 host_names = "localhost"
 port_names = "5432"
 
@@ -184,9 +184,19 @@ DATABASES = {
         'PORT': '7355',
     }
 }
-        # 'OPTIONS': {
-        #     'options': '-c search_path={}'.format(schema_skripsi)
-        # },
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'OPTIONS': {
+#             'options': '-c search_path={}'.format(schema_skripsi)
+#         },
+#         'NAME': db_names,
+#         'USER': user_names,
+#         'PASSWORD': password_names,
+#         'HOST': host_names,
+#         'PORT': port_names,
+#     }
+# }
 
 # db_from_env = dj_database_url.config()
 # DATABASES['default'].update(db_from_env)
