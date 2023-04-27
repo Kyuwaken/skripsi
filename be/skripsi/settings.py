@@ -83,7 +83,18 @@ MIDDLEWARE = [
 
 # buat allow origin
 CORS_ALLOW_ALL_ORIGINS = True
-
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+    "Client-ID"
+]
 ROOT_URLCONF = 'skripsi.urls'
 
 TEMPLATES = [
@@ -220,6 +231,8 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, 'static'),
 )
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
 # Default primary key field type
